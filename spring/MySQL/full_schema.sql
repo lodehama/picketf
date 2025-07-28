@@ -1,4 +1,4 @@
- DROP DATABASE picketf;
+DROP DATABASE IF EXISTS picketf;
 CREATE DATABASE picketf DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE picketf;
 

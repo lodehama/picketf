@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html 
+xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+layout:decorate="~{fragments/layout/layout.html}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body >
+	<main layout:fragment="content">
+		<h2>2345</h2>
+		<p th:text="'Hello, ' + ${name} + '!'"></p>
+	</main>
+</body>
+</html>

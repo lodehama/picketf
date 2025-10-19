@@ -14,20 +14,25 @@ public class HomeController {
   @Autowired
   UserService userService;
 
-  @GetMapping("/")
-  public String home() {
-    return "index";
-  }
-
+  
   @GetMapping("/signup")
   public String signup() {
     return "signup";
   }
-
+  
   @PostMapping("/register")
   public String register(UserVO userVO) {
     userService.register(userVO);
     return "redirect:/login";
   }
-  
+  @GetMapping("/")
+  public String home() {
+    return "index";
+  }
+
+  @GetMapping("/snp")
+  public String snp() {
+    return "snp";
+  }
+
 }

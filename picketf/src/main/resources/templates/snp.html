@@ -46,14 +46,10 @@
         <tbody>
           <tr data-code="379800">
             <td>1</td>
-
             <td>
-
               <div class="name">-</div>
               <div class="issueName">-</div>
-
             </td>
-
             <td>?</td>
             <td class="price">-</td>
             <td class="accumulatedTradingValue">-</td>
@@ -61,7 +57,7 @@
             <td class="threeMonthEarnRate">-</td>
             <td class="sixMonthEarnRate">-</td>
             <td class="oneYearEarnRate">-</td>
-            <td class="nav">-</td>
+            <td class="premium">-</td>
           </tr>
           <tr>
             <td>2</td>
@@ -115,6 +111,7 @@
             set(tr, ".nav", d.nav);
             set(tr, ".fundPay", d.fundPay);
             set(tr, ".issueName", d.issueName);
+            set(tr, ".premium", d.premium);
           }
         } catch (e) {
           console.error("데이터 반영 실패", e);

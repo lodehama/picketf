@@ -30,4 +30,5 @@ public class StockQuote {
     private String nav;
     private String fundPay;
     private String issueName;
+    private String premium;
 }

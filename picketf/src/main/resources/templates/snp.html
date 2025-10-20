@@ -46,11 +46,22 @@
         <tbody>
           <tr data-code="379800">
             <td>1</td>
-            <td class="name">-</td>
+
+            <td>
+
+              <div class="name">-</div>
+              <div class="issueName">-</div>
+
+            </td>
+
+            <td>?</td>
             <td class="price">-</td>
-            <td class="mcap">-</td>
-            <td class="per">-</td>
-            <td class="pbr">-</td>
+            <td class="accumulatedTradingValue">-</td>
+            <td class="oneMonthEarnRate">-</td>
+            <td class="threeMonthEarnRate">-</td>
+            <td class="sixMonthEarnRate">-</td>
+            <td class="oneYearEarnRate">-</td>
+            <td class="nav">-</td>
           </tr>
           <tr>
             <td>2</td>
@@ -65,110 +76,52 @@
         </tbody>
       </table>
     </div>
-
-    <div
-      class="bg-white border-bottom py-2 d-flex justify-content-center gap-4 small fw-semibold"
-    >
-      123123
-      <div class="kv-muted" id="updated">–</div>
-    </div>
-    <!-- 그리드 레이아웃 -->
-    <style>
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(260px, 1fr));
-        gap: 12px;
-      }
-      .card {
-        border: 1px solid #e5e7eb;
-        border-radius: 12px;
-        padding: 12px;
-      }
-      .row {
-        display: flex;
-        justify-content: space-between;
-        margin: 6px 0;
-        font-size: 14px;
-      }
-      .name {
-        font-weight: 700;
-        margin-bottom: 6px;
-      }
-      @media (max-width: 900px) {
-        .grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
-      }
-      @media (max-width: 520px) {
-        .grid {
-          grid-template-columns: 1fr;
-        }
-      }
-    </style>
-
-    <div class="grid" id="stock-grid">
-      <!-- data-code에 종목코드만 넣으면 됨 -->
-      <div class="card" data-code="005930">
-        <div class="name">-</div>
-        <div class="row"><span>현재가</span><span class="price">-</span></div>
-        <div class="row"><span>시가총액</span><span class="mcap">-</span></div>
-        <div class="row"><span>PER</span><span class="per">-</span></div>
-        <div class="row"><span>PBR</span><span class="pbr">-</span></div>
-      </div>
-
-      <div class="card" data-code="000660">
-        <div class="name">-</div>
-        <div class="row"><span>현재가</span><span class="price">-</span></div>
-        <div class="row"><span>시가총액</span><span class="mcap">-</span></div>
-        <div class="row"><span>PER</span><span class="per">-</span></div>
-        <div class="row"><span>PBR</span><span class="pbr">-</span></div>
-      </div>
-
-      <div class="card" data-code="379800">
-        <div class="name">-</div>
-        <div class="row"><span>현재가</span><span class="price">-</span></div>
-        <div class="row"><span>시가총액</span><span class="mcap">-</span></div>
-        <div class="row"><span>PER</span><span class="per">-</span></div>
-        <div class="row"><span>PBR</span><span class="pbr">-</span></div>
-      </div>
-      <div class="card" data-code="035420">... 동일 구조 ...</div>
-      <!-- 필요한 만큼 계속 추가 -->
-    </div>
     <script>
+      const set = (tr, sel, val) => {
+        const el = tr.querySelector(sel);
+        if (el) el.textContent = val ?? "-";
+      };
+
       async function refreshBatch() {
         try {
-          // ✅ 모든 tr에서 종목코드 수집
           const rows = Array.from(document.querySelectorAll("tr[data-code]"));
-          const codes = rows.map((r) => r.dataset.code).join(",");
+          if (rows.length === 0) return;
 
-          // ✅ 백엔드에서 여러 종목 한 번에 불러오기
+          const codes = rows.map((r) => r.dataset.code).join(",");
           const res = await fetch(`/api/stocks?codes=${codes}`, {
             cache: "no-store",
           });
           const list = await res.json().catch(() => []);
           const map = Object.fromEntries(list.map((x) => [x.code, x]));
 
-          // ✅ 각 행별로 데이터 채우기
           for (const tr of rows) {
             const d = map[tr.dataset.code];
             if (!d) continue;
 
-            tr.querySelector(".name").textContent = d.name ?? "-";
-            tr.querySelector(".price").textContent = d.price ?? "-";
-            tr.querySelector(".mcap").textContent = d.marketCap ?? "-";
-            tr.querySelector(".per").textContent = d.per ?? "-";
-            tr.querySelector(".pbr").textContent = d.pbr ?? "-";
+            // 기본
+            set(tr, ".name", d.name);
+            set(tr, ".price", d.price);
+            set(tr, ".mcap", d.marketCap);
+            set(tr, ".per", d.per);
+            set(tr, ".pbr", d.pbr);
 
-            // 필요시 추가 컬럼 예시
-            // tr.querySelector(".nav").textContent = d.nav ?? "-";
-            // tr.querySelector(".oneMonth").textContent = d.oneMonthEarnRate ?? "-";
+            // ETF/확장
+            set(tr, ".lastClosePrice", d.lastClosePrice);
+            set(tr, ".accumulatedTradingValue", d.accumulatedTradingValue);
+            set(tr, ".oneMonthEarnRate", d.oneMonthEarnRate);
+            set(tr, ".threeMonthEarnRate", d.threeMonthEarnRate);
+            set(tr, ".sixMonthEarnRate", d.sixMonthEarnRate);
+            set(tr, ".oneYearEarnRate", d.oneYearEarnRate);
+            set(tr, ".nav", d.nav);
+            set(tr, ".fundPay", d.fundPay);
+            set(tr, ".issueName", d.issueName);
           }
         } catch (e) {
-          console.error("데이터 불러오기 실패 (무시)", e);
+          console.error("데이터 반영 실패", e);
         }
       }
 
-      // ✅ 페이지 로드시 한 번만 실행
+      // 페이지 로드 시 1회
       refreshBatch();
     </script>
   </main>

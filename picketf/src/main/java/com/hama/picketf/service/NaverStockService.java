@@ -22,35 +22,96 @@ public class NaverStockService {
       String response = restTemplate.getForObject(url, String.class);
       JsonNode root = om.readTree(response);
 
+      // 기본 필드
       String name = getText(root, "stockName", "N/A");
       String price = "0";
 
       JsonNode deal = root.path("dealTrendInfos");
-      if (deal.isArray() && deal.size() > 0)
+      if (deal.isArray() && deal.size() > 0) {
         price = getText(deal.get(0), "closePrice", "0");
+      }
 
+      // totalInfos 에서 추가 항목들 파싱
       String marketCap = "0";
       String per = "N/A";
       String pbr = "N/A";
+
+      String lastClosePrice = "0";
+      String accumulatedTradingValue = "0"; // 원문이 "79,854백만" 형태면 그대로 둠(혹은 여기서 파싱해도 됨)
+
+      String oneMonthEarnRate = "N/A";
+      String threeMonthEarnRate = "N/A";
+      String sixMonthEarnRate = "N/A";
+      String oneYearEarnRate = "N/A";
+
+      String nav = "0";
+      String fundPay = "N/A";
+      String issueName = "N/A";
 
       JsonNode infos = root.path("totalInfos");
       if (infos.isArray()) {
         for (JsonNode node : infos) {
           String c = getText(node, "code", "");
           String v = getText(node, "value", "");
+
           if ("marketValue".equalsIgnoreCase(c))
             marketCap = v;
           else if ("per".equalsIgnoreCase(c))
             per = v;
           else if ("pbr".equalsIgnoreCase(c))
             pbr = v;
+
+          else if ("lastClosePrice".equalsIgnoreCase(c))
+            lastClosePrice = v;
+          else if ("accumulatedTradingValue".equalsIgnoreCase(c))
+            accumulatedTradingValue = v;
+
+          else if ("oneMonthEarnRate".equalsIgnoreCase(c))
+            oneMonthEarnRate = v;
+          else if ("threeMonthEarnRate".equalsIgnoreCase(c))
+            threeMonthEarnRate = v;
+          else if ("sixMonthEarnRate".equalsIgnoreCase(c))
+            sixMonthEarnRate = v;
+          else if ("oneYearEarnRate".equalsIgnoreCase(c))
+            oneYearEarnRate = v;
+
+          else if ("nav".equalsIgnoreCase(c))
+            nav = v;
+          else if ("fundPay".equalsIgnoreCase(c))
+            fundPay = v;
+          else if ("issueName".equalsIgnoreCase(c))
+            issueName = v;
         }
       }
 
-      return new StockQuote(code, name, price, marketCap, per, pbr);
+      // Lombok Builder 사용: 필요한 것만 채워서 반환
+      return StockQuote.builder()
+          .code(code)
+          .name(name)
+          .price(price)
+          .marketCap(marketCap)
+          .per(per)
+          .pbr(pbr)
+          .lastClosePrice(lastClosePrice)
+          .accumulatedTradingValue(accumulatedTradingValue)
+          .oneMonthEarnRate(oneMonthEarnRate)
+          .threeMonthEarnRate(threeMonthEarnRate)
+          .sixMonthEarnRate(sixMonthEarnRate)
+          .oneYearEarnRate(oneYearEarnRate)
+          .nav(nav)
+          .fundPay(fundPay)
+          .issueName(issueName)
+          .build();
 
     } catch (Exception e) {
-      return new StockQuote(code, "N/A", "0", "0", "N/A", "N/A");
+      return StockQuote.builder()
+          .code(code).name("N/A").price("0")
+          .marketCap("0").per("N/A").pbr("N/A")
+          .lastClosePrice("0").accumulatedTradingValue("0")
+          .oneMonthEarnRate("N/A").threeMonthEarnRate("N/A")
+          .sixMonthEarnRate("N/A").oneYearEarnRate("N/A")
+          .nav("0").fundPay("N/A").issueName("N/A")
+          .build();
     }
   }
 
@@ -60,9 +121,8 @@ public class NaverStockService {
   }
 
   public List<StockQuote> fetchQuotes(List<String> codes) {
-    // 병렬 스트림으로 여러 종목 동시에 처리
     return codes.parallelStream()
-        .map(this::fetchQuote) // 기존 단건 호출 재사용
+        .map(this::fetchQuote)
         .collect(Collectors.toList());
   }
 }

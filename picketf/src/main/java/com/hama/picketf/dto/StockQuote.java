@@ -1,6 +1,16 @@
 package com.hama.picketf.dto;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class StockQuote {
+
     private String code;
     private String name;
     private String price;
@@ -8,25 +18,16 @@ public class StockQuote {
     private String per;
     private String pbr;
 
-    public StockQuote() {}
-    public StockQuote(String code, String name, String price, String marketCap, String per, String pbr) {
-        this.code = code;
-        this.name = name;
-        this.price = price;
-        this.marketCap = marketCap;
-        this.per = per;
-        this.pbr = pbr;
-    }
-    public String getCode() { return code; }
-    public String getName() { return name; }
-    public String getPrice() { return price; }
-    public String getMarketCap() { return marketCap; }
-    public String getPer() { return per; }
-    public String getPbr() { return pbr; }
-    public void setCode(String code) { this.code = code; }
-    public void setName(String name) { this.name = name; }
-    public void setPrice(String price) { this.price = price; }
-    public void setMarketCap(String marketCap) { this.marketCap = marketCap; }
-    public void setPer(String per) { this.per = per; }
-    public void setPbr(String pbr) { this.pbr = pbr; }
+    // --- [ETF/추가 데이터] ---
+    private String lastClosePrice;
+    private String accumulatedTradingValue;
+
+    private String oneMonthEarnRate;
+    private String threeMonthEarnRate;
+    private String sixMonthEarnRate;
+    private String oneYearEarnRate;
+
+    private String nav;
+    private String fundPay;
+    private String issueName;
 }

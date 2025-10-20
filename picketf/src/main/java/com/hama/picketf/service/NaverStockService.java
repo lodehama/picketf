@@ -24,14 +24,18 @@ public class NaverStockService {
 
       String name = getText(root, "stockName", "N/A");
       String price = "0";
-
       JsonNode deal = root.path("dealTrendInfos");
       if (deal.isArray() && deal.size() > 0) {
         price = getText(deal.get(0), "closePrice", "0");
       }
 
+      // 주식용 필드(있으면 쓰고, ETF면 0일 수 있음)
       String marketCap = "0", per = "N/A", pbr = "N/A";
-      String lastClosePrice = "0", accumulatedTradingValue = "0";
+
+      // --- ETF/추가 데이터 ---
+      String lastClosePrice = "0";
+      String marketValue = "0"; // ✅ AUM (시가총액 성격: etfKeyIndicator.marketValue)
+      String accumulatedTradingValue = "0";
 
       String oneMonthEarnRate = "N/A", threeMonthEarnRate = "N/A",
           sixMonthEarnRate = "N/A", oneYearEarnRate = "N/A";
@@ -43,16 +47,21 @@ public class NaverStockService {
         for (JsonNode node : infos) {
           String c = getText(node, "code", "");
           String v = getText(node, "value", "");
-          if ("marketValue".equalsIgnoreCase(c))
-            marketCap = v;
-          else if ("per".equalsIgnoreCase(c))
+
+          // 주식 기본
+          if ("per".equalsIgnoreCase(c))
             per = v;
           else if ("pbr".equalsIgnoreCase(c))
             pbr = v;
+
+          // ETF/공통
+          else if ("marketValue".equalsIgnoreCase(c))
+            marketValue = v; // ✅ 변경: 예전엔 marketCap에 넣었음
           else if ("lastClosePrice".equalsIgnoreCase(c))
             lastClosePrice = v;
           else if ("accumulatedTradingValue".equalsIgnoreCase(c))
             accumulatedTradingValue = v;
+
           else if ("oneMonthEarnRate".equalsIgnoreCase(c))
             oneMonthEarnRate = v;
           else if ("threeMonthEarnRate".equalsIgnoreCase(c))
@@ -61,6 +70,7 @@ public class NaverStockService {
             sixMonthEarnRate = v;
           else if ("oneYearEarnRate".equalsIgnoreCase(c))
             oneYearEarnRate = v;
+
           else if ("nav".equalsIgnoreCase(c))
             nav = v;
           else if ("fundPay".equalsIgnoreCase(c))
@@ -70,38 +80,59 @@ public class NaverStockService {
         }
       }
 
-      // 가격 보정: price가 0이면 전일가로 대체(옵션)
+      // ✅ etfKeyIndicator 폴백
+      JsonNode key = root.path("etfKeyIndicator");
+      if (!key.isMissingNode() && !key.isNull()) {
+        if ("0".equals(marketValue) || "-".equals(marketValue)) {
+          marketValue = getText(key, "marketValue", marketValue); // 예: "5조 9,010억"
+        }
+        if ("0".equals(nav) || "N/A".equalsIgnoreCase(nav)) {
+          nav = getText(key, "nav", nav);
+        }
+        if ("N/A".equalsIgnoreCase(issueName)) {
+          issueName = getText(key, "issuerName", issueName);
+        }
+        if ("N/A".equalsIgnoreCase(fundPay) && key.hasNonNull("totalFee")) {
+          fundPay = key.get("totalFee").asText() + "%"; // 0.0062 → "0.0062%"
+        }
+      }
+
+      // 가격 보정(옵션)
       if ("0".equals(price) && !"0".equals(lastClosePrice))
         price = lastClosePrice;
 
-      // ✅ 괴리율 계산 = ((시장가 - NAV) / NAV) * 100
+      // ✅ 괴리율 계산
       String premium = "-";
       double priceVal = parseNumber(price);
       double navVal = parseNumber(nav);
       if (priceVal > 0 && navVal > 0) {
         double rate = ((priceVal - navVal) / navVal) * 100.0;
-        premium = String.format("%+.2f%%", rate); // 예: +0.31%
+        premium = String.format("%+.2f%%", rate);
       }
 
       return StockQuote.builder()
           .code(code).name(name).price(price)
           .marketCap(marketCap).per(per).pbr(pbr)
-          .lastClosePrice(lastClosePrice).accumulatedTradingValue(accumulatedTradingValue)
+          .lastClosePrice(lastClosePrice)
+          .marketValue(marketValue) // ✅ 추가
+          .accumulatedTradingValue(accumulatedTradingValue)
           .oneMonthEarnRate(oneMonthEarnRate).threeMonthEarnRate(threeMonthEarnRate)
           .sixMonthEarnRate(sixMonthEarnRate).oneYearEarnRate(oneYearEarnRate)
           .nav(nav).fundPay(fundPay).issueName(issueName)
-          .premium(premium) // ✅ 추가
+          .premium(premium)
           .build();
 
     } catch (Exception e) {
       return StockQuote.builder()
           .code(code).name("N/A").price("0")
           .marketCap("0").per("N/A").pbr("N/A")
-          .lastClosePrice("0").accumulatedTradingValue("0")
+          .lastClosePrice("0")
+          .marketValue("0") // ✅ 추가
+          .accumulatedTradingValue("0")
           .oneMonthEarnRate("N/A").threeMonthEarnRate("N/A")
           .sixMonthEarnRate("N/A").oneYearEarnRate("N/A")
           .nav("0").fundPay("N/A").issueName("N/A")
-          .premium("-") // ✅ 추가
+          .premium("-")
           .build();
     }
   }

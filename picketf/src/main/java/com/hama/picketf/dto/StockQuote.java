@@ -20,6 +20,7 @@ public class StockQuote {
 
     // --- [ETF/추가 데이터] ---
     private String lastClosePrice;
+    private String marketValue;
     private String accumulatedTradingValue;
 
     private String oneMonthEarnRate;

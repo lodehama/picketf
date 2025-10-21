@@ -9,7 +9,7 @@ import lombok.Builder;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class StockQuote {
+public class NaverStockQuote {
 
     private String code;
     private String name;
@@ -22,6 +22,7 @@ public class StockQuote {
     private String lastClosePrice;
     private String marketValue;
     private String accumulatedTradingValue;
+    private String dividendYieldTtm;
 
     private String oneMonthEarnRate;
     private String threeMonthEarnRate;

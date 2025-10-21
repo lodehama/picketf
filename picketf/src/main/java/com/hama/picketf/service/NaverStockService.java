@@ -1,6 +1,6 @@
 package com.hama.picketf.service;
 
-import com.hama.picketf.dto.StockQuote;
+import com.hama.picketf.dto.NaverStockQuote;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,7 +16,7 @@ public class NaverStockService {
   private final RestTemplate restTemplate = new RestTemplate();
   private final ObjectMapper om = new ObjectMapper();
 
-  public StockQuote fetchQuote(String code) {
+  public NaverStockQuote fetchQuote(String code) {
     try {
       String url = "https://m.stock.naver.com/api/stock/" + code + "/integration";
       String response = restTemplate.getForObject(url, String.class);
@@ -110,7 +110,7 @@ public class NaverStockService {
         premium = String.format("%+.2f%%", rate);
       }
 
-      return StockQuote.builder()
+      return NaverStockQuote.builder()
           .code(code).name(name).price(price)
           .marketCap(marketCap).per(per).pbr(pbr)
           .lastClosePrice(lastClosePrice)
@@ -123,7 +123,7 @@ public class NaverStockService {
           .build();
 
     } catch (Exception e) {
-      return StockQuote.builder()
+      return NaverStockQuote.builder()
           .code(code).name("N/A").price("0")
           .marketCap("0").per("N/A").pbr("N/A")
           .lastClosePrice("0")
@@ -151,7 +151,7 @@ public class NaverStockService {
     }
   }
 
-  public List<StockQuote> fetchQuotes(List<String> codes) {
+  public List<NaverStockQuote> fetchQuotes(List<String> codes) {
     return codes.parallelStream().map(this::fetchQuote).collect(Collectors.toList());
   }
 }

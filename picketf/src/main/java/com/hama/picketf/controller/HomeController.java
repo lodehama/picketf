@@ -35,4 +35,9 @@ public class HomeController {
     return "snp";
   }
 
+  @GetMapping("/krx")
+  public String krx() {
+    return "krx";
+  }
+
 }

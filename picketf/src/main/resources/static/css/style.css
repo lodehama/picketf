@@ -26,6 +26,11 @@
   color: #798390 !important;
 }
 
+/* 순위 열 숫자만 bold 처리 */
+.table tbody td:first-child {
+  font-weight: 700;
+  text-align: center;
+}
 
 /* 홀수 행 색 */
 .table > tbody > tr:nth-of-type(odd) > * {

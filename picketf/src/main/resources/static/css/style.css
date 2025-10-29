@@ -53,3 +53,11 @@
 .table td:nth-child(5)::after {
   content: "원";
 }
+
+.table .bi-bookmark,
+.table .bi-bookmark-fill {
+  cursor: pointer;
+  transition: color 0.4s ease-in-out;
+  color: #B0B0B0;
+}
+

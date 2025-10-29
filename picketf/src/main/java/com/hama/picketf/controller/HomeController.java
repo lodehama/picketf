@@ -35,9 +35,14 @@ public class HomeController {
     return "snp";
   }
 
-  @GetMapping("/krx")
-  public String krx() {
-    return "krx";
+  @GetMapping("/qqq")
+  public String qqq() {
+    return "qqq";
+  }
+
+  @GetMapping("/m7")
+  public String m7() {
+    return "m7";
   }
 
   @GetMapping("/updates")

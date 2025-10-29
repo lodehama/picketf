@@ -6,7 +6,7 @@ import lombok.Data;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
-public class KrxEtf {
+public class KrxEtfDto {
     
     @JsonProperty("BAS_DD") private String BAS_DD;                     // 기준일자
     @JsonProperty("ISU_CD") private String ISU_CD;                     // 종목코드

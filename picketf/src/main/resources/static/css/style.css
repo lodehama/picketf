@@ -10,15 +10,35 @@
   border: none !important;
 }
 
-/* 짝수 행 고정색 */
-.table > tbody > tr:nth-of-type(odd) > * {
-  background-color: #F9FAFB !important;
-  --bs-table-accent-bg: #F9FAFB;
+/* 테이블 전체 오른쪽 정렬 */
+.table th,
+.table td {
+  text-align: right !important;
 }
 
-/* 행 hover */
+
+/* 테이블 헤더 텍스트 오른쪽 정렬 */
+/* .table > thead > tr > th {
+  text-align: right !important;
+} */
+
+/* 헤더 글자색 변경 */
+.table > thead > tr:first-of-type > * {
+  color: #798390 !important;
+}
+
+
+/* 홀수 행 색 */
+.table > tbody > tr:nth-of-type(odd) > * {
+  background-color: #F9FAFB !important;
+  --bs-table-accent-bg: transparent !important; /* 내부 변수 영향 제거 */
+}
+
+/* hover가 항상 위에 오도록 강화 */
 .table > tbody > tr:hover > * {
   background-color: #F2F4F6 !important;
+  --bs-table-accent-bg: #F2F4F6 !important; /* 내부변수까지 덮기 */
+  z-index: 1; /* 레이어 우선순위 */
 }
 
 /* 부드러운 전환 */

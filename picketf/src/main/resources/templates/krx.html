@@ -19,7 +19,7 @@
             <th></th>
             <th>기준일</th>
             <th>종목명</th>
-            <th>실부담비용</th>
+            <th>실부담비용 <i class="bi bi-caret-down-fill"></i></th>
             <th>종가</th>
             <th>등락률(%)</th>
             <th>순자산가치(NAV)</th>
@@ -35,7 +35,7 @@
             <td>7</td>
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
-            <td>0.01%</td>
+            <td>0.021%</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="FLUC_RT">-</td>
             <td class="NAV">-</td>
@@ -50,7 +50,7 @@
             <td>8</td>
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
-            <td>0.02%</td>
+            <td>0.011%</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="FLUC_RT">-</td>
             <td class="NAV">-</td>
@@ -64,71 +64,97 @@
       </table>
     </div>
     <script>
-      document.addEventListener("DOMContentLoaded", async () => {
-        const rows = Array.from(document.querySelectorAll("tr[data-code]"));
-        console.log(
-          "[FE] rows & codes",
-          rows.map((r) => r.dataset.code)
-        ); // ✅ 코드 리스트 확인
+  document.addEventListener("DOMContentLoaded", async () => {
+    const rows = Array.from(document.querySelectorAll("tr[data-code]"));
+    const codes = rows.map((r) => r.dataset.code).join(",");
+    const res = await fetch(`/api/krx?codes=${codes}`);
+    const allData = await res.json();
 
-        const codes = rows.map((r) => r.dataset.code).join(",");
+    const dtoKeys = [
+      "BAS_DD",
+      "ISU_CD",
+      "ISU_NM",
+      "TDD_CLSPRC",
+      "CMPPREVDD_PRC",
+      "FLUC_RT",
+      "NAV",
+      "TDD_OPNPRC",
+      "TDD_HGPRC",
+      "TDD_LWPRC",
+      "ACC_TRDVOL",
+      "ACC_TRDVAL",
+      "MKTCAP",
+      "INVSTASST_NETASST_TOTAMT",
+      "LIST_SHRS",
+      "IDX_IND_NM",
+      "OBJ_STKPRC_IDX",
+      "CMPPREVDD_IDX",
+      "FLUC_RT_IDX",
+    ];
 
-        // 필요하면 basDd 쿼리 추가: `&basDd=20251021`
-        const res = await fetch(`/api/krx?codes=${codes}`);
-        const allData = await res.json(); // {"482730": {...}, "433330": {...}}
+    const toNum = (v) => {
+      if (v === null || v === undefined) return NaN;
+      const s = String(v).replace(/,/g, "").trim();
+      const n = Number(s);
+      return isNaN(n) ? NaN : n;
+    };
 
-        // DTO 키 목록(열과 1:1)
-        const dtoKeys = [
-          "BAS_DD",
-          "ISU_CD",
-          "ISU_NM",
-          "TDD_CLSPRC",
-          "CMPPREVDD_PRC",
-          "FLUC_RT",
-          "NAV",
-          "TDD_OPNPRC",
-          "TDD_HGPRC",
-          "TDD_LWPRC",
-          "ACC_TRDVOL",
-          "ACC_TRDVAL",
-          "MKTCAP",
-          "INVSTASST_NETASST_TOTAMT",
-          "LIST_SHRS",
-          "IDX_IND_NM",
-          "OBJ_STKPRC_IDX",
-          "CMPPREVDD_IDX",
-          "FLUC_RT_IDX",
-        ];
+    // 데이터 채우기
+    rows.forEach((row) => {
+      const code = row.dataset.code;
+      const data = allData[code] || {};
 
-        const toNum = (v) => {
-          if (v === null || v === undefined) return NaN;
-          const s = String(v).replace(/,/g, "").trim();
-          const n = Number(s);
-          return isNaN(n) ? NaN : n;
-        };
+      dtoKeys.forEach((k) => {
+        const el = row.querySelector(`.${k}`);
+        if (el) el.textContent = data[k] ?? "-";
+      });
 
-        rows.forEach((row) => {
-          const code = row.dataset.code;
-          const data = allData[code] || {};
+      const elPrem = row.querySelector(".premium");
+      if (elPrem) {
+        const nav = toNum(data["NAV"]);
+        const close = toNum(data["TDD_CLSPRC"]);
+        elPrem.textContent =
+          !isNaN(nav) && nav !== 0 && !isNaN(close)
+            ? (((close - nav) / nav) * 100).toFixed(2) + "%"
+            : "-";
+      }
+    });
 
-          // DTO 키들 채우기 (대소문자 그대로)
-          dtoKeys.forEach((k) => {
-            const el = row.querySelector(`.${k}`);
-            if (el) el.textContent = data[k] ?? "-";
-          });
+    // ✅ 정렬 기능 추가
+    const table = document.querySelector("table");
+    const tbody = table.querySelector("tbody");
+    const headers = Array.from(table.querySelectorAll("th"));
 
-          // premium 계산 = (종가 - NAV)/NAV * 100
-          const elPrem = row.querySelector(".premium");
-          if (elPrem) {
-            const nav = toNum(data["NAV"]);
-            const close = toNum(data["TDD_CLSPRC"]);
-            elPrem.textContent =
-              !isNaN(nav) && nav !== 0 && !isNaN(close)
-                ? (((close - nav) / nav) * 100).toFixed(2) + "%"
-                : "-";
+    const ascPreferred = ["종목명", "실부담비용", "괴리율"];
+
+    headers.forEach((th, idx) => {
+      th.style.cursor = "pointer";
+      let asc = ascPreferred.includes(th.textContent.trim()); // 초기 방향 설정
+
+      th.addEventListener("click", () => {
+        const rowsArr = Array.from(tbody.querySelectorAll("tr"));
+        const isNumeric = (val) => !isNaN(parseFloat(val)) && isFinite(val);
+
+        rowsArr.sort((a, b) => {
+          const aText = a.children[idx].textContent.replace("%", "").trim();
+          const bText = b.children[idx].textContent.replace("%", "").trim();
+
+          if (isNumeric(aText) && isNumeric(bText)) {
+            return asc ? aText - bText : bText - aText;
+          } else {
+            return asc
+              ? aText.localeCompare(bText, "ko")
+              : bText.localeCompare(aText, "ko");
           }
         });
+
+        // 정렬된 행 재삽입
+        rowsArr.forEach((r) => tbody.appendChild(r));
+        asc = !asc; // 다음 클릭 시 방향 반전
       });
-    </script>
+    });
+  });
+</script>
+
   </main>
 </html>

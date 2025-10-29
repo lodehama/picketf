@@ -1,0 +1,17 @@
+/* 홀수 행은 항상 #F9FAFB */
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+  background-color: #F9FAFB !important;
+  --bs-table-accent-bg: #F9FAFB;
+}
+
+/* 행 hover 시 전체를 #F2F4F6 */
+.table > tbody > tr:hover > *,
+.table-hover > tbody > tr:hover > * {
+  background-color: #F2F4F6 !important;
+}
+
+/* 부드러운 전환감 */
+.table > tbody > tr > *,
+.table-hover > tbody > tr > * {
+  transition: background-color 0.15s ease-in-out;
+}

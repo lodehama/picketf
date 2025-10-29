@@ -16,7 +16,6 @@
   text-align: right !important;
 }
 
-
 /* 테이블 헤더 텍스트 오른쪽 정렬 */
 /* .table > thead > tr > th {
   text-align: right !important;
@@ -44,4 +43,8 @@
 /* 부드러운 전환 */
 .table > tbody > tr > * {
   transition: background-color 0.15s ease-in-out;
+}
+/* '종가' 열의 모든 데이터에 '원' 단위 추가 */
+.table td:nth-child(5)::after {
+  content: "원";
 }

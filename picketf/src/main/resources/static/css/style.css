@@ -1,17 +1,27 @@
-/* 홀수 행은 항상 #F9FAFB */
-.table-striped > tbody > tr:nth-of-type(odd) > * {
+/* 테이블 전체 경계선 제거 */
+.table {
+  border-collapse: collapse !important;
+  border: none !important;
+}
+
+/* 셀 사이 경계선 제거 */
+.table th,
+.table td {
+  border: none !important;
+}
+
+/* 짝수 행 고정색 */
+.table > tbody > tr:nth-of-type(odd) > * {
   background-color: #F9FAFB !important;
   --bs-table-accent-bg: #F9FAFB;
 }
 
-/* 행 hover 시 전체를 #F2F4F6 */
-.table > tbody > tr:hover > *,
-.table-hover > tbody > tr:hover > * {
+/* 행 hover */
+.table > tbody > tr:hover > * {
   background-color: #F2F4F6 !important;
 }
 
-/* 부드러운 전환감 */
-.table > tbody > tr > *,
-.table-hover > tbody > tr > * {
+/* 부드러운 전환 */
+.table > tbody > tr > * {
   transition: background-color 0.15s ease-in-out;
 }

@@ -1,18 +1,18 @@
 /* 테이블 전체 경계선 제거 */
-.table {
+.table.etf {
   border-collapse: collapse !important;
   border: none !important;
 }
 
 /* 셀 사이 경계선 제거 */
-.table th,
-.table td {
+.table.etf th,
+.table.etf td {
   border: none !important;
 }
 
 /* 테이블 전체 오른쪽 정렬 */
-.table th,
-.table td {
+.table.etf th,
+.table.etf td {
   text-align: right !important;
 }
 
@@ -27,7 +27,7 @@
 }
 
 /* 순위 열 숫자만 bold 처리 */
-.table tbody td:nth-child(2) {
+.table.etf tbody td:nth-child(2) {
   font-weight: 700;
   text-align: center;
 }
@@ -51,11 +51,11 @@
 }
 
 /* '종가' 열의 모든 데이터에 '원' 단위 추가 */
-.table td:nth-child(6)::after {
+.table.etf td:nth-child(6)::after {
   content: "원";
 }
 
-
+/* 북마크 효과 */
 .table .bi-bookmark,
 .table .bi-bookmark-fill {
   cursor: pointer;
@@ -63,3 +63,5 @@
   color: #B0B0B0;
 }
 
+/* 업데이트 항목 */
+.table.updates th, .table.updates td { text-align: center !important; }

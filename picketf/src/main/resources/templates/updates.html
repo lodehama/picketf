@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{fragments/layout/layout.html}">
+
+<head>
+  <title>메인 페이지</title>
+</head>
+<main layout:fragment="content">
+  <div class="container py-3">
+    <h5 class="mb-3">업데이트 내역</h5>
+    <div class="mb-2">
+      <table class="table updates">
+        <thead>
+          <tr>
+            <th>날짜</th>
+            <th>업데이트 내역</th>
+            <th>고민거리</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>2025-10-30</td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>2025-10-29</td>
+            <td>ETF 테이블 구성</td>
+            <td>API 호출 시간이 400ms로 너무 길어서 고민, 열에 어떤 것들을 배치할지</td>
+          </tr>
+        </tbody>
+      </table>
+      피드백 주기
+    </div>
+</main>
+
+</html>

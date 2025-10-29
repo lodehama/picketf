@@ -40,4 +40,9 @@ public class HomeController {
     return "krx";
   }
 
+  @GetMapping("/updates")
+  public String updates() {
+    return "updates";
+  }
+
 }

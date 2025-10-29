@@ -3,7 +3,7 @@ package com.hama.picketf.dto;
 import lombok.Data;
 
 @Data
-public class EtfDto {
+public class EtfDTO {
     private Long etfNum;
     private String etfCategory;
     private String etfCode;

@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hama.picketf.dto.KrxEtfDto;
+import com.hama.picketf.dto.KrxEtfDTO;
 
 @Service
 public class KrxApiService {
@@ -62,7 +62,7 @@ public class KrxApiService {
   }
 
   /** 실제 호출 + 파싱 (주어진 날짜 1회 시도) */
-  private Map<String, KrxEtfDto> fetchOnce(String date) {
+  private Map<String, KrxEtfDTO> fetchOnce(String date) {
     String url = String.format("%s%s?basDd=%s", baseUrl, apiPath, date);
 
     HttpHeaders headers = new HttpHeaders();
@@ -79,9 +79,9 @@ public class KrxApiService {
       if (!arr.isArray() || arr.isEmpty())
         return Map.of();
 
-      Map<String, KrxEtfDto> map = new LinkedHashMap<>();
+      Map<String, KrxEtfDTO> map = new LinkedHashMap<>();
       for (JsonNode node : arr) {
-        KrxEtfDto dto = om.treeToValue(node, KrxEtfDto.class);
+        KrxEtfDTO dto = om.treeToValue(node, KrxEtfDTO.class);
         String code = node.path("ISU_CD").asText("");
         if (!code.isBlank())
           map.put(code, dto);
@@ -98,13 +98,13 @@ public class KrxApiService {
    * 날짜 한 번 조회해서 전체 리스트를 Map(ISU_CD -> DTO)로 반환.
    * basDd 없으면: 오늘부터 fallbackDays 만큼 과거로 내려가며 첫 성공 날짜를 사용.
    */
-  private Map<String, KrxEtfDto> fetchAllEtfsByDate(String basDd) {
+  private Map<String, KrxEtfDTO> fetchAllEtfsByDate(String basDd) {
     String start = resolveStartDate(basDd);
     LocalDate cursor = LocalDate.parse(start, FMT);
 
     for (int i = 0; i < Math.max(1, fallbackDays); i++) {
       String tryDate = cursor.minusDays(i).format(FMT);
-      Map<String, KrxEtfDto> result = fetchOnce(tryDate);
+      Map<String, KrxEtfDTO> result = fetchOnce(tryDate);
       if (!result.isEmpty()) {
         // 성공: 실제 사용 기준일 저장
         this.lastResolvedBasDd = tryDate;
@@ -117,15 +117,15 @@ public class KrxApiService {
   }
 
   /** 단건: 전체 리스트에서 코드로 매칭 */
-  public KrxEtfDto getEtf(String isuCd, String basDd) {
-    Map<String, KrxEtfDto> all = fetchAllEtfsByDate(basDd);
+  public KrxEtfDTO getEtf(String isuCd, String basDd) {
+    Map<String, KrxEtfDTO> all = fetchAllEtfsByDate(basDd);
     return all.getOrDefault(isuCd, null);
   }
 
   /** 배치: 한 번만 조회해서 요청한 코드들만 추출 */
-  public Map<String, KrxEtfDto> getEtfs(List<String> isuCds, String basDd) {
-    Map<String, KrxEtfDto> all = fetchAllEtfsByDate(basDd);
-    Map<String, KrxEtfDto> result = new LinkedHashMap<>();
+  public Map<String, KrxEtfDTO> getEtfs(List<String> isuCds, String basDd) {
+    Map<String, KrxEtfDTO> all = fetchAllEtfsByDate(basDd);
+    Map<String, KrxEtfDTO> result = new LinkedHashMap<>();
     for (String code : isuCds) {
       result.put(code, all.getOrDefault(code, null));
     }

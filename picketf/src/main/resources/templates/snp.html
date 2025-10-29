@@ -52,7 +52,7 @@
             <td></td>
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
-            <td>0.011%</td>
+            <td class="etf_ter">-</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="FLUC_RT">-</td>
             <td class="NAV">-</td>
@@ -68,7 +68,7 @@
             <td></td>
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
-            <td>0.011%</td>
+            <td class="etf_ter">-</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="FLUC_RT">-</td>
             <td class="NAV">-</td>
@@ -91,7 +91,8 @@
         const dtoKeys = [
           "BAS_DD", "ISU_CD", "ISU_NM", "TDD_CLSPRC", "CMPPREVDD_PRC", "FLUC_RT", "NAV",
           "TDD_OPNPRC", "TDD_HGPRC", "TDD_LWPRC", "ACC_TRDVOL", "ACC_TRDVAL", "MKTCAP",
-          "INVSTASST_NETASST_TOTAMT", "LIST_SHRS", "IDX_IND_NM", "OBJ_STKPRC_IDX", "CMPPREVDD_IDX", "FLUC_RT_IDX",
+          "INVSTASST_NETASST_TOTAMT", "LIST_SHRS", "IDX_IND_NM", "OBJ_STKPRC_IDX",
+          "CMPPREVDD_IDX", "FLUC_RT_IDX",
         ];
 
         const toNum = (v) => {
@@ -101,50 +102,7 @@
           return isNaN(n) ? NaN : n;
         };
 
-        // ===== 북마크 쿠키 유틸 =====
-        const COOKIE_KEY = "etfBookmarks";
-
-        const getBookmarks = () => {
-          const raw = document.cookie.split("; ").find(s => s.startsWith(COOKIE_KEY + "="));
-          if (!raw) return [];
-          try { return JSON.parse(decodeURIComponent(raw.split("=")[1])) || []; }
-          catch { return []; }
-        };
-
-        const setBookmarks = (list) => {
-          const uniq = Array.from(new Set(list));
-          const val = encodeURIComponent(JSON.stringify(uniq));
-          const maxAge = 60 * 60 * 24 * 365 * 5; // 5년
-          document.cookie = `${COOKIE_KEY}=${val}; Max-Age=${maxAge}; Path=/; SameSite=Lax`;
-        };
-
         // ===== 데이터 채우기 =====
-        const formatKoreanWon = (num) => {
-          const n = Number(String(num).replace(/,/g, "").trim());
-          if (isNaN(n)) return "-";
-          const trillion = 1_0000_0000_0000; // 1조
-          const billion = 1_0000_0000;      // 1억
-          if (n >= trillion) {
-            const 조 = Math.floor(n / trillion);
-            const 억 = Math.floor((n % trillion) / billion);
-            return `${조}조${억 > 0 ? " " + 억.toLocaleString() + "억원" : "원"}`;
-          } else if (n >= billion) {
-            return `${Math.floor(n / billion).toLocaleString()}억원`;
-          } else if (n >= 10_000) {
-            return `${Math.floor(n / 10_000).toLocaleString()}만원`;
-          } else {
-            return `${n.toLocaleString()}원`;
-          }
-        };
-
-        const updateRowNumbers = () => {
-          const tbody = document.querySelector("tbody");
-          Array.from(tbody.querySelectorAll("tr")).forEach((row, i) => {
-            const rankCell = row.querySelector("td:nth-child(2)");
-            if (rankCell) rankCell.textContent = i + 1;
-          });
-        };
-
         rows.forEach((row) => {
           const code = row.dataset.code;
           const data = allData[code] || {};
@@ -152,7 +110,7 @@
             const el = row.querySelector(`.${k}`);
             if (!el) return;
             if (k === "MKTCAP" && data[k]) {
-              el.textContent = formatKoreanWon(data[k]);
+              el.textContent = data[k].toLocaleString();
               el.dataset.raw = String(data[k]).replace(/,/g, "");
             } else {
               el.textContent = data[k] ?? "-";
@@ -172,6 +130,27 @@
           }
         });
 
+        // ===== etf_ter (DB에서 가져오기) =====
+        for (const row of rows) {
+          const code = row.dataset.code;
+          const terCell = row.querySelector(".etf_ter");
+
+          try {
+            const res = await fetch(`/api/etf/ter?code=${code}`);
+            if (!res.ok) {
+              terCell.textContent = "-";
+              continue;
+            }
+
+            const ter = await res.json();
+            // 값이 있으면 표시, 없으면 "-"
+            terCell.textContent = ter !== null ? `${ter.toFixed(3)}%` : "-";
+          } catch (err) {
+            console.error("TER fetch error:", err);
+            terCell.textContent = "-";
+          }
+        }
+
         // ===== 시총 내림차순 기본 정렬 =====
         const tbody = document.querySelector("tbody");
         const sortedRows = [...rows].sort((a, b) => {
@@ -180,67 +159,6 @@
           return bVal - aVal;
         });
         sortedRows.forEach((r) => tbody.appendChild(r));
-        updateRowNumbers();
-
-        // ===== 헤더 클릭 정렬 =====
-        const table = document.querySelector("table");
-        const headers = Array.from(table.querySelectorAll("th"));
-        const ascPreferred = ["종목명", "실부담비용", "괴리율"];
-
-        headers.forEach((th, idx) => {
-          th.style.cursor = "pointer";
-          let asc = ascPreferred.includes(th.textContent.trim());
-          th.addEventListener("click", () => {
-            const rowsArr = Array.from(tbody.querySelectorAll("tr"));
-            const isNumeric = (val) => !isNaN(parseFloat(val)) && isFinite(val);
-            rowsArr.sort((a, b) => {
-              const aText = a.children[idx].textContent.replace(/[,%원억조]/g, "").trim();
-              const bText = b.children[idx].textContent.replace(/[,%원억조]/g, "").trim();
-              if (isNumeric(aText) && isNumeric(bText)) {
-                return asc ? aText - bText : bText - aText;
-              } else {
-                return asc ? aText.localeCompare(bText, "ko") : bText.localeCompare(aText, "ko");
-              }
-            });
-            rowsArr.forEach((r) => tbody.appendChild(r));
-            asc = !asc;
-            updateRowNumbers();
-          });
-        });
-
-        // ===== 쿠키 상태로 북마크 초기 렌더링 =====
-        const bookmarked = new Set(getBookmarks());
-        rows.forEach((row) => {
-          const code = row.dataset.code;
-          if (!code || !bookmarked.has(code)) return;
-          const icon = row.querySelector(".bi-bookmark, .bi-bookmark-fill");
-          if (!icon) return;
-          icon.classList.remove("bi-bookmark");
-          icon.classList.add("bi-bookmark-fill");
-          icon.style.color = "#FFD43B";
-        });
-
-        // ===== 북마크 클릭 → 쿠키 갱신 (헤더 forEach 바깥) =====
-        document.addEventListener("click", (e) => {
-          const icon = e.target.closest(".bi-bookmark, .bi-bookmark-fill");
-          if (!icon) return;
-          const row = icon.closest("tr[data-code]");
-          if (!row) return;
-          const code = row.dataset.code;
-          if (!code) return;
-
-          const cur = new Set(getBookmarks());
-          if (icon.classList.contains("bi-bookmark")) {
-            icon.classList.replace("bi-bookmark", "bi-bookmark-fill");
-            icon.style.color = "#FFD43B";
-            cur.add(code);
-          } else {
-            icon.classList.replace("bi-bookmark-fill", "bi-bookmark");
-            icon.style.color = "#B0B0B0";
-            cur.delete(code);
-          }
-          setBookmarks([...cur]);
-        });
       });
     </script>
 </main>

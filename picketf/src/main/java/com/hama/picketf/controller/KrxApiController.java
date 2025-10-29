@@ -5,7 +5,7 @@ import java.util.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.hama.picketf.dto.KrxEtfDto;
+import com.hama.picketf.dto.KrxEtfDTO;
 import com.hama.picketf.service.KrxApiService;
 
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class KrxApiController {
   public ResponseEntity<?> getOne(@PathVariable String isuCd,
       @RequestParam(required = false) String basDd) {
     try {
-      KrxEtfDto dto = krxApiService.getEtf(isuCd, basDd);
+      KrxEtfDTO dto = krxApiService.getEtf(isuCd, basDd);
       return ResponseEntity.ok(dto);
     } catch (Exception e) {
       return ResponseEntity.status(502).body(Map.of(
@@ -39,7 +39,7 @@ public class KrxApiController {
           .map(String::trim)
           .filter(s -> !s.isBlank())
           .toList();
-      Map<String, KrxEtfDto> map = krxApiService.getEtfs(list, basDd);
+      Map<String, KrxEtfDTO> map = krxApiService.getEtfs(list, basDd);
       return ResponseEntity.ok(map);
     } catch (Exception e) {
       return ResponseEntity.status(502).body(Map.of(
@@ -50,7 +50,7 @@ public class KrxApiController {
 
   // 프론트 분리 테스트용
   @GetMapping("/_dummy")
-  public Map<String, KrxEtfDto> dummy() {
-    return Map.of("379800", new KrxEtfDto(), "433330", new KrxEtfDto());
+  public Map<String, KrxEtfDTO> dummy() {
+    return Map.of("379800", new KrxEtfDTO(), "433330", new KrxEtfDTO());
   }
 }

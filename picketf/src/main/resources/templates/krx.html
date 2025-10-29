@@ -30,7 +30,7 @@
         </thead>
         <tbody>
           <tr data-code="379800">
-            <td>7</td>
+            <td></td>
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
             <td>0.021%</td>
@@ -45,7 +45,7 @@
           </tr>
 
           <tr data-code="360750">
-            <td>8</td>
+            <td></td>
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
             <td>0.011%</td>
@@ -60,7 +60,7 @@
           </tr>
 
           <tr data-code="360200">
-            <td>8</td>
+            <td></td>
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
             <td>0.011%</td>
@@ -133,6 +133,15 @@
           }
         };
 
+        // ✅ 순번 자동 업데이트 함수
+        const updateRowNumbers = () => {
+          const tbody = document.querySelector("tbody");
+          Array.from(tbody.querySelectorAll("tr")).forEach((row, i) => {
+            const firstCell = row.querySelector("td:first-child");
+            if (firstCell) firstCell.textContent = i + 1;
+          });
+        };
+
         // ✅ 데이터 채우기
         rows.forEach((row) => {
           const code = row.dataset.code;
@@ -142,15 +151,16 @@
             const el = row.querySelector(`.${k}`);
             if (!el) return;
 
-            // ✅ 시가총액(MKTCAP)만 변환
             if (k === "MKTCAP" && data[k]) {
               el.textContent = formatKoreanWon(data[k]);
+              el.dataset.raw = String(data[k]).replace(/,/g, ""); // 정렬용 숫자 저장
             } else {
               el.textContent = data[k] ?? "-";
+              if (k === "MKTCAP") el.dataset.raw = "0";
             }
           });
 
-          // ✅ 괴리율 계산
+          // 괴리율 계산
           const elPrem = row.querySelector(".premium");
           if (elPrem) {
             const nav = toNum(data["NAV"]);
@@ -162,11 +172,21 @@
           }
         });
 
-        // ✅ 정렬 기능
-        const table = document.querySelector("table");
-        const tbody = table.querySelector("tbody");
-        const headers = Array.from(table.querySelectorAll("th"));
+        // ✅ 시가총액 기준 내림차순 정렬
+        const tbody = document.querySelector("tbody");
+        const sortedRows = [...rows].sort((a, b) => {
+          const aVal = Number(a.querySelector(".MKTCAP").dataset.raw || 0);
+          const bVal = Number(b.querySelector(".MKTCAP").dataset.raw || 0);
+          return bVal - aVal;
+        });
+        sortedRows.forEach((r) => tbody.appendChild(r));
 
+        // ✅ 번호 갱신 (처음 로드 시)
+        updateRowNumbers();
+
+        // ✅ 클릭 정렬 기능
+        const table = document.querySelector("table");
+        const headers = Array.from(table.querySelectorAll("th"));
         const ascPreferred = ["종목명", "실부담비용", "괴리율"];
 
         headers.forEach((th, idx) => {
@@ -179,8 +199,8 @@
               !isNaN(parseFloat(val)) && isFinite(val);
 
             rowsArr.sort((a, b) => {
-              const aText = a.children[idx].textContent.replace("%", "").trim();
-              const bText = b.children[idx].textContent.replace("%", "").trim();
+              const aText = a.children[idx].textContent.replace(/[,%원억조]/g, "").trim();
+              const bText = b.children[idx].textContent.replace(/[,%원억조]/g, "").trim();
 
               if (isNumeric(aText) && isNumeric(bText)) {
                 return asc ? aText - bText : bText - aText;
@@ -193,10 +213,14 @@
 
             rowsArr.forEach((r) => tbody.appendChild(r));
             asc = !asc;
+
+            // ✅ 정렬 후에도 번호 갱신
+            updateRowNumbers();
           });
         });
       });
     </script>
+
 </main>
 
 </html>

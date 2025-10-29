@@ -27,7 +27,7 @@
 }
 
 /* 순위 열 숫자만 bold 처리 */
-.table tbody td:first-child {
+.table tbody td:nth-child(2) {
   font-weight: 700;
   text-align: center;
 }

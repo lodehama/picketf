@@ -15,6 +15,7 @@
         <thead>
           <tr>
             <th></th>
+            <th></th>
             <th>기준일</th>
             <th>종목명</th>
             <th>실부담비용 <i class="bi bi-caret-down-fill"></i></th>
@@ -30,6 +31,7 @@
         </thead>
         <tbody>
           <tr data-code="379800">
+            <td><i class="bi bi-bookmark"></i></td>
             <td></td>
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
@@ -45,6 +47,7 @@
           </tr>
 
           <tr data-code="360750">
+            <td><i class="bi bi-bookmark"></i></td>
             <td></td>
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
@@ -60,6 +63,7 @@
           </tr>
 
           <tr data-code="360200">
+            <td><i class="bi bi-bookmark"></i></td>
             <td></td>
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
@@ -133,12 +137,12 @@
           }
         };
 
-        // ✅ 순번 자동 업데이트 함수
+        // ✅ 순번 자동 업데이트 함수 (두 번째 열에 표기)
         const updateRowNumbers = () => {
           const tbody = document.querySelector("tbody");
           Array.from(tbody.querySelectorAll("tr")).forEach((row, i) => {
-            const firstCell = row.querySelector("td:first-child");
-            if (firstCell) firstCell.textContent = i + 1;
+            const rankCell = row.querySelector("td:nth-child(2)");
+            if (rankCell) rankCell.textContent = i + 1;
           });
         };
 
@@ -214,13 +218,31 @@
             rowsArr.forEach((r) => tbody.appendChild(r));
             asc = !asc;
 
-            // ✅ 정렬 후에도 번호 갱신
+            // ✅ 정렬 후에도 번호 갱신 (두 번째 열 기준)
             updateRowNumbers();
           });
+
+          // ✅ 북마크 클릭 토글 기능
+          document.addEventListener("click", (e) => {
+            const icon = e.target.closest(".bi-bookmark, .bi-bookmark-fill");
+            if (!icon) return; // 클릭 대상이 북마크가 아니면 무시
+
+            if (icon.classList.contains("bi-bookmark")) {
+              // 비어있는 북마크 → 채워진 북마크로
+              icon.classList.remove("bi-bookmark");
+              icon.classList.add("bi-bookmark-fill");
+              icon.style.color = "#FFD43B"; // 노란색 강조
+            } else {
+              // 채워진 북마크 → 비어있는 북마크로
+              icon.classList.remove("bi-bookmark-fill");
+              icon.classList.add("bi-bookmark");
+              icon.style.color = "#B0B0B0"; // 회색으로 복귀
+            }
+          });
+
         });
       });
     </script>
-
 </main>
 
 </html>

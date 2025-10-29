@@ -7,27 +7,27 @@
 </head>
 <main layout:fragment="content">
   <div class="container py-3">
-    <h5 class="mb-3 text-center fw-bold">개발노트</h5>
+    <h5 class="mb-3 text-center fw-bold">Dev Log</h5>
     <div class="mb-2">
       <table class="table updates">
         <thead>
           <tr>
             <th>날짜</th>
             <th>업데이트 내역</th>
-            <th>설명 및 고민거리</th>
+            <th>변경사항 및 고민</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>2025-10-30</td>
-            <td>DB 추가</td>
-            <td>테이블에서 환헷지, 레버리지 등 분류별 표기를 위해 DB로 관리
+            <td>상단 탭 필터 기능 추가 (환헷지/레버리지 분류)</td>
+            <td>분류하기 위해 기본적으로 API로 호출하되 일부는 DB로 관리
             </td>
           </tr>
           <tr>
             <td>-</td>
-            <td>북마크 추가</td>
-            <td>테이블을 보여줄 때 기준이 시총 내림차순인데, 북마크를 우선으로 보여줄지 고려중
+            <td><i class="bi bi-bookmark"></i> 북마크 추가</td>
+            <td>테이블을 순위 기준이 시총 내림차순에서, 북마크를 우선으로 보여줄지 고려중
               <br>북마크를 DB에만 저장하자니 비회원 접근성이 떨어지고
               <br>비회원은 쿠키로 저장하고 로그인시 DB에 넣으려고 했으나 시간이 부족해 임시로 쿠키로 통일
             </td>
@@ -35,7 +35,7 @@
           <tr>
             <td>2025-10-29</td>
             <td>ETF 테이블 구성</td>
-            <td>API 호출 시간이 400ms로 너무 길어서 사용에 불편함, 열에는 어떤 것들을 배치할지</td>
+            <td>API 호출 시간이 400ms이라 사용이 불편하다. 열에는 어떤 것들을 배치할지</td>
           </tr>
           <tr>
             <td>~ 2025-10-28</td>

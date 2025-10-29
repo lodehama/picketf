@@ -8,9 +8,9 @@ import com.hama.picketf.dao.EtfDAO;
 @RequiredArgsConstructor
 public class EtfService {
 
-    private final EtfDAO etfDAO;
+  private final EtfDAO etfDAO;
 
-    public Double getEtfTerByCode(String code) {
-        return etfDAO.selectEtfTerByCode(code);
-    }
+  public Double getEtfTerByCode(String code) {
+    return etfDAO.selectEtfTerByCode(code);
+  }
 }

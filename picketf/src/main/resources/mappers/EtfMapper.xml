@@ -4,7 +4,7 @@
 
 <mapper namespace="EtfMapper">
 
-  <!-- 특정 코드의 TER 조회 -->
+  <!-- 특정 코드의 TER 조회 (etf_ter DB 연동을 위해 만듦) -->
   <select id="selectEtfTerByCode" parameterType="string" resultType="double">
     SELECT etf_ter
     FROM etf

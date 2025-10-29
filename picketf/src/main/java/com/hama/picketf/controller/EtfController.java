@@ -11,11 +11,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EtfController {
 
-    private final EtfService etfService;
+  private final EtfService etfService;
 
-    // 예: /api/etf/ter?code=379800
-    @GetMapping("/api/etf/ter")
-    public Double getEtfTer(@RequestParam String code) {
-        return etfService.getEtfTerByCode(code);
-    }
+  // 예: /api/etf/ter?code=379800
+  @GetMapping("/api/etf/ter")
+  public Double getEtfTer(@RequestParam String code) {
+    return etfService.getEtfTerByCode(code);
+  }
 }

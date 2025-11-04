@@ -395,52 +395,55 @@
         }
 
         function highlightTopBottom() {
-  const vis = getVisibleRows();
-  if (vis.length === 0) return;
+          const vis = getVisibleRows();
+          if (vis.length === 0) return;
 
-  // ===== 실부담비용 =====
-  const costArr = vis.map(r => {
-    const td = r.querySelector('.etf_real_cost');
-    if (!td) return null;
-    const val = Number(String(td.textContent).replace(/[^\d.-]/g, ""));
-    return Number.isFinite(val) ? { td, val } : null;
-  }).filter(Boolean);
+          // ===== 실부담비용 =====
+          const costArr = vis.map(r => {
+            const td = r.querySelector('.etf_real_cost');
+            if (!td) return null;
+            const val = Number(String(td.textContent).replace(/[^\d.-]/g, ""));
+            return Number.isFinite(val) ? { td, val } : null;
+          }).filter(Boolean);
 
-  // 낮은 3개: 항상 초록색 + Bold
-  if (costArr.length > 0) {
-    const low3 = [...costArr].sort((a, b) => a.val - b.val).slice(0, 3);
-    low3.forEach(({ td }) => { 
-      td.classList.add('hl-green'); 
-      td.style.fontWeight = '700'; 
-    });
-  }
+          // 낮은 3개: 항상 초록색 + Bold
+          if (costArr.length > 0) {
+            const low3 = [...costArr].sort((a, b) => a.val - b.val).slice(0, 3);
+            low3.forEach(({ td }) => {
+              td.classList.add('hl-green');
+              td.style.fontWeight = '700';
+            });
+          }
 
-  // 높은 3개: 4개 이상일 때만 빨간색 표시
-  if (costArr.length >= 4) {
-    const high3 = [...costArr].sort((a, b) => b.val - a.val).slice(0, 3);
-    high3.forEach(({ td }) => td.classList.add('hl-red'));
-  }
+          // 높은 n개: 행 개수에 따라 자동 결정
+          if (costArr.length >= 4) {
+            let redCount = 3; // 기본값
 
-  // ===== 시가총액 =====
-  const capArr = vis.map(r => {
-    const td = r.querySelector('.MKTCAP');
-    if (!td) return null;
-    const raw = td.dataset?.raw ?? td.textContent;
-    const val = Number(String(raw).replace(/[^\d.-]/g, ""));
-    return Number.isFinite(val) ? { td, val } : null;
-  }).filter(Boolean);
+            if (costArr.length === 4) redCount = 1;
+            else if (costArr.length === 5) redCount = 2;
 
-  // 상위 3개: 개수 상관없이 초록색 + Bold
-  if (capArr.length > 0) {
-    const capTop3 = [...capArr].sort((a, b) => b.val - a.val).slice(0, 3);
-    capTop3.forEach(({ td }) => { 
-      td.classList.add('hl-green'); 
-      td.style.fontWeight = '700'; 
-    });
-  }
-}
+            const highN = [...costArr].sort((a, b) => b.val - a.val).slice(0, redCount);
+            highN.forEach(({ td }) => td.classList.add('hl-red'));
+          }
 
+          // ===== 시가총액 =====
+          const capArr = vis.map(r => {
+            const td = r.querySelector('.MKTCAP');
+            if (!td) return null;
+            const raw = td.dataset?.raw ?? td.textContent;
+            const val = Number(String(raw).replace(/[^\d.-]/g, ""));
+            return Number.isFinite(val) ? { td, val } : null;
+          }).filter(Boolean);
 
+          // 상위 3개: 개수 상관없이 초록색 + Bold
+          if (capArr.length > 0) {
+            const capTop3 = [...capArr].sort((a, b) => b.val - a.val).slice(0, 3);
+            capTop3.forEach(({ td }) => {
+              td.classList.add('hl-green');
+              td.style.fontWeight = '700';
+            });
+          }
+        }
 
         function repaintAll() {
           renumberVisibleRows();
@@ -613,9 +616,6 @@
         });
       });
     </script>
-
-
-
 </main>
 
 </html>

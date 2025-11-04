@@ -51,7 +51,7 @@
 }
 
 /* '종가' 열의 모든 데이터에 '원' 단위 추가 */
-.table.etf td:nth-child(6)::after {
+.table.etf td:nth-child(7)::after {
   content: "원";
 }
 

@@ -279,14 +279,12 @@
 
         // ===== 북마크 쿠키 유틸 =====
         const COOKIE_KEY = "etfBookmarks";
-
         const getBookmarks = () => {
           const raw = document.cookie.split("; ").find(s => s.startsWith(COOKIE_KEY + "="));
           if (!raw) return [];
           try { return JSON.parse(decodeURIComponent(raw.split("=")[1])) || []; }
           catch { return []; }
         };
-
         const setBookmarks = (list) => {
           const uniq = Array.from(new Set(list));
           const val = encodeURIComponent(JSON.stringify(uniq));
@@ -295,11 +293,12 @@
         };
 
         // ===== 데이터 채우기 =====
+        // ★ 변경: 원화 축약 포맷 공통 함수 (조/억/만/원)
         const formatKoreanWon = (num) => {
           const n = Number(String(num).replace(/,/g, "").trim());
           if (isNaN(n)) return "-";
-          const trillion = 1_0000_0000_0000;
-          const billion = 1_0000_0000;
+          const trillion = 1_0000_0000_0000; // 1조
+          const billion = 1_0000_0000;      // 1억
           if (n >= trillion) {
             const 조 = Math.floor(n / trillion);
             const 억 = Math.floor((n % trillion) / billion);
@@ -321,19 +320,61 @@
           });
         };
 
+        // 1) 공통 포맷터
+        const fmtCommaInt = (n) => Number(n).toLocaleString("ko-KR", { maximumFractionDigits: 0 });
+        const fmtCommaFloat = (n, digits = 2) => Number(n).toLocaleString("ko-KR", { minimumFractionDigits: digits, maximumFractionDigits: digits });
+        const fmtPercent = (n, digits = 2) => `${Number(n).toFixed(digits)}%`;
+
+        // 기존 함수 유지: formatKoreanWon, toNum ...
+
+        // 2) 어떤 키에 어떤 포맷을 적용할지 정의
+        const keysToFormatWon = ["MKTCAP", "ACC_TRDVAL"];              // 조/억/만/원
+        const keysToFormatCommaI = ["TDD_CLSPRC"];                        // 정수 콤마 (종가)
+        const keysToFormatCommaF = ["NAV"];                               // 소수 콤마 (NAV)
+        const keysToFormatPercent = ["FLUC_RT"];                           // 퍼센트 (등락률)
+
+        // 3) 렌더링 루프
         rows.forEach((row) => {
           const code = row.dataset.code;
           const data = allData[code] || {};
+
           dtoKeys.forEach((k) => {
             const el = row.querySelector(`.${k}`);
             if (!el) return;
-            if (k === "MKTCAP" && data[k]) {
-              el.textContent = formatKoreanWon(data[k]);
-              el.dataset.raw = String(data[k]).replace(/,/g, "");
-            } else {
-              el.textContent = data[k] ?? "-";
-              if (k === "MKTCAP") el.dataset.raw = "0";
+
+            const raw = data[k];
+
+            if (keysToFormatWon.includes(k)) {
+              if (raw != null && String(raw).trim() !== "") {
+                el.textContent = formatKoreanWon(raw);
+                el.dataset.raw = String(raw).replace(/,/g, "");
+              } else { el.textContent = "-"; el.dataset.raw = "0"; }
+              return;
             }
+
+            if (keysToFormatCommaI.includes(k)) {
+              const n = toNum(raw);
+              el.textContent = isNaN(n) ? "-" : fmtCommaInt(n);
+              el.dataset.raw = isNaN(n) ? "0" : String(n);
+              return;
+            }
+
+            if (keysToFormatCommaF.includes(k)) {
+              const n = toNum(raw);
+              el.textContent = isNaN(n) ? "-" : fmtCommaFloat(n, 2); // 필요시 자리수 조정
+              el.dataset.raw = isNaN(n) ? "0" : String(n);
+              return;
+            }
+
+            if (keysToFormatPercent.includes(k)) {
+              const n = toNum(raw);
+              el.textContent = isNaN(n) ? "-" : fmtPercent(n, 2);
+              el.dataset.raw = isNaN(n) ? "0" : String(n);
+              return;
+            }
+
+            // 기본값
+            el.textContent = raw ?? "-";
           });
 
           // 괴리율 계산
@@ -366,7 +407,8 @@
           }
         }
 
-        // ===== 페이지 로드시 시총 내림차순 기본 정렬 =====
+        // ===== 기본 정렬 (시가총액 내림차순) =====
+        // ※ 기본을 '거래대금'으로 바꾸고 싶으면 .MKTCAP → .ACC_TRDVAL 로 변경
         const tbody = document.querySelector("tbody");
         const sortedRows = [...rows].sort((a, b) => {
           const aVal = Number(a.querySelector(".MKTCAP").dataset.raw || 0);
@@ -402,7 +444,7 @@
           });
         });
 
-        // ===== 쿠키 상태로 북마크 초기 렌더링 =====
+        // ===== 북마크 초기 렌더링 =====
         const bookmarked = new Set(getBookmarks());
         rows.forEach((row) => {
           const code = row.dataset.code;

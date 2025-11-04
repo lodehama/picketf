@@ -62,12 +62,11 @@
 }
 
 
-
-/* hover가 항상 위에 오도록 강화 */
-.table > tbody > tr:hover > * {
+/* 강조색 우선 => 다음 hover가 위에 오도록 강화 */
+.table.etf > tbody > tr:hover > td:not(.hl-green):not(.hl-red) {
   background-color: #F2F4F6 !important;
-  --bs-table-accent-bg: #F2F4F6 !important; /* 내부변수까지 덮기 */
-  z-index: 1; /* 레이어 우선순위 */
+  --bs-table-accent-bg: #F2F4F6 !important;
+  z-index: 1;
 }
 
 /* 부드러운 전환 */

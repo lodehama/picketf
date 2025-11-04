@@ -4,7 +4,7 @@
 
 <mapper namespace="EtfMapper">
 
-  <!-- 특정 코드의 TER 조회 (etf_ter DB 연동을 위해 만듦) -->
+  <!-- 특정 코드의 TER 조회 (etf_real_cost DB 연동을 위해 만듦) -->
   <select id="selectEtfRealCostByCode" parameterType="string" resultType="double">
     SELECT etf_real_cost
     FROM etf

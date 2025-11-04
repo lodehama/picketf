@@ -50,6 +50,18 @@
   --bs-table-accent-bg: transparent !important;
 }
 
+/* ↓ 줄무늬 정의들 아래쪽에 추가 */
+.table.etf tbody td.hl-green {
+  background-color: #DFF5E1 !important; /* 연한 초록 */
+  font-weight: 700;
+}
+
+.table.etf tbody td.hl-red {
+  background-color: #FFE3E3 !important; /* 연한 빨강 */
+  /* font-weight: 700; */
+}
+
+
 
 /* hover가 항상 위에 오도록 강화 */
 .table > tbody > tr:hover > * {

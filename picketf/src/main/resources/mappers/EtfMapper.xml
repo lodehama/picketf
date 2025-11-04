@@ -4,11 +4,24 @@
 
 <mapper namespace="EtfMapper">
 
-  <!-- 특정 코드의 TER 조회 (etf_real_cost DB 연동을 위해) -->
+  <!-- 실부담비용 단일 조회 -->
   <select id="selectEtfRealCostByCode" parameterType="string" resultType="double">
     SELECT etf_real_cost
     FROM etf
     WHERE etf_code = #{code}
+  </select>
+
+  <!-- 코드 목록의 메타 조회: etf_code, etf_leverage, etf_fx_hedged -->
+  <select id="selectEtfMetaByCodes" parameterType="list" resultType="com.hama.picketf.dto.EtfMetaDTO">
+    SELECT
+      etf_code   AS etfCode,
+      etf_leverage AS etfLeverage,
+      etf_fx_hedged AS etfFxHedged
+    FROM etf
+    WHERE etf_code IN
+    <foreach collection="list" item="code" open="(" separator="," close=")">
+      #{code}
+    </foreach>
   </select>
 
 </mapper>

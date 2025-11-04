@@ -11,6 +11,12 @@
     <div class="mb-2">
       <strong>기준일자: 추후에 DB에서 가져오기</strong>
 
+      <div class="d-flex gap-2 mb-2" id="etf-filter-bar">
+        <button class="btn btn-light border active" id="btn-basic" type="button">기본</button>
+        <button class="btn btn-light border" id="btn-hedged" type="button">환헷지</button>
+        <button class="btn btn-light border" id="btn-leverage" type="button">레버리지</button>
+      </div>
+
       <table class="table etf">
         <thead>
           <tr>
@@ -293,11 +299,9 @@
         };
 
         // ===== 데이터 채우기 =====
-        // ★ 수정: 1억 미만은 x만원, 1억 이상은 억/조 단위 표시
+        // 1억 미만은 x만원, 1억 이상은 억/조 단위 표시
         const formatKoreanWon = (num) => {
           if (num === null || num === undefined) return "-";
-
-          // 숫자로 변환 (콤마, 공백 제거)
           const n = Number(String(num).replace(/[^\d.-]/g, ""));
           if (isNaN(n) || n === 0) return "-";
 
@@ -305,25 +309,15 @@
           const billion = 1_0000_0000;      // 1억
           const tenThousand = 10_000;       // 1만
 
-          // 1조 이상
           if (n >= trillion) {
             const 조 = Math.floor(n / trillion);
             const 억 = Math.floor((n % trillion) / billion);
             return `${조}조${억 > 0 ? " " + 억.toLocaleString() + "억원" : ""}`;
-          }
-
-          // 10억 이상
-          else if (n >= 10 * billion) {
+          } else if (n >= 10 * billion) {
             return `${Math.floor(n / billion).toLocaleString()}억원`;
-          }
-
-          // 1억 이상 ~ 10억 미만 → x.x억
-          else if (n >= billion) {
+          } else if (n >= billion) {
             return `${(n / billion).toFixed(1)}억원`;
-          }
-
-          // 1억 미만 → x만원
-          else {
+          } else {
             return `${Math.floor(n / tenThousand).toLocaleString()}만원`;
           }
         };
@@ -336,20 +330,18 @@
           });
         };
 
-        // 1) 공통 포맷터
+        // 포맷터
         const fmtCommaInt = (n) => Number(n).toLocaleString("ko-KR", { maximumFractionDigits: 0 });
         const fmtCommaFloat = (n, digits = 2) => Number(n).toLocaleString("ko-KR", { minimumFractionDigits: digits, maximumFractionDigits: digits });
         const fmtPercent = (n, digits = 2) => `${Number(n).toFixed(digits)}%`;
 
-        // 기존 함수 유지: formatKoreanWon, toNum ...
+        // 어떤 키에 어떤 포맷
+        const keysToFormatWon = ["MKTCAP", "ACC_TRDVAL"]; // 조/억/만/원
+        const keysToFormatCommaI = ["TDD_CLSPRC"];        // 종가 정수 콤마
+        const keysToFormatCommaF = ["NAV"];               // NAV 소수 콤마
+        const keysToFormatPercent = ["FLUC_RT"];          // 등락률 %
 
-        // 2) 어떤 키에 어떤 포맷을 적용할지 정의
-        const keysToFormatWon = ["MKTCAP", "ACC_TRDVAL"];              // 조/억/만/원
-        const keysToFormatCommaI = ["TDD_CLSPRC"];                        // 정수 콤마 (종가)
-        const keysToFormatCommaF = ["NAV"];                               // 소수 콤마 (NAV)
-        const keysToFormatPercent = ["FLUC_RT"];                           // 퍼센트 (등락률)
-
-        // 3) 렌더링 루프
+        // 렌더링 루프
         rows.forEach((row) => {
           const code = row.dataset.code;
           const data = allData[code] || {};
@@ -377,7 +369,7 @@
 
             if (keysToFormatCommaF.includes(k)) {
               const n = toNum(raw);
-              el.textContent = isNaN(n) ? "-" : fmtCommaFloat(n, 2); // 필요시 자리수 조정
+              el.textContent = isNaN(n) ? "-" : fmtCommaFloat(n, 2);
               el.dataset.raw = isNaN(n) ? "0" : String(n);
               return;
             }
@@ -405,6 +397,120 @@
           }
         });
 
+        // ===== 필터 상태/버튼 =====
+        const filterState = { mode: "basic", hedged: false, leveraged: false };
+        const $btnBasic = document.getElementById("btn-basic");
+        const $btnHedged = document.getElementById("btn-hedged");
+        const $btnLeverage = document.getElementById("btn-leverage");
+
+        // ===== (중요) DB 기준 메타 불러오기: etf_leverage, etf_fx_hedged =====
+        // 없으면 넘어가되, 있으면 사용하여 필터 정확히 적용
+        let metaMap = {};
+        try {
+          const metaRes = await fetch(`/api/etf/meta?codes=${codes}`);
+          if (metaRes.ok) metaMap = await metaRes.json(); // {"360750": {etf_leverage:1.0, etf_fx_hedged:0}, ...}
+        } catch (_) { /* optional */ }
+
+        // ===== 각 행에 DB 값으로 태그 심기 =====
+        rows.forEach((row) => {
+          const code = row.dataset.code;
+
+          const levRaw = Number(
+            (metaMap[code]?.etf_leverage) ??
+            (allData[code]?.etf_leverage) ??
+            (allData[code]?.ETF_LEVERAGE) ?? 1
+          );
+          const hedgedRaw = Number(
+            (metaMap[code]?.etf_fx_hedged) ??
+            (allData[code]?.etf_fx_hedged) ??
+            (allData[code]?.ETF_FX_HEDGED) ?? 0
+          );
+
+          const isLeveraged = levRaw > 1.0;
+          const isHedged = hedgedRaw === 1;
+
+          row.dataset.leveraged = isLeveraged ? "1" : "0";
+          row.dataset.hedged = isHedged ? "1" : "0";
+        });
+
+        // ===== 필터 적용 및 버튼 렌더 =====
+        function applyFilter() {
+          rows.forEach((row) => {
+            const isLev = row.dataset.leveraged === "1";
+            const isHed = row.dataset.hedged === "1";
+            let show = true;
+
+            if (filterState.mode === "basic") {
+              // 기본 = 비헷지 & 무레버리지 만 보기
+              show = (!isHed && !isLev);
+            } else {
+              if (filterState.hedged) show = show && isHed;
+              if (filterState.leveraged) show = show && isLev;
+            }
+            row.style.display = show ? "" : "none";
+          });
+        }
+
+        function renderButtons() {
+          // 모든 버튼 초기화
+          [$btnBasic, $btnHedged, $btnLeverage].forEach(b => {
+            b.classList.remove("active", "btn-primary", "btn-light", "opacity-75");
+          });
+
+          if (filterState.mode === "basic") {
+            // 기본 탭을 파란색으로 강조
+            $btnBasic.classList.add("btn-primary", "active");
+            // 나머지는 연하게 표시 (클릭 가능)
+            [$btnHedged, $btnLeverage].forEach(b => {
+              b.classList.add("btn-light", "opacity-75");
+            });
+          } else {
+            // 커스텀 모드: 선택된 필터만 강조
+            $btnBasic.classList.add("btn-light");
+            if (filterState.hedged)
+              $btnHedged.classList.add("btn-primary", "active");
+            else
+              $btnHedged.classList.add("btn-light");
+
+            if (filterState.leveraged)
+              $btnLeverage.classList.add("btn-primary", "active");
+            else
+              $btnLeverage.classList.add("btn-light");
+          }
+        }
+
+        // 버튼 이벤트
+        $btnBasic.addEventListener("click", () => {
+          filterState.mode = "basic";
+          filterState.hedged = false;
+          filterState.leveraged = false;
+          renderButtons(); applyFilter();
+        });
+
+        $btnHedged.addEventListener("click", () => {
+          if (filterState.mode === "basic") {
+            filterState.mode = "custom";
+            filterState.hedged = true;
+            filterState.leveraged = false;
+          } else {
+            filterState.hedged = !filterState.hedged;
+            if (!filterState.hedged && !filterState.leveraged) filterState.mode = "basic";
+          }
+          renderButtons(); applyFilter();
+        });
+
+        $btnLeverage.addEventListener("click", () => {
+          if (filterState.mode === "basic") {
+            filterState.mode = "custom";
+            filterState.hedged = false;
+            filterState.leveraged = true;
+          } else {
+            filterState.leveraged = !filterState.leveraged;
+            if (!filterState.hedged && !filterState.leveraged) filterState.mode = "basic";
+          }
+          renderButtons(); applyFilter();
+        });
+
         // ===== etf_real_cost (DB에서 가져오기) =====
         for (const row of rows) {
           const code = row.dataset.code;
@@ -423,8 +529,7 @@
           }
         }
 
-        // ===== 기본 정렬 (시가총액 내림차순) =====
-        // ※ 기본을 '거래대금'으로 바꾸고 싶으면 .MKTCAP → .ACC_TRDVAL 로 변경
+        // 기본 정렬 (시가총액 내림차순)
         const tbody = document.querySelector("tbody");
         const sortedRows = [...rows].sort((a, b) => {
           const aVal = Number(a.querySelector(".MKTCAP").dataset.raw || 0);
@@ -434,7 +539,7 @@
         sortedRows.forEach((r) => tbody.appendChild(r));
         updateRowNumbers();
 
-        // ===== 헤더 클릭 정렬 =====
+        // 헤더 클릭 정렬
         const table = document.querySelector("table");
         const headers = Array.from(table.querySelectorAll("th"));
         const ascPreferred = ["종목명", "실부담비용", "괴리율"];
@@ -460,7 +565,7 @@
           });
         });
 
-        // ===== 북마크 초기 렌더링 =====
+        // 북마크 초기 렌더링
         const bookmarked = new Set(getBookmarks());
         rows.forEach((row) => {
           const code = row.dataset.code;
@@ -472,7 +577,11 @@
           icon.style.color = "#FFD43B";
         });
 
-        // ===== 북마크 클릭 이벤트 =====
+        // 필터 초기 적용
+        renderButtons();
+        applyFilter();
+
+        // 북마크 클릭 이벤트
         document.addEventListener("click", (e) => {
           const icon = e.target.closest(".bi-bookmark, .bi-bookmark-fill");
           if (!icon) return;
@@ -495,6 +604,7 @@
         });
       });
     </script>
+
 </main>
 
 </html>

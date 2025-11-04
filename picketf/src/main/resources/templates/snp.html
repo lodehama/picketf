@@ -560,21 +560,54 @@
         const headers = Array.from(table.querySelectorAll("th"));
         const ascPreferred = ["종목명", "실부담비용", "괴리율"];
 
+        // 공통 비교값 추출기: dataset.raw 우선, 없으면 텍스트 파싱
+        function getComparable(td) {
+          // 1) data-raw가 있으면 그걸 숫자로 사용
+          if (td && td.dataset && td.dataset.raw != null && td.dataset.raw !== "") {
+            const n = Number(String(td.dataset.raw).replace(/[^\d.-]/g, ""));
+            if (!Number.isNaN(n)) return n;
+          }
+
+          // 2) 텍스트 fallback (%, 원 등 기호 제거)
+          const txt = (td?.textContent ?? "").trim();
+          // 퍼센트, 원화 기호, 콤마, 공백 제거
+          const cleaned = txt.replace(/[,%\s원]/g, "");
+
+          // 숫자면 숫자로
+          const asNum = Number(cleaned);
+          if (!Number.isNaN(asNum)) return asNum;
+
+          // 그 외는 문자열 비교용
+          return txt;
+        }
+
         headers.forEach((th, idx) => {
           th.style.cursor = "pointer";
           let asc = ascPreferred.includes(th.textContent.trim());
+
           th.addEventListener("click", () => {
             const rowsArr = Array.from(tbody.querySelectorAll("tr"));
-            const isNumeric = (val) => !isNaN(parseFloat(val)) && isFinite(val);
+
             rowsArr.sort((a, b) => {
-              const aText = a.children[idx].textContent.replace(/[,%원억조]/g, "").trim();
-              const bText = b.children[idx].textContent.replace(/[,%원억조]/g, "").trim();
-              if (isNumeric(aText) && isNumeric(bText)) {
-                return asc ? aText - bText : bText - aText;
-              } else {
-                return asc ? aText.localeCompare(bText, "ko") : bText.localeCompare(aText, "ko");
+              const av = getComparable(a.children[idx]);
+              const bv = getComparable(b.children[idx]);
+
+              const aNum = typeof av === "number";
+              const bNum = typeof bv === "number";
+
+              if (aNum && bNum) {
+                return asc ? av - bv : bv - av;
               }
+              // 하나만 숫자면 숫자를 우선
+              if (aNum && !bNum) return asc ? -1 : 1;
+              if (!aNum && bNum) return asc ? 1 : -1;
+
+              // 둘 다 문자열
+              return asc
+                ? String(av).localeCompare(String(bv), "ko")
+                : String(bv).localeCompare(String(av), "ko");
             });
+
             rowsArr.forEach((r) => tbody.appendChild(r));
             asc = !asc;
             updateRowNumbers();

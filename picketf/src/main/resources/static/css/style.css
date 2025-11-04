@@ -33,10 +33,23 @@
 }
 
 /* 홀수 행 색 */
-.table > tbody > tr:nth-of-type(odd) > * {
+/* .table > tbody > tr:nth-of-type(odd) > * {
   background-color: #F9FAFB !important;
-  --bs-table-accent-bg: transparent !important; /* 내부 변수 영향 제거 */
+  --bs-table-accent-bg: transparent !important;
+} */
+
+/* 먼저 전부 초기화 */
+.table.etf tbody tr > * {
+  background-color: transparent !important;
+  --bs-table-accent-bg: transparent !important;
 }
+
+/* 보이는 행에만 JS가 붙이는 zebra */
+.table > tbody > tr.zebra > * {
+  background-color: #F9FAFB !important;
+  --bs-table-accent-bg: transparent !important;
+}
+
 
 /* hover가 항상 위에 오도록 강화 */
 .table > tbody > tr:hover > * {

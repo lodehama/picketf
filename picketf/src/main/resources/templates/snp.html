@@ -270,7 +270,33 @@
         const res = await fetch(`/api/krx?codes=${codes}`);
         const allData = await res.json();
 
-        // 날짜 포맷 정규화 함수 (유지)
+        // ===== 유틸: 보이는 행 / 재번호 / 줄무늬 =====
+        const tbody = document.querySelector("tbody");
+
+        function getVisibleRows() {
+          return Array.from(tbody.querySelectorAll("tr"))
+            .filter(r => r.style.display !== "none");
+        }
+
+        function renumberVisibleRows() {
+          // 2번째 셀에 1..N 번호를 "가시 행" 기준으로 부여
+          const vis = getVisibleRows();
+          vis.forEach((row, i) => {
+            const rankCell = row.querySelector("td:nth-child(2)");
+            if (rankCell) rankCell.textContent = i + 1;
+          });
+        }
+
+        function applyZebraVisibleOnly() {
+          // 모두 해제 후 가시 행 기준으로 1,3,5…번째 행에 zebra 클래스
+          Array.from(tbody.querySelectorAll("tr")).forEach(r => r.classList.remove("zebra"));
+          const vis = getVisibleRows();
+          vis.forEach((row, i) => {
+            if (i % 2 === 0) row.classList.add("zebra");
+          });
+        }
+
+        // ===== 날짜 포맷 =====
         function normalizeBasDd(v) {
           if (!v) return null;
           const s = String(v).trim();
@@ -293,7 +319,7 @@
           return isNaN(n) ? NaN : n;
         };
 
-        // ===== 북마크 쿠키 유틸 =====
+        // ===== 북마크 쿠키 =====
         const COOKIE_KEY = "etfBookmarks";
         const getBookmarks = () => {
           const raw = document.cookie.split("; ").find(s => s.startsWith(COOKIE_KEY + "="));
@@ -308,17 +334,23 @@
           document.cookie = `${COOKIE_KEY}=${val}; Max-Age=${maxAge}; Path=/; SameSite=Lax`;
         };
 
-        // ===== 데이터 채우기 =====
-        // 1억 미만은 x만원, 1억 이상은 억/조 단위 표시
+        // ===== 포맷터 =====
+        const fmtCommaInt = (n) => Number(n).toLocaleString("ko-KR", { maximumFractionDigits: 0 });
+        const fmtCommaFloat = (n, d = 2) => Number(n).toLocaleString("ko-KR", { minimumFractionDigits: d, maximumFractionDigits: d });
+        const fmtPercent = (n, d = 2) => `${Number(n).toFixed(d)}%`;
+
+        const keysToFormatWon = ["MKTCAP", "ACC_TRDVAL"];
+        const keysToFormatCommaI = ["TDD_CLSPRC"];
+        const keysToFormatCommaF = ["NAV"];
+        const keysToFormatPercent = ["FLUC_RT"];
+
         const formatKoreanWon = (num) => {
           if (num === null || num === undefined) return "-";
           const n = Number(String(num).replace(/[^\d.-]/g, ""));
           if (isNaN(n) || n === 0) return "-";
-
           const trillion = 1_0000_0000_0000; // 1조
           const billion = 1_0000_0000;      // 1억
-          const tenThousand = 10_000;       // 1만
-
+          const tenThou = 10_000;           // 1만
           if (n >= trillion) {
             const 조 = Math.floor(n / trillion);
             const 억 = Math.floor((n % trillion) / billion);
@@ -328,30 +360,11 @@
           } else if (n >= billion) {
             return `${(n / billion).toFixed(1)}억원`;
           } else {
-            return `${Math.floor(n / tenThousand).toLocaleString()}만원`;
+            return `${Math.floor(n / tenThou).toLocaleString()}만원`;
           }
         };
 
-        const updateRowNumbers = () => {
-          const tbody = document.querySelector("tbody");
-          Array.from(tbody.querySelectorAll("tr")).forEach((row, i) => {
-            const rankCell = row.querySelector("td:nth-child(2)");
-            if (rankCell) rankCell.textContent = i + 1;
-          });
-        };
-
-        // 포맷터
-        const fmtCommaInt = (n) => Number(n).toLocaleString("ko-KR", { maximumFractionDigits: 0 });
-        const fmtCommaFloat = (n, digits = 2) => Number(n).toLocaleString("ko-KR", { minimumFractionDigits: digits, maximumFractionDigits: digits });
-        const fmtPercent = (n, digits = 2) => `${Number(n).toFixed(digits)}%`;
-
-        // 어떤 키에 어떤 포맷
-        const keysToFormatWon = ["MKTCAP", "ACC_TRDVAL"]; // 조/억/만/원
-        const keysToFormatCommaI = ["TDD_CLSPRC"];        // 종가 정수 콤마
-        const keysToFormatCommaF = ["NAV"];               // NAV 소수 콤마
-        const keysToFormatPercent = ["FLUC_RT"];          // 등락률 %
-
-        // 렌더링 루프
+        // ===== 렌더링 =====
         rows.forEach((row) => {
           const code = row.dataset.code;
           const data = allData[code] || {};
@@ -362,11 +375,7 @@
 
             const raw = data[k];
 
-            // === BAS_DD 셀만 yyyy-MM-dd로 표기 ===
-            if (k === "BAS_DD") {
-              el.textContent = normalizeBasDd(raw) ?? "-";
-              return;
-            }
+            if (k === "BAS_DD") { el.textContent = normalizeBasDd(raw) ?? "-"; return; }
 
             if (keysToFormatWon.includes(k)) {
               if (raw != null && String(raw).trim() !== "") {
@@ -375,21 +384,18 @@
               } else { el.textContent = "-"; el.dataset.raw = "0"; }
               return;
             }
-
             if (keysToFormatCommaI.includes(k)) {
               const n = toNum(raw);
               el.textContent = isNaN(n) ? "-" : fmtCommaInt(n);
               el.dataset.raw = isNaN(n) ? "0" : String(n);
               return;
             }
-
             if (keysToFormatCommaF.includes(k)) {
               const n = toNum(raw);
               el.textContent = isNaN(n) ? "-" : fmtCommaFloat(n, 2);
               el.dataset.raw = isNaN(n) ? "0" : String(n);
               return;
             }
-
             if (keysToFormatPercent.includes(k)) {
               const n = toNum(raw);
               el.textContent = isNaN(n) ? "-" : fmtPercent(n, 2);
@@ -397,11 +403,10 @@
               return;
             }
 
-            // 기본값
             el.textContent = raw ?? "-";
           });
 
-          // 괴리율 계산
+          // 괴리율
           const elPrem = row.querySelector(".premium");
           if (elPrem) {
             const nav = toNum(data["NAV"]);
@@ -413,24 +418,21 @@
           }
         });
 
-        // ===== 필터 상태/버튼 =====
+        // ===== 필터 버튼/상태 =====
         const filterState = { mode: "basic", hedged: false, leveraged: false };
         const $btnBasic = document.getElementById("btn-basic");
         const $btnHedged = document.getElementById("btn-hedged");
         const $btnLeverage = document.getElementById("btn-leverage");
 
-        // ===== (중요) DB 기준 메타 불러오기: etf_leverage, etf_fx_hedged =====
-        // 없으면 넘어가되, 있으면 사용하여 필터 정확히 적용
+        // (선택) 메타 정보
         let metaMap = {};
         try {
           const metaRes = await fetch(`/api/etf/meta?codes=${codes}`);
-          if (metaRes.ok) metaMap = await metaRes.json(); // {"360750": {etf_leverage:1.0, etf_fx_hedged:0}, ...}
-        } catch (_) { /* optional */ }
+          if (metaRes.ok) metaMap = await metaRes.json();
+        } catch { }
 
-        // ===== 각 행에 DB 값으로 태그 심기 =====
         rows.forEach((row) => {
           const code = row.dataset.code;
-
           const levRaw = Number(
             (metaMap[code]?.etf_leverage) ??
             (allData[code]?.etf_leverage) ??
@@ -441,23 +443,16 @@
             (allData[code]?.etf_fx_hedged) ??
             (allData[code]?.ETF_FX_HEDGED) ?? 0
           );
-
-          const isLeveraged = levRaw > 1.0;
-          const isHedged = hedgedRaw === 1;
-
-          row.dataset.leveraged = isLeveraged ? "1" : "0";
-          row.dataset.hedged = isHedged ? "1" : "0";
+          row.dataset.leveraged = (levRaw > 1.0) ? "1" : "0";
+          row.dataset.hedged = (hedgedRaw === 1) ? "1" : "0";
         });
 
-        // ===== 필터 적용 및 버튼 렌더 =====
         function applyFilter() {
           rows.forEach((row) => {
             const isLev = row.dataset.leveraged === "1";
             const isHed = row.dataset.hedged === "1";
             let show = true;
-
             if (filterState.mode === "basic") {
-              // 기본 = 비헷지 & 무레버리지 만 보기
               show = (!isHed && !isLev);
             } else {
               if (filterState.hedged) show = show && isHed;
@@ -465,33 +460,23 @@
             }
             row.style.display = show ? "" : "none";
           });
+          // 필터 후 재번호 + 줄무늬
+          renumberVisibleRows();
+          applyZebraVisibleOnly();
         }
 
         function renderButtons() {
-          // 모든 버튼 초기화
           [$btnBasic, $btnHedged, $btnLeverage].forEach(b => {
             b.classList.remove("active", "btn-primary", "btn-light", "opacity-75");
           });
 
           if (filterState.mode === "basic") {
-            // 기본 탭을 파란색으로 강조
             $btnBasic.classList.add("btn-primary", "active");
-            // 나머지는 연하게 표시 (클릭 가능)
-            [$btnHedged, $btnLeverage].forEach(b => {
-              b.classList.add("btn-light", "opacity-75");
-            });
+            [$btnHedged, $btnLeverage].forEach(b => b.classList.add("btn-light", "opacity-75"));
           } else {
-            // 커스텀 모드: 선택된 필터만 강조
             $btnBasic.classList.add("btn-light");
-            if (filterState.hedged)
-              $btnHedged.classList.add("btn-primary", "active");
-            else
-              $btnHedged.classList.add("btn-light");
-
-            if (filterState.leveraged)
-              $btnLeverage.classList.add("btn-primary", "active");
-            else
-              $btnLeverage.classList.add("btn-light");
+            if (filterState.hedged) $btnHedged.classList.add("btn-primary", "active"); else $btnHedged.classList.add("btn-light");
+            if (filterState.leveraged) $btnLeverage.classList.add("btn-primary", "active"); else $btnLeverage.classList.add("btn-light");
           }
         }
 
@@ -502,7 +487,6 @@
           filterState.leveraged = false;
           renderButtons(); applyFilter();
         });
-
         $btnHedged.addEventListener("click", () => {
           if (filterState.mode === "basic") {
             filterState.mode = "custom";
@@ -514,7 +498,6 @@
           }
           renderButtons(); applyFilter();
         });
-
         $btnLeverage.addEventListener("click", () => {
           if (filterState.mode === "basic") {
             filterState.mode = "custom";
@@ -527,57 +510,44 @@
           renderButtons(); applyFilter();
         });
 
-        // ===== etf_real_cost (DB에서 가져오기) =====
+        // ===== 실부담비용 =====
         for (const row of rows) {
           const code = row.dataset.code;
           const terCell = row.querySelector(".etf_real_cost");
           try {
             const res = await fetch(`/api/etf/real-cost?code=${code}`);
-            if (!res.ok) {
-              terCell.textContent = "-";
-              continue;
-            }
+            if (!res.ok) { terCell.textContent = "-"; continue; }
             const ter = await res.json();
             terCell.textContent = ter !== null ? `${ter.toFixed(3)}%` : "-";
-          } catch (err) {
-            console.error("TER fetch error:", err);
+          } catch {
             terCell.textContent = "-";
           }
         }
 
-        // 기본 정렬 (시가총액 내림차순)
-        const tbody = document.querySelector("tbody");
+        // ===== 초기 정렬: 시총 내림차순 =====
         const sortedRows = [...rows].sort((a, b) => {
           const aVal = Number(a.querySelector(".MKTCAP").dataset.raw || 0);
           const bVal = Number(b.querySelector(".MKTCAP").dataset.raw || 0);
           return bVal - aVal;
         });
         sortedRows.forEach((r) => tbody.appendChild(r));
-        updateRowNumbers();
+        renumberVisibleRows();
+        applyZebraVisibleOnly();
 
-        // 헤더 클릭 정렬
+        // ===== 헤더 클릭 정렬 =====
         const table = document.querySelector("table");
         const headers = Array.from(table.querySelectorAll("th"));
         const ascPreferred = ["종목명", "실부담비용", "괴리율"];
 
-        // 공통 비교값 추출기: dataset.raw 우선, 없으면 텍스트 파싱
         function getComparable(td) {
-          // 1) data-raw가 있으면 그걸 숫자로 사용
           if (td && td.dataset && td.dataset.raw != null && td.dataset.raw !== "") {
             const n = Number(String(td.dataset.raw).replace(/[^\d.-]/g, ""));
             if (!Number.isNaN(n)) return n;
           }
-
-          // 2) 텍스트 fallback (%, 원 등 기호 제거)
           const txt = (td?.textContent ?? "").trim();
-          // 퍼센트, 원화 기호, 콤마, 공백 제거
           const cleaned = txt.replace(/[,%\s원]/g, "");
-
-          // 숫자면 숫자로
           const asNum = Number(cleaned);
           if (!Number.isNaN(asNum)) return asNum;
-
-          // 그 외는 문자열 비교용
           return txt;
         }
 
@@ -587,34 +557,26 @@
 
           th.addEventListener("click", () => {
             const rowsArr = Array.from(tbody.querySelectorAll("tr"));
-
             rowsArr.sort((a, b) => {
               const av = getComparable(a.children[idx]);
               const bv = getComparable(b.children[idx]);
-
               const aNum = typeof av === "number";
               const bNum = typeof bv === "number";
-
-              if (aNum && bNum) {
-                return asc ? av - bv : bv - av;
-              }
-              // 하나만 숫자면 숫자를 우선
+              if (aNum && bNum) return asc ? av - bv : bv - av;
               if (aNum && !bNum) return asc ? -1 : 1;
               if (!aNum && bNum) return asc ? 1 : -1;
-
-              // 둘 다 문자열
-              return asc
-                ? String(av).localeCompare(String(bv), "ko")
+              return asc ? String(av).localeCompare(String(bv), "ko")
                 : String(bv).localeCompare(String(av), "ko");
             });
-
             rowsArr.forEach((r) => tbody.appendChild(r));
             asc = !asc;
-            updateRowNumbers();
+            // 정렬 후 재번호 + 줄무늬
+            renumberVisibleRows();
+            applyZebraVisibleOnly();
           });
         });
 
-        // 북마크 초기 렌더링
+        // ===== 북마크 초기 렌더링 =====
         const bookmarked = new Set(getBookmarks());
         rows.forEach((row) => {
           const code = row.dataset.code;
@@ -626,11 +588,11 @@
           icon.style.color = "#FFD43B";
         });
 
-        // 필터 초기 적용
+        // ===== 필터 초기 적용 =====
         renderButtons();
         applyFilter();
 
-        // 북마크 클릭 이벤트
+        // ===== 북마크 토글 =====
         document.addEventListener("click", (e) => {
           const icon = e.target.closest(".bi-bookmark, .bi-bookmark-fill");
           if (!icon) return;
@@ -653,7 +615,6 @@
         });
       });
     </script>
-
 </main>
 
 </html>

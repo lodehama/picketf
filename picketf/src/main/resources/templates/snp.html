@@ -35,7 +35,7 @@
             <td></td>
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
-            <td class="etf_ter">-</td>
+            <td class="etf_real_cost">-</td>
             <!-- <td>0.021%</td> -->
             <td class="TDD_CLSPRC">-</td>
             <td class="FLUC_RT">-</td>
@@ -52,7 +52,7 @@
             <td></td>
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
-            <td class="etf_ter">-</td>
+            <td class="etf_real_cost">-</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="FLUC_RT">-</td>
             <td class="NAV">-</td>
@@ -68,7 +68,7 @@
             <td></td>
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
-            <td class="etf_ter">-</td>
+            <td class="etf_real_cost">-</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="FLUC_RT">-</td>
             <td class="NAV">-</td>
@@ -172,12 +172,12 @@
           }
         });
 
-        // ===== etf_ter (DB에서 가져오기) =====
+        // ===== etf_real_cost (DB에서 가져오기) =====
         for (const row of rows) {
           const code = row.dataset.code;
-          const terCell = row.querySelector(".etf_ter");
+          const terCell = row.querySelector(".etf_real_cost");
           try {
-            const res = await fetch(`/api/etf/ter?code=${code}`);
+            const res = await fetch(`/api/etf/real-cost?code=${code}`);
             if (!res.ok) {
               terCell.textContent = "-";
               continue;

@@ -10,7 +10,7 @@ public class EtfService {
 
   private final EtfDAO etfDAO;
 
-  public Double getEtfTerByCode(String code) {
-    return etfDAO.selectEtfTerByCode(code);
+  public Double getEtfRealCostByCode(String code) {
+    return etfDAO.selectEtfRealCostByCode(code);
   }
 }

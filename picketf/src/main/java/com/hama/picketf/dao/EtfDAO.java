@@ -12,7 +12,7 @@ public class EtfDAO {
   @Autowired
   private SqlSession sqlSession;
 
-  public Double selectEtfTerByCode(String code) {
-    return sqlSession.selectOne(NAMESPACE + "selectEtfTerByCode", code);
+  public Double selectEtfRealCostByCode(String code) {
+    return sqlSession.selectOne(NAMESPACE + "selectEtfRealCostByCode", code);
   }
 }

@@ -13,9 +13,9 @@ public class EtfController {
 
   private final EtfService etfService;
 
-  // 예: /api/etf/ter?code=379800
-  @GetMapping("/api/etf/ter")
-  public Double getEtfTer(@RequestParam String code) {
-    return etfService.getEtfTerByCode(code);
+  // 예: /api/etf/real-cost?code=379800
+  @GetMapping("/api/etf/real-cost")
+  public Double getEtfRealCost(@RequestParam String code) {
+    return etfService.getEtfRealCostByCode(code);
   }
 }

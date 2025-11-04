@@ -9,7 +9,7 @@ public class EtfDTO {
     private String etfCode;
     private String etfName;
     private String etfIssuer;
-    private Double etfTer;
+    private Double etfRealCost;
     private Double etfLeverage;
     private Boolean etfFxHedged;
 }

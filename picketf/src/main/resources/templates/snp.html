@@ -266,398 +266,405 @@
       </table>
     </div>
     <script>
-  document.addEventListener("DOMContentLoaded", async () => {
-    const rows = Array.from(document.querySelectorAll("tr[data-code]"));
-    const codes = rows.map((r) => r.dataset.code).join(",");
-    const res = await fetch(`/api/krx?codes=${codes}`);
-    const allData = await res.json();
+      document.addEventListener("DOMContentLoaded", async () => {
+        const rows = Array.from(document.querySelectorAll("tr[data-code]"));
+        const codes = rows.map((r) => r.dataset.code).join(",");
+        const res = await fetch(`/api/krx?codes=${codes}`);
+        const allData = await res.json();
 
-    // ===== 유틸: 보이는 행 / 재번호 / 줄무늬 =====
-    const tbody = document.querySelector("tbody");
+        // ===== 유틸: 보이는 행 / 재번호 / 줄무늬 =====
+        const tbody = document.querySelector("tbody");
 
-    function getVisibleRows() {
-      return Array.from(tbody.querySelectorAll("tr")).filter(r => r.style.display !== "none");
-    }
-
-    function renumberVisibleRows() {
-      const vis = getVisibleRows();
-      vis.forEach((row, i) => {
-        const rankCell = row.querySelector("td:nth-child(2)");
-        if (rankCell) rankCell.textContent = i + 1;
-      });
-    }
-
-    function applyZebraVisibleOnly() {
-      Array.from(tbody.querySelectorAll("tr")).forEach(r => r.classList.remove("zebra"));
-      const vis = getVisibleRows();
-      vis.forEach((row, i) => {
-        if (i % 2 === 0) row.classList.add("zebra"); // 1,3,5...행(시각적 홀수)에 칠하기
-      });
-    }
-
-    // ===== 날짜 포맷 =====
-    function normalizeBasDd(v) {
-      if (!v) return null;
-      const s = String(v).trim();
-      if (/^\d{8}$/.test(s)) return `${s.slice(0, 4)}-${s.slice(4, 6)}-${s.slice(6, 8)}`;
-      const m = s.match(/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})$/);
-      if (m) return `${m[1]}-${m[2].padStart(2, "0")}-${m[3].padStart(2, "0")}`;
-      return s;
-    }
-
-    const dtoKeys = [
-      "BAS_DD", "ISU_CD", "ISU_NM", "TDD_CLSPRC", "CMPPREVDD_PRC", "FLUC_RT", "NAV",
-      "TDD_OPNPRC", "TDD_HGPRC", "TDD_LWPRC", "ACC_TRDVOL", "ACC_TRDVAL", "MKTCAP",
-      "INVSTASST_NETASST_TOTAMT", "LIST_SHRS", "IDX_IND_NM", "OBJ_STKPRC_IDX", "CMPPREVDD_IDX", "FLUC_RT_IDX",
-    ];
-
-    const toNum = (v) => {
-      if (v === null || v === undefined) return NaN;
-      const s = String(v).replace(/,/g, "").trim();
-      const n = Number(s);
-      return isNaN(n) ? NaN : n;
-    };
-
-    // ===== 북마크 쿠키 =====
-    const COOKIE_KEY = "etfBookmarks";
-    const getBookmarks = () => {
-      const raw = document.cookie.split("; ").find(s => s.startsWith(COOKIE_KEY + "="));
-      if (!raw) return [];
-      try { return JSON.parse(decodeURIComponent(raw.split("=")[1])) || []; }
-      catch { return []; }
-    };
-    const setBookmarks = (list) => {
-      const uniq = Array.from(new Set(list));
-      const val = encodeURIComponent(JSON.stringify(uniq));
-      const maxAge = 60 * 60 * 24 * 365 * 5; // 5년
-      document.cookie = `${COOKIE_KEY}=${val}; Max-Age=${maxAge}; Path=/; SameSite=Lax`;
-    };
-
-    // ===== 포맷터 =====
-    const fmtCommaInt = (n) => Number(n).toLocaleString("ko-KR", { maximumFractionDigits: 0 });
-    const fmtCommaFloat = (n, d = 2) => Number(n).toLocaleString("ko-KR", { minimumFractionDigits: d, maximumFractionDigits: d });
-    const fmtPercent = (n, d = 2) => `${Number(n).toFixed(d)}%`;
-
-    const keysToFormatWon = ["MKTCAP", "ACC_TRDVAL"];
-    const keysToFormatCommaI = ["TDD_CLSPRC"];
-    const keysToFormatCommaF = ["NAV"];
-    const keysToFormatPercent = ["FLUC_RT"];
-
-    const formatKoreanWon = (num) => {
-      if (num === null || num === undefined) return "-";
-      const n = Number(String(num).replace(/[^\d.-]/g, ""));
-      if (isNaN(n) || n === 0) return "-";
-      const trillion = 1_0000_0000_0000; // 1조
-      const billion  = 1_0000_0000;      // 1억
-      const tenThou  = 10_000;           // 1만
-      if (n >= trillion) {
-        const 조 = Math.floor(n / trillion);
-        const 억 = Math.floor((n % trillion) / billion);
-        return `${조}조${억 > 0 ? " " + 억.toLocaleString() + "억원" : ""}`;
-      } else if (n >= 10 * billion) {
-        return `${Math.floor(n / billion).toLocaleString()}억원`;
-      } else if (n >= billion) {
-        return `${(n / billion).toFixed(1)}억원`;
-      } else {
-        return `${Math.floor(n / tenThou).toLocaleString()}만원`;
-      }
-    };
-
-    // ===== 렌더링 =====
-    rows.forEach((row) => {
-      const code = row.dataset.code;
-      const data = allData[code] || {};
-
-      dtoKeys.forEach((k) => {
-        const el = row.querySelector(`.${k}`);
-        if (!el) return;
-
-        const raw = data[k];
-
-        if (k === "BAS_DD") { el.textContent = normalizeBasDd(raw) ?? "-"; return; }
-
-        if (keysToFormatWon.includes(k)) {
-          if (raw != null && String(raw).trim() !== "") {
-            el.textContent = formatKoreanWon(raw);
-            el.dataset.raw = String(raw).replace(/,/g, "");
-          } else { el.textContent = "-"; el.dataset.raw = "0"; }
-          return;
-        }
-        if (keysToFormatCommaI.includes(k)) {
-          const n = toNum(raw);
-          el.textContent = isNaN(n) ? "-" : fmtCommaInt(n);
-          el.dataset.raw = isNaN(n) ? "0" : String(n);
-          return;
-        }
-        if (keysToFormatCommaF.includes(k)) {
-          const n = toNum(raw);
-          el.textContent = isNaN(n) ? "-" : fmtCommaFloat(n, 2);
-          el.dataset.raw = isNaN(n) ? "0" : String(n);
-          return;
-        }
-        if (keysToFormatPercent.includes(k)) {
-          const n = toNum(raw);
-          el.textContent = isNaN(n) ? "-" : fmtPercent(n, 2);
-          el.dataset.raw = isNaN(n) ? "0" : String(n);
-          return;
+        function getVisibleRows() {
+          return Array.from(tbody.querySelectorAll("tr")).filter(r => r.style.display !== "none");
         }
 
-        el.textContent = raw ?? "-";
-      });
-
-      // 괴리율
-      const elPrem = row.querySelector(".premium");
-      if (elPrem) {
-        const nav   = toNum(allData[row.dataset.code]?.NAV);
-        const close = toNum(allData[row.dataset.code]?.TDD_CLSPRC);
-        elPrem.textContent =
-          !isNaN(nav) && nav !== 0 && !isNaN(close)
-            ? (((close - nav) / nav) * 100).toFixed(2) + "%"
-            : "-";
-      }
-    });
-
-    // ===== 필터 버튼/상태 =====
-    const filterState = { mode: "basic", hedged: false, leveraged: false };
-    const $btnBasic    = document.getElementById("btn-basic");
-    const $btnHedged   = document.getElementById("btn-hedged");
-    const $btnLeverage = document.getElementById("btn-leverage");
-
-    // (선택) 메타 정보
-    let metaMap = {};
-    try {
-      const metaRes = await fetch(`/api/etf/meta?codes=${codes}`);
-      if (metaRes.ok) metaMap = await metaRes.json();
-    } catch {}
-
-    rows.forEach((row) => {
-      const code = row.dataset.code;
-      const levRaw = Number(
-        (metaMap[code]?.etf_leverage) ??
-        (allData[code]?.etf_leverage) ??
-        (allData[code]?.ETF_LEVERAGE) ?? 1
-      );
-      const hedgedRaw = Number(
-        (metaMap[code]?.etf_fx_hedged) ??
-        (allData[code]?.etf_fx_hedged) ??
-        (allData[code]?.ETF_FX_HEDGED) ?? 0
-      );
-      row.dataset.leveraged = (levRaw > 1.0) ? "1" : "0";
-      row.dataset.hedged   = (hedgedRaw === 1) ? "1" : "0";
-    });
-
-    // ===== 하이라이트 (가시 행 기준, 정확히 3개) =====
-    function clearHighlights() {
-      tbody.querySelectorAll('.etf_real_cost, .MKTCAP').forEach(td => {
-        td.classList.remove('hl-green','hl-red');
-        td.style.fontWeight = '';
-      });
-    }
-
-    function highlightTopBottom() {
-      const vis = getVisibleRows();
-      if (vis.length === 0) return;
-
-      // 실부담비용(%) 파싱
-      const costArr = vis.map(r => {
-        const td = r.querySelector('.etf_real_cost');
-        if (!td) return null;
-        const val = Number(String(td.textContent).replace(/[^\d.-]/g, "")); // % 제거 후 숫자
-        return Number.isFinite(val) ? { td, val } : null;
-      }).filter(Boolean);
-
-      const low3  = [...costArr].sort((a,b)=> a.val - b.val).slice(0, 3);
-      const high3 = [...costArr].sort((a,b)=> b.val - a.val).slice(0, 3);
-
-      // 낮은 3개: 연초록 + Bold
-      low3.forEach(({td}) => { td.classList.add('hl-green'); td.style.fontWeight = '700'; });
-      // 높은 3개: 연빨강(볼드는 적용 안 함)
-      high3.forEach(({td}) => { td.classList.add('hl-red'); });
-
-      // 시가총액 상위 3개
-      const capArr = vis.map(r => {
-        const td = r.querySelector('.MKTCAP');
-        if (!td) return null;
-        const raw = td.dataset?.raw ?? td.textContent;
-        const val = Number(String(raw).replace(/[^\d.-]/g, ""));
-        return Number.isFinite(val) ? { td, val } : null;
-      }).filter(Boolean);
-
-      const capTop3 = [...capArr].sort((a,b)=> b.val - a.val).slice(0, 3);
-      capTop3.forEach(({td}) => { td.classList.add('hl-green'); td.style.fontWeight = '700'; });
-    }
-
-    function repaintAll() {
-      renumberVisibleRows();
-      applyZebraVisibleOnly();
-      clearHighlights();
-      highlightTopBottom();
-    }
-
-    function applyFilter() {
-      rows.forEach((row) => {
-        const isLev = row.dataset.leveraged === "1";
-        const isHed = row.dataset.hedged === "1";
-        let show = true;
-        if (filterState.mode === "basic") {
-          show = (!isHed && !isLev);
-        } else {
-          if (filterState.hedged)    show = show && isHed;
-          if (filterState.leveraged) show = show && isLev;
+        function renumberVisibleRows() {
+          const vis = getVisibleRows();
+          vis.forEach((row, i) => {
+            const rankCell = row.querySelector("td:nth-child(2)");
+            if (rankCell) rankCell.textContent = i + 1;
+          });
         }
-        row.style.display = show ? "" : "none";
-      });
-      repaintAll();
-    }
 
-    function renderButtons() {
-      [$btnBasic, $btnHedged, $btnLeverage].forEach(b => {
-        b.classList.remove("active", "btn-primary", "btn-light", "opacity-75");
-      });
+        function applyZebraVisibleOnly() {
+          Array.from(tbody.querySelectorAll("tr")).forEach(r => r.classList.remove("zebra"));
+          const vis = getVisibleRows();
+          vis.forEach((row, i) => {
+            if (i % 2 === 0) row.classList.add("zebra"); // 1,3,5...행(시각적 홀수)에 칠하기
+          });
+        }
 
-      if (filterState.mode === "basic") {
-        $btnBasic.classList.add("btn-primary", "active");
-        [$btnHedged, $btnLeverage].forEach(b => b.classList.add("btn-light", "opacity-75"));
-      } else {
-        $btnBasic.classList.add("btn-light");
-        if (filterState.hedged)    $btnHedged.classList.add("btn-primary", "active"); else $btnHedged.classList.add("btn-light");
-        if (filterState.leveraged) $btnLeverage.classList.add("btn-primary", "active"); else $btnLeverage.classList.add("btn-light");
-      }
-    }
+        // ===== 날짜 포맷 =====
+        function normalizeBasDd(v) {
+          if (!v) return null;
+          const s = String(v).trim();
+          if (/^\d{8}$/.test(s)) return `${s.slice(0, 4)}-${s.slice(4, 6)}-${s.slice(6, 8)}`;
+          const m = s.match(/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})$/);
+          if (m) return `${m[1]}-${m[2].padStart(2, "0")}-${m[3].padStart(2, "0")}`;
+          return s;
+        }
 
-    // 버튼 이벤트
-    $btnBasic.addEventListener("click", () => {
-      filterState.mode = "basic";
-      filterState.hedged = false;
-      filterState.leveraged = false;
-      renderButtons(); applyFilter();
-    });
-    $btnHedged.addEventListener("click", () => {
-      if (filterState.mode === "basic") {
-        filterState.mode = "custom";
-        filterState.hedged = true;
-        filterState.leveraged = false;
-      } else {
-        filterState.hedged = !filterState.hedged;
-        if (!filterState.hedged && !filterState.leveraged) filterState.mode = "basic";
-      }
-      renderButtons(); applyFilter();
-    });
-    $btnLeverage.addEventListener("click", () => {
-      if (filterState.mode === "basic") {
-        filterState.mode = "custom";
-        filterState.hedged = false;
-        filterState.leveraged = true;
-      } else {
-        filterState.leveraged = !filterState.leveraged;
-        if (!filterState.hedged && !filterState.leveraged) filterState.mode = "basic";
-      }
-      renderButtons(); applyFilter();
-    });
+        const dtoKeys = [
+          "BAS_DD", "ISU_CD", "ISU_NM", "TDD_CLSPRC", "CMPPREVDD_PRC", "FLUC_RT", "NAV",
+          "TDD_OPNPRC", "TDD_HGPRC", "TDD_LWPRC", "ACC_TRDVOL", "ACC_TRDVAL", "MKTCAP",
+          "INVSTASST_NETASST_TOTAMT", "LIST_SHRS", "IDX_IND_NM", "OBJ_STKPRC_IDX", "CMPPREVDD_IDX", "FLUC_RT_IDX",
+        ];
 
-    // ===== etf_real_cost(실부담비용) 채우기 =====
-    for (const row of rows) {
-      const code = row.dataset.code;
-      const terCell = row.querySelector(".etf_real_cost");
-      try {
-        const res = await fetch(`/api/etf/real-cost?code=${code}`);
-        if (!res.ok) { terCell.textContent = "-"; continue; }
-        const ter = await res.json();
-        terCell.textContent = ter !== null ? `${ter.toFixed(3)}%` : "-";
-      } catch {
-        terCell.textContent = "-";
-      }
-    }
+        const toNum = (v) => {
+          if (v === null || v === undefined) return NaN;
+          const s = String(v).replace(/,/g, "").trim();
+          const n = Number(s);
+          return isNaN(n) ? NaN : n;
+        };
 
-    // ===== 초기 정렬: 시총 내림차순 =====
-    const sortedRows = [...rows].sort((a, b) => {
-      const aVal = Number(a.querySelector(".MKTCAP").dataset.raw || 0);
-      const bVal = Number(b.querySelector(".MKTCAP").dataset.raw || 0);
-      return bVal - aVal;
-    });
-    sortedRows.forEach((r) => tbody.appendChild(r));
-    repaintAll(); // 초기에도 번호/줄무늬/강조 모두 적용
+        // ===== 북마크 쿠키 =====
+        const COOKIE_KEY = "etfBookmarks";
+        const getBookmarks = () => {
+          const raw = document.cookie.split("; ").find(s => s.startsWith(COOKIE_KEY + "="));
+          if (!raw) return [];
+          try { return JSON.parse(decodeURIComponent(raw.split("=")[1])) || []; }
+          catch { return []; }
+        };
+        const setBookmarks = (list) => {
+          const uniq = Array.from(new Set(list));
+          const val = encodeURIComponent(JSON.stringify(uniq));
+          const maxAge = 60 * 60 * 24 * 365 * 5; // 5년
+          document.cookie = `${COOKIE_KEY}=${val}; Max-Age=${maxAge}; Path=/; SameSite=Lax`;
+        };
 
-    // ===== 헤더 클릭 정렬 =====
-    const table = document.querySelector("table");
-    const headers = Array.from(table.querySelectorAll("th"));
-    const ascPreferred = ["종목명", "실부담비용", "괴리율"];
+        // ===== 포맷터 =====
+        const fmtCommaInt = (n) => Number(n).toLocaleString("ko-KR", { maximumFractionDigits: 0 });
+        const fmtCommaFloat = (n, d = 2) => Number(n).toLocaleString("ko-KR", { minimumFractionDigits: d, maximumFractionDigits: d });
+        const fmtPercent = (n, d = 2) => `${Number(n).toFixed(d)}%`;
 
-    function getComparable(td) {
-      if (td && td.dataset && td.dataset.raw != null && td.dataset.raw !== "") {
-        const n = Number(String(td.dataset.raw).replace(/[^\d.-]/g, ""));
-        if (!Number.isNaN(n)) return n;
-      }
-      const txt = (td?.textContent ?? "").trim();
-      const cleaned = txt.replace(/[,%\s원]/g, "");
-      const asNum = Number(cleaned);
-      if (!Number.isNaN(asNum)) return asNum;
-      return txt;
-    }
+        const keysToFormatWon = ["MKTCAP", "ACC_TRDVAL"];
+        const keysToFormatCommaI = ["TDD_CLSPRC"];
+        const keysToFormatCommaF = ["NAV"];
+        const keysToFormatPercent = ["FLUC_RT"];
 
-    headers.forEach((th, idx) => {
-      th.style.cursor = "pointer";
-      let asc = ascPreferred.includes(th.textContent.trim());
+        const formatKoreanWon = (num) => {
+          if (num === null || num === undefined) return "-";
+          const n = Number(String(num).replace(/[^\d.-]/g, ""));
+          if (isNaN(n) || n === 0) return "-";
+          const trillion = 1_0000_0000_0000; // 1조
+          const billion = 1_0000_0000;      // 1억
+          const tenThou = 10_000;           // 1만
+          if (n >= trillion) {
+            const 조 = Math.floor(n / trillion);
+            const 억 = Math.floor((n % trillion) / billion);
+            return `${조}조${억 > 0 ? " " + 억.toLocaleString() + "억원" : ""}`;
+          } else if (n >= 10 * billion) {
+            return `${Math.floor(n / billion).toLocaleString()}억원`;
+          } else if (n >= billion) {
+            return `${(n / billion).toFixed(1)}억원`;
+          } else {
+            return `${Math.floor(n / tenThou).toLocaleString()}만원`;
+          }
+        };
 
-      th.addEventListener("click", () => {
-        const rowsArr = Array.from(tbody.querySelectorAll("tr"));
-        rowsArr.sort((a, b) => {
-          const av = getComparable(a.children[idx]);
-          const bv = getComparable(b.children[idx]);
-          const aNum = typeof av === "number";
-          const bNum = typeof bv === "number";
-          if (aNum && bNum) return asc ? av - bv : bv - av;
-          if (aNum && !bNum) return asc ? -1 : 1;
-          if (!aNum && bNum) return asc ? 1 : -1;
-          return asc ? String(av).localeCompare(String(bv), "ko")
-                     : String(bv).localeCompare(String(av), "ko");
+        // ===== 렌더링 =====
+        rows.forEach((row) => {
+          const code = row.dataset.code;
+          const data = allData[code] || {};
+
+          dtoKeys.forEach((k) => {
+            const el = row.querySelector(`.${k}`);
+            if (!el) return;
+
+            const raw = data[k];
+
+            if (k === "BAS_DD") { el.textContent = normalizeBasDd(raw) ?? "-"; return; }
+
+            if (keysToFormatWon.includes(k)) {
+              if (raw != null && String(raw).trim() !== "") {
+                el.textContent = formatKoreanWon(raw);
+                el.dataset.raw = String(raw).replace(/,/g, "");
+              } else { el.textContent = "-"; el.dataset.raw = "0"; }
+              return;
+            }
+            if (keysToFormatCommaI.includes(k)) {
+              const n = toNum(raw);
+              el.textContent = isNaN(n) ? "-" : fmtCommaInt(n);
+              el.dataset.raw = isNaN(n) ? "0" : String(n);
+              return;
+            }
+            if (keysToFormatCommaF.includes(k)) {
+              const n = toNum(raw);
+              el.textContent = isNaN(n) ? "-" : fmtCommaFloat(n, 2);
+              el.dataset.raw = isNaN(n) ? "0" : String(n);
+              return;
+            }
+            if (keysToFormatPercent.includes(k)) {
+              const n = toNum(raw);
+              el.textContent = isNaN(n) ? "-" : fmtPercent(n, 2);
+              el.dataset.raw = isNaN(n) ? "0" : String(n);
+              return;
+            }
+
+            el.textContent = raw ?? "-";
+          });
+
+          // 괴리율
+          const elPrem = row.querySelector(".premium");
+          if (elPrem) {
+            const nav = toNum(allData[row.dataset.code]?.NAV);
+            const close = toNum(allData[row.dataset.code]?.TDD_CLSPRC);
+            elPrem.textContent =
+              !isNaN(nav) && nav !== 0 && !isNaN(close)
+                ? (((close - nav) / nav) * 100).toFixed(2) + "%"
+                : "-";
+          }
         });
-        rowsArr.forEach((r) => tbody.appendChild(r));
-        asc = !asc;
 
-        repaintAll(); // 정렬 후에도 전부 갱신
+        // ===== 필터 버튼/상태 =====
+        const filterState = { mode: "basic", hedged: false, leveraged: false };
+        const $btnBasic = document.getElementById("btn-basic");
+        const $btnHedged = document.getElementById("btn-hedged");
+        const $btnLeverage = document.getElementById("btn-leverage");
+
+        // (선택) 메타 정보
+        let metaMap = {};
+        try {
+          const metaRes = await fetch(`/api/etf/meta?codes=${codes}`);
+          if (metaRes.ok) metaMap = await metaRes.json();
+        } catch { }
+
+        rows.forEach((row) => {
+          const code = row.dataset.code;
+          const levRaw = Number(
+            (metaMap[code]?.etf_leverage) ??
+            (allData[code]?.etf_leverage) ??
+            (allData[code]?.ETF_LEVERAGE) ?? 1
+          );
+          const hedgedRaw = Number(
+            (metaMap[code]?.etf_fx_hedged) ??
+            (allData[code]?.etf_fx_hedged) ??
+            (allData[code]?.ETF_FX_HEDGED) ?? 0
+          );
+          row.dataset.leveraged = (levRaw > 1.0) ? "1" : "0";
+          row.dataset.hedged = (hedgedRaw === 1) ? "1" : "0";
+        });
+
+        // ===== 하이라이트 (가시 행 기준, 정확히 3개) =====
+        function clearHighlights() {
+          tbody.querySelectorAll('.etf_real_cost, .MKTCAP').forEach(td => {
+            td.classList.remove('hl-green', 'hl-red');
+            td.style.fontWeight = '';
+          });
+        }
+
+        function highlightTopBottom() {
+          const vis = getVisibleRows();
+          if (vis.length === 0) return;
+
+          // 실부담비용(%) 파싱
+          const costArr = vis.map(r => {
+            const td = r.querySelector('.etf_real_cost');
+            if (!td) return null;
+            const val = Number(String(td.textContent).replace(/[^\d.-]/g, "")); // % 제거 후 숫자
+            return Number.isFinite(val) ? { td, val } : null;
+          }).filter(Boolean);
+
+          // 비교 대상이 3개 이하이면 색/볼드 모두 주지 않음
+          if (costArr.length >= 4) {
+            const low3 = [...costArr].sort((a, b) => a.val - b.val).slice(0, 3);
+            const high3 = [...costArr].sort((a, b) => b.val - a.val).slice(0, 3);
+
+            // 낮은 3개: 연초록 + Bold
+            low3.forEach(({ td }) => { td.classList.add('hl-green'); td.style.fontWeight = '700'; });
+            // 높은 3개: 연빨강(볼드 없음)
+            high3.forEach(({ td }) => { td.classList.add('hl-red'); });
+          }
+
+
+          // 시가총액 상위 3개
+          const capArr = vis.map(r => {
+            const td = r.querySelector('.MKTCAP');
+            if (!td) return null;
+            const raw = td.dataset?.raw ?? td.textContent;
+            const val = Number(String(raw).replace(/[^\d.-]/g, ""));
+            return Number.isFinite(val) ? { td, val } : null;
+          }).filter(Boolean);
+
+          // 시총도 3개 이하이면 색/볼드 없음
+          if (capArr.length >= 4) {
+            const capTop3 = [...capArr].sort((a, b) => b.val - a.val).slice(0, 3);
+            capTop3.forEach(({ td }) => { td.classList.add('hl-green'); td.style.fontWeight = '700'; });
+          }
+        }
+
+        function repaintAll() {
+          renumberVisibleRows();
+          applyZebraVisibleOnly();
+          clearHighlights();
+          highlightTopBottom();
+        }
+
+        function applyFilter() {
+          rows.forEach((row) => {
+            const isLev = row.dataset.leveraged === "1";
+            const isHed = row.dataset.hedged === "1";
+            let show = true;
+            if (filterState.mode === "basic") {
+              show = (!isHed && !isLev);
+            } else {
+              if (filterState.hedged) show = show && isHed;
+              if (filterState.leveraged) show = show && isLev;
+            }
+            row.style.display = show ? "" : "none";
+          });
+          repaintAll();
+        }
+
+        function renderButtons() {
+          [$btnBasic, $btnHedged, $btnLeverage].forEach(b => {
+            b.classList.remove("active", "btn-primary", "btn-light", "opacity-75");
+          });
+
+          if (filterState.mode === "basic") {
+            $btnBasic.classList.add("btn-primary", "active");
+            [$btnHedged, $btnLeverage].forEach(b => b.classList.add("btn-light", "opacity-75"));
+          } else {
+            $btnBasic.classList.add("btn-light");
+            if (filterState.hedged) $btnHedged.classList.add("btn-primary", "active"); else $btnHedged.classList.add("btn-light");
+            if (filterState.leveraged) $btnLeverage.classList.add("btn-primary", "active"); else $btnLeverage.classList.add("btn-light");
+          }
+        }
+
+        // 버튼 이벤트
+        $btnBasic.addEventListener("click", () => {
+          filterState.mode = "basic";
+          filterState.hedged = false;
+          filterState.leveraged = false;
+          renderButtons(); applyFilter();
+        });
+        $btnHedged.addEventListener("click", () => {
+          if (filterState.mode === "basic") {
+            filterState.mode = "custom";
+            filterState.hedged = true;
+            filterState.leveraged = false;
+          } else {
+            filterState.hedged = !filterState.hedged;
+            if (!filterState.hedged && !filterState.leveraged) filterState.mode = "basic";
+          }
+          renderButtons(); applyFilter();
+        });
+        $btnLeverage.addEventListener("click", () => {
+          if (filterState.mode === "basic") {
+            filterState.mode = "custom";
+            filterState.hedged = false;
+            filterState.leveraged = true;
+          } else {
+            filterState.leveraged = !filterState.leveraged;
+            if (!filterState.hedged && !filterState.leveraged) filterState.mode = "basic";
+          }
+          renderButtons(); applyFilter();
+        });
+
+        // ===== etf_real_cost(실부담비용) 채우기 =====
+        for (const row of rows) {
+          const code = row.dataset.code;
+          const terCell = row.querySelector(".etf_real_cost");
+          try {
+            const res = await fetch(`/api/etf/real-cost?code=${code}`);
+            if (!res.ok) { terCell.textContent = "-"; continue; }
+            const ter = await res.json();
+            terCell.textContent = ter !== null ? `${ter.toFixed(3)}%` : "-";
+          } catch {
+            terCell.textContent = "-";
+          }
+        }
+
+        // ===== 초기 정렬: 시총 내림차순 =====
+        const sortedRows = [...rows].sort((a, b) => {
+          const aVal = Number(a.querySelector(".MKTCAP").dataset.raw || 0);
+          const bVal = Number(b.querySelector(".MKTCAP").dataset.raw || 0);
+          return bVal - aVal;
+        });
+        sortedRows.forEach((r) => tbody.appendChild(r));
+        repaintAll(); // 초기에도 번호/줄무늬/강조 모두 적용
+
+        // ===== 헤더 클릭 정렬 =====
+        const table = document.querySelector("table");
+        const headers = Array.from(table.querySelectorAll("th"));
+        const ascPreferred = ["종목명", "실부담비용", "괴리율"];
+
+        function getComparable(td) {
+          if (td && td.dataset && td.dataset.raw != null && td.dataset.raw !== "") {
+            const n = Number(String(td.dataset.raw).replace(/[^\d.-]/g, ""));
+            if (!Number.isNaN(n)) return n;
+          }
+          const txt = (td?.textContent ?? "").trim();
+          const cleaned = txt.replace(/[,%\s원]/g, "");
+          const asNum = Number(cleaned);
+          if (!Number.isNaN(asNum)) return asNum;
+          return txt;
+        }
+
+        headers.forEach((th, idx) => {
+          th.style.cursor = "pointer";
+          let asc = ascPreferred.includes(th.textContent.trim());
+
+          th.addEventListener("click", () => {
+            const rowsArr = Array.from(tbody.querySelectorAll("tr"));
+            rowsArr.sort((a, b) => {
+              const av = getComparable(a.children[idx]);
+              const bv = getComparable(b.children[idx]);
+              const aNum = typeof av === "number";
+              const bNum = typeof bv === "number";
+              if (aNum && bNum) return asc ? av - bv : bv - av;
+              if (aNum && !bNum) return asc ? -1 : 1;
+              if (!aNum && bNum) return asc ? 1 : -1;
+              return asc ? String(av).localeCompare(String(bv), "ko")
+                : String(bv).localeCompare(String(av), "ko");
+            });
+            rowsArr.forEach((r) => tbody.appendChild(r));
+            asc = !asc;
+
+            repaintAll(); // 정렬 후에도 전부 갱신
+          });
+        });
+
+        // ===== 북마크 초기 렌더링 =====
+        const bookmarked = new Set(getBookmarks());
+        rows.forEach((row) => {
+          const code = row.dataset.code;
+          if (!code || !bookmarked.has(code)) return;
+          const icon = row.querySelector(".bi-bookmark, .bi-bookmark-fill");
+          if (!icon) return;
+          icon.classList.remove("bi-bookmark");
+          icon.classList.add("bi-bookmark-fill");
+          icon.style.color = "#FFD43B";
+        });
+
+        // ===== 필터 초기 적용 =====
+        renderButtons();
+        applyFilter();
+
+        // ===== 북마크 토글 =====
+        document.addEventListener("click", (e) => {
+          const icon = e.target.closest(".bi-bookmark, .bi-bookmark-fill");
+          if (!icon) return;
+          const row = icon.closest("tr[data-code]");
+          if (!row) return;
+          const code = row.dataset.code;
+          if (!code) return;
+
+          const cur = new Set(getBookmarks());
+          if (icon.classList.contains("bi-bookmark")) {
+            icon.classList.replace("bi-bookmark", "bi-bookmark-fill");
+            icon.style.color = "#FFD43B";
+            cur.add(code);
+          } else {
+            icon.classList.replace("bi-bookmark-fill", "bi-bookmark");
+            icon.style.color = "#B0B0B0";
+            cur.delete(code);
+          }
+          setBookmarks([...cur]);
+        });
       });
-    });
-
-    // ===== 북마크 초기 렌더링 =====
-    const bookmarked = new Set(getBookmarks());
-    rows.forEach((row) => {
-      const code = row.dataset.code;
-      if (!code || !bookmarked.has(code)) return;
-      const icon = row.querySelector(".bi-bookmark, .bi-bookmark-fill");
-      if (!icon) return;
-      icon.classList.remove("bi-bookmark");
-      icon.classList.add("bi-bookmark-fill");
-      icon.style.color = "#FFD43B";
-    });
-
-    // ===== 필터 초기 적용 =====
-    renderButtons();
-    applyFilter();
-
-    // ===== 북마크 토글 =====
-    document.addEventListener("click", (e) => {
-      const icon = e.target.closest(".bi-bookmark, .bi-bookmark-fill");
-      if (!icon) return;
-      const row = icon.closest("tr[data-code]");
-      if (!row) return;
-      const code = row.dataset.code;
-      if (!code) return;
-
-      const cur = new Set(getBookmarks());
-      if (icon.classList.contains("bi-bookmark")) {
-        icon.classList.replace("bi-bookmark", "bi-bookmark-fill");
-        icon.style.color = "#FFD43B";
-        cur.add(code);
-      } else {
-        icon.classList.replace("bi-bookmark-fill", "bi-bookmark");
-        icon.style.color = "#B0B0B0";
-        cur.delete(code);
-      }
-      setBookmarks([...cur]);
-    });
-  });
-</script>
+    </script>
 
 
 </main>

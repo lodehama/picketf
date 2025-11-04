@@ -293,22 +293,38 @@
         };
 
         // ===== 데이터 채우기 =====
-        // ★ 변경: 원화 축약 포맷 공통 함수 (조/억/만/원)
+        // ★ 수정: 1억 미만은 x만원, 1억 이상은 억/조 단위 표시
         const formatKoreanWon = (num) => {
-          const n = Number(String(num).replace(/,/g, "").trim());
-          if (isNaN(n)) return "-";
+          if (num === null || num === undefined) return "-";
+
+          // 숫자로 변환 (콤마, 공백 제거)
+          const n = Number(String(num).replace(/[^\d.-]/g, ""));
+          if (isNaN(n) || n === 0) return "-";
+
           const trillion = 1_0000_0000_0000; // 1조
           const billion = 1_0000_0000;      // 1억
+          const tenThousand = 10_000;       // 1만
+
+          // 1조 이상
           if (n >= trillion) {
             const 조 = Math.floor(n / trillion);
             const 억 = Math.floor((n % trillion) / billion);
-            return `${조}조${억 > 0 ? " " + 억.toLocaleString() + "억원" : "원"}`;
-          } else if (n >= billion) {
+            return `${조}조${억 > 0 ? " " + 억.toLocaleString() + "억원" : ""}`;
+          }
+
+          // 10억 이상
+          else if (n >= 10 * billion) {
             return `${Math.floor(n / billion).toLocaleString()}억원`;
-          } else if (n >= 10_000) {
-            return `${Math.floor(n / 10_000).toLocaleString()}만원`;
-          } else {
-            return `${n.toLocaleString()}원`;
+          }
+
+          // 1억 이상 ~ 10억 미만 → x.x억
+          else if (n >= billion) {
+            return `${(n / billion).toFixed(1)}억원`;
+          }
+
+          // 1억 미만 → x만원
+          else {
+            return `${Math.floor(n / tenThousand).toLocaleString()}만원`;
           }
         };
 

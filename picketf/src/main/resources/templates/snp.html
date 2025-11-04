@@ -11,7 +11,7 @@
     <div class="mb-2">
       <p><strong>기본 정렬 기준은 시가총액 내림차순</strong></p>
       <p><strong>항목별 데이터 출처 확인하기</strong></p>
-      
+
 
       <div class="d-flex gap-2 mb-2" id="etf-filter-bar">
         <button class="btn btn-light border active" id="btn-basic" type="button">기본</button>
@@ -276,8 +276,7 @@
     const tbody = document.querySelector("tbody");
 
     function getVisibleRows() {
-      return Array.from(tbody.querySelectorAll("tr"))
-        .filter(r => r.style.display !== "none");
+      return Array.from(tbody.querySelectorAll("tr")).filter(r => r.style.display !== "none");
     }
 
     function renumberVisibleRows() {
@@ -292,7 +291,7 @@
       Array.from(tbody.querySelectorAll("tr")).forEach(r => r.classList.remove("zebra"));
       const vis = getVisibleRows();
       vis.forEach((row, i) => {
-        if (i % 2 === 0) row.classList.add("zebra"); // 홀수행(1,3,5...)을 칠하려면 i%2===0 유지
+        if (i % 2 === 0) row.classList.add("zebra"); // 1,3,5...행(시각적 홀수)에 칠하기
       });
     }
 
@@ -349,8 +348,8 @@
       const n = Number(String(num).replace(/[^\d.-]/g, ""));
       if (isNaN(n) || n === 0) return "-";
       const trillion = 1_0000_0000_0000; // 1조
-      const billion = 1_0000_0000;      // 1억
-      const tenThou = 10_000;           // 1만
+      const billion  = 1_0000_0000;      // 1억
+      const tenThou  = 10_000;           // 1만
       if (n >= trillion) {
         const 조 = Math.floor(n / trillion);
         const 억 = Math.floor((n % trillion) / billion);
@@ -409,7 +408,7 @@
       // 괴리율
       const elPrem = row.querySelector(".premium");
       if (elPrem) {
-        const nav = toNum(allData[row.dataset.code]?.NAV);
+        const nav   = toNum(allData[row.dataset.code]?.NAV);
         const close = toNum(allData[row.dataset.code]?.TDD_CLSPRC);
         elPrem.textContent =
           !isNaN(nav) && nav !== 0 && !isNaN(close)
@@ -420,8 +419,8 @@
 
     // ===== 필터 버튼/상태 =====
     const filterState = { mode: "basic", hedged: false, leveraged: false };
-    const $btnBasic = document.getElementById("btn-basic");
-    const $btnHedged = document.getElementById("btn-hedged");
+    const $btnBasic    = document.getElementById("btn-basic");
+    const $btnHedged   = document.getElementById("btn-hedged");
     const $btnLeverage = document.getElementById("btn-leverage");
 
     // (선택) 메타 정보
@@ -429,7 +428,7 @@
     try {
       const metaRes = await fetch(`/api/etf/meta?codes=${codes}`);
       if (metaRes.ok) metaMap = await metaRes.json();
-    } catch { }
+    } catch {}
 
     rows.forEach((row) => {
       const code = row.dataset.code;
@@ -444,67 +443,49 @@
         (allData[code]?.ETF_FX_HEDGED) ?? 0
       );
       row.dataset.leveraged = (levRaw > 1.0) ? "1" : "0";
-      row.dataset.hedged = (hedgedRaw === 1) ? "1" : "0";
+      row.dataset.hedged   = (hedgedRaw === 1) ? "1" : "0";
     });
 
-    // ===== 강조 초기화 & 재적용 =====
-    // 1) 초기화
-function clearHighlights() {
-  tbody.querySelectorAll('.etf_real_cost, .MKTCAP').forEach(td => {
-    td.classList.remove('hl');       // 배경/볼드 제거
-    td.style.fontWeight = '';        // 혹시 남아있으면 지우기
-  });
-}
-
-// 2) 다시 칠하기
-function highlightTopBottom() {
-  const rowsArr = getVisibleRows();
-
-  // 실부담비용 (낮은 3개 → 연한 초록 / 높은 3개 → 연한 빨강)
-  const costCells = rowsArr
-    .map(r => {
-      const txt = r.querySelector('.etf_real_cost')?.textContent ?? '';
-      const val = toNum(txt.replace('%', ''));
-      return { row: r, val };
-    })
-    .filter(o => !isNaN(o.val))
-    .sort((a, b) => a.val - b.val);
-
-  // 낮은 3개 → 초록
-  costCells.slice(0, 3).forEach(o => {
-    const cell = o.row.querySelector('.etf_real_cost');
-    if (cell) {
-      cell.classList.add('hl-green');
+    // ===== 하이라이트 (가시 행 기준, 정확히 3개) =====
+    function clearHighlights() {
+      tbody.querySelectorAll('.etf_real_cost, .MKTCAP').forEach(td => {
+        td.classList.remove('hl-green','hl-red');
+        td.style.fontWeight = '';
+      });
     }
-  });
 
-  // 높은 3개 → 빨강
-  costCells.slice(-3).forEach(o => {
-    const cell = o.row.querySelector('.etf_real_cost');
-    if (cell) {
-      cell.classList.add('hl-red');
+    function highlightTopBottom() {
+      const vis = getVisibleRows();
+      if (vis.length === 0) return;
+
+      // 실부담비용(%) 파싱
+      const costArr = vis.map(r => {
+        const td = r.querySelector('.etf_real_cost');
+        if (!td) return null;
+        const val = Number(String(td.textContent).replace(/[^\d.-]/g, "")); // % 제거 후 숫자
+        return Number.isFinite(val) ? { td, val } : null;
+      }).filter(Boolean);
+
+      const low3  = [...costArr].sort((a,b)=> a.val - b.val).slice(0, 3);
+      const high3 = [...costArr].sort((a,b)=> b.val - a.val).slice(0, 3);
+
+      // 낮은 3개: 연초록 + Bold
+      low3.forEach(({td}) => { td.classList.add('hl-green'); td.style.fontWeight = '700'; });
+      // 높은 3개: 연빨강(볼드는 적용 안 함)
+      high3.forEach(({td}) => { td.classList.add('hl-red'); });
+
+      // 시가총액 상위 3개
+      const capArr = vis.map(r => {
+        const td = r.querySelector('.MKTCAP');
+        if (!td) return null;
+        const raw = td.dataset?.raw ?? td.textContent;
+        const val = Number(String(raw).replace(/[^\d.-]/g, ""));
+        return Number.isFinite(val) ? { td, val } : null;
+      }).filter(Boolean);
+
+      const capTop3 = [...capArr].sort((a,b)=> b.val - a.val).slice(0, 3);
+      capTop3.forEach(({td}) => { td.classList.add('hl-green'); td.style.fontWeight = '700'; });
     }
-  });
-
-  // 시가총액 (높은 3개 → 연한 초록)
-  const mktCells = rowsArr
-    .map(r => {
-      const raw = r.querySelector('.MKTCAP')?.dataset.raw ?? '';
-      const val = toNum(raw);
-      return { row: r, val };
-    })
-    .filter(o => !isNaN(o.val))
-    .sort((a, b) => b.val - a.val);
-
-  mktCells.slice(0, 3).forEach(o => {
-    const cell = o.row.querySelector('.MKTCAP');
-    if (cell) {
-      cell.classList.add('hl-green');
-    }
-  });
-}
-
-
 
     function repaintAll() {
       renumberVisibleRows();
@@ -521,7 +502,7 @@ function highlightTopBottom() {
         if (filterState.mode === "basic") {
           show = (!isHed && !isLev);
         } else {
-          if (filterState.hedged) show = show && isHed;
+          if (filterState.hedged)    show = show && isHed;
           if (filterState.leveraged) show = show && isLev;
         }
         row.style.display = show ? "" : "none";
@@ -539,7 +520,7 @@ function highlightTopBottom() {
         [$btnHedged, $btnLeverage].forEach(b => b.classList.add("btn-light", "opacity-75"));
       } else {
         $btnBasic.classList.add("btn-light");
-        if (filterState.hedged) $btnHedged.classList.add("btn-primary", "active"); else $btnHedged.classList.add("btn-light");
+        if (filterState.hedged)    $btnHedged.classList.add("btn-primary", "active"); else $btnHedged.classList.add("btn-light");
         if (filterState.leveraged) $btnLeverage.classList.add("btn-primary", "active"); else $btnLeverage.classList.add("btn-light");
       }
     }
@@ -574,7 +555,7 @@ function highlightTopBottom() {
       renderButtons(); applyFilter();
     });
 
-    // ===== 실부담비용 =====
+    // ===== etf_real_cost(실부담비용) 채우기 =====
     for (const row of rows) {
       const code = row.dataset.code;
       const terCell = row.querySelector(".etf_real_cost");
@@ -634,8 +615,7 @@ function highlightTopBottom() {
         rowsArr.forEach((r) => tbody.appendChild(r));
         asc = !asc;
 
-        // 정렬 후에도 전부 갱신
-        repaintAll();
+        repaintAll(); // 정렬 후에도 전부 갱신
       });
     });
 
@@ -678,6 +658,7 @@ function highlightTopBottom() {
     });
   });
 </script>
+
 
 </main>
 

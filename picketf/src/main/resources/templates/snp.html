@@ -22,7 +22,7 @@
           <tr>
             <th></th>
             <th></th>
-            <th>기준일</th>
+            <th id="bas-date-header">기준일</th>
             <th>종목명 <i class="bi bi-caret-down-fill"></i></th>
             <th>실부담비용 <i class="bi bi-caret-down-fill"></i></th>
             <th>시가총액 <i class="bi bi-caret-down-fill"></i></th>
@@ -270,6 +270,16 @@
         const res = await fetch(`/api/krx?codes=${codes}`);
         const allData = await res.json();
 
+        // 날짜 포맷 정규화 함수 (유지)
+        function normalizeBasDd(v) {
+          if (!v) return null;
+          const s = String(v).trim();
+          if (/^\d{8}$/.test(s)) return `${s.slice(0, 4)}-${s.slice(4, 6)}-${s.slice(6, 8)}`;
+          const m = s.match(/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})$/);
+          if (m) return `${m[1]}-${m[2].padStart(2, "0")}-${m[3].padStart(2, "0")}`;
+          return s;
+        }
+
         const dtoKeys = [
           "BAS_DD", "ISU_CD", "ISU_NM", "TDD_CLSPRC", "CMPPREVDD_PRC", "FLUC_RT", "NAV",
           "TDD_OPNPRC", "TDD_HGPRC", "TDD_LWPRC", "ACC_TRDVOL", "ACC_TRDVAL", "MKTCAP",
@@ -351,6 +361,12 @@
             if (!el) return;
 
             const raw = data[k];
+
+            // === BAS_DD 셀만 yyyy-MM-dd로 표기 ===
+            if (k === "BAS_DD") {
+              el.textContent = normalizeBasDd(raw) ?? "-";
+              return;
+            }
 
             if (keysToFormatWon.includes(k)) {
               if (raw != null && String(raw).trim() !== "") {

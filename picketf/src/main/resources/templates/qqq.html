@@ -325,8 +325,13 @@
             }
             if (keysToFormatCommaI.includes(k)) {
               const n = toNum(raw);
-              el.textContent = isNaN(n) ? "-" : fmtCommaInt(n);
-              el.dataset.raw = isNaN(n) ? "0" : String(n);
+              if (isNaN(n)) {
+                el.textContent = "-";
+                el.dataset.raw = "0";
+              } else {
+                el.textContent = k === "TDD_CLSPRC" ? `${fmtCommaInt(n)}원` : fmtCommaInt(n);
+                el.dataset.raw = String(n);
+              }
               return;
             }
             if (keysToFormatCommaF.includes(k)) {

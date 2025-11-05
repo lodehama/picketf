@@ -17,8 +17,9 @@
         <button class="btn btn-light border active" id="btn-basic" type="button">파생상품 제외</button>
         <button class="btn btn-light border" id="btn-hedged" type="button">환헷지</button>
         <button class="btn btn-light border" id="btn-leverage" type="button">레버리지</button>
+        <button type="button" class="btn btn-secondary ms-auto" data-bs-toggle="modal"
+          data-bs-target="#glossaryModal">항목 설명</button>
       </div>
-
       <table class="table etf">
         <thead>
           <tr>
@@ -204,6 +205,48 @@
           </tr>
         </tbody>
       </table>
+    </div>
+    <div class="modal fade" id="glossaryModal" tabindex="-1" aria-labelledby="glossaryTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+          <div class="modal-header border-0 pt-3 pb-1">
+            <h5 class="modal-title fw-bold w-100 text-center" id="glossaryTitle">항목 설명</h5>
+          </div>
+          <div class="modal-body p-2 pt-0">
+            <table class="table align-middle mb-0">
+              <tbody>
+                <tr>
+                  <th class="text-center text-nowrap" style="width: 120px;">기준일</th>
+                  <td>해당 종목의 정보를 가져온 기준일</td>
+                </tr>
+                <tr>
+                  <th class="text-center">실부담비용</th>
+                  <td>TER(보수율 + 기타 비용)
+                    <br>+ 매매 · 중개 수수료율
+                    <br>실제로 지불하는 수수료
+                  </td>
+                </tr>
+                <tr>
+                  <th class="text-center">거래대금</th>
+                  <td>해당 종목의 일일 거래대금</td>
+                </tr>
+                <tr>
+                  <th class="text-center">NAV</th>
+                  <td>해당 종목의 종가 기준 순자산가치</td>
+                </tr>
+                <tr>
+                  <th class="text-center">괴리율</th>
+                  <td>종가와 NAV의 차이를 %로 나타낸 값</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="modal-footer d-flex flex-column align-items-end border-0 p-2 pt-0">
+            <p class="text-secondary small mb-1">※ 데이터 출처: 한국거래소 / 금융투자협회</p>
+            <button class="btn btn-outline-secondary" data-bs-dismiss="modal">닫기</button>
+          </div>
+        </div>
+      </div>
     </div>
     <script>
       document.addEventListener("DOMContentLoaded", async () => {

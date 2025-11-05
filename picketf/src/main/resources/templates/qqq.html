@@ -354,11 +354,12 @@
           dtoKeys.forEach((k) => {
             const el = row.querySelector(`.${k}`);
             if (!el) return;
-
             const raw = data[k];
 
-            if (k === "BAS_DD") { el.textContent = normalizeBasDd(raw) ?? "-"; return; }
-
+            if (k === "BAS_DD") {
+              el.textContent = normalizeBasDd(raw) ?? "-";
+              return;
+            }
             if (keysToFormatWon.includes(k)) {
               if (raw != null && String(raw).trim() !== "") {
                 el.textContent = formatKoreanWon(raw);
@@ -387,6 +388,13 @@
               const n = toNum(raw);
               el.textContent = isNaN(n) ? "-" : fmtPercent(n, 2);
               el.dataset.raw = isNaN(n) ? "0" : String(n);
+              return;
+            }
+
+            // ISU_NM 툴팁
+            if (k === "ISU_NM") {
+              const name = raw ?? "-";
+              el.innerHTML = `${name} <i class="bi bi-exclamation-circle text-danger ms-1"></i>`;
               return;
             }
 

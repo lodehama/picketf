@@ -248,6 +248,47 @@
         </div>
       </div>
     </div>
+
+    <!-- 모달2 -->
+    <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+          <div class="modal-header border-0 pt-3 pb-1">
+            <h5 class="modal-title fw-bold w-100 text-center" id="detialTitle">종목 상세정보</h5>
+          </div>
+          <div class="modal-body p-2 pt-0">
+            <table class="table align-middle mb-0">
+              <tbody>
+                <tr>
+                  <th class="text-center text-nowrap" style="width: 120px;">종목명</th>
+                  <td>나중에 연동</td>
+                </tr>
+                <tr>
+                  <th class="text-center">운용사</th>
+                  <td>나중에 연동</td>
+                </tr>
+                <tr>
+                  <th class="text-center">종목코드</th>
+                  <td id="detailCodeCell">현재 연결하려함</td>
+                </tr>
+                <tr>
+                  <th class="text-center">상장일</th>
+                  <td>추후 db연동 or 하드코딩</td>
+                </tr>
+                <tr>
+                  <th class="text-center">바로가기</th>
+                  <td>추후 db연동 or 하드코딩</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="modal-footer d-flex flex-column align-items-end border-0 p-2 pt-0">
+            <p class="text-secondary small mb-1">※ 데이터 출처 : 한국거래소 / 금융투자협회</p>
+            <button class="btn btn-outline-secondary" data-bs-dismiss="modal">닫기</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <script>
       document.addEventListener("DOMContentLoaded", async () => {
         const rows = Array.from(document.querySelectorAll("tr[data-code]"));
@@ -356,17 +397,25 @@
             if (!el) return;
             const raw = data[k];
 
+            // 기준일
             if (k === "BAS_DD") {
               el.textContent = normalizeBasDd(raw) ?? "-";
               return;
             }
+
+            // 시가총액, 거래대금 → 한글 금액 포맷
             if (keysToFormatWon.includes(k)) {
               if (raw != null && String(raw).trim() !== "") {
                 el.textContent = formatKoreanWon(raw);
                 el.dataset.raw = String(raw).replace(/,/g, "");
-              } else { el.textContent = "-"; el.dataset.raw = "0"; }
+              } else {
+                el.textContent = "-";
+                el.dataset.raw = "0";
+              }
               return;
             }
+
+            // 종가 → 콤마 + 원
             if (keysToFormatCommaI.includes(k)) {
               const n = toNum(raw);
               if (isNaN(n)) {
@@ -378,12 +427,16 @@
               }
               return;
             }
+
+            // NAV → 소수 2자리
             if (keysToFormatCommaF.includes(k)) {
               const n = toNum(raw);
               el.textContent = isNaN(n) ? "-" : fmtCommaFloat(n, 2);
               el.dataset.raw = isNaN(n) ? "0" : String(n);
               return;
             }
+
+            // 등락률 → %
             if (keysToFormatPercent.includes(k)) {
               const n = toNum(raw);
               el.textContent = isNaN(n) ? "-" : fmtPercent(n, 2);
@@ -391,17 +444,25 @@
               return;
             }
 
-            // ISU_NM 툴팁
+            // 종목명 + 느낌표 아이콘 (여기서 data-code 심어줌)
             if (k === "ISU_NM") {
               const name = raw ?? "-";
-              el.innerHTML = `${name} <i class="bi bi-exclamation-circle text-danger ms-1"></i>`;
+              el.innerHTML = `
+        ${name} 
+        <i 
+          class="bi bi-exclamation-circle text-danger ms-1 isu-info-icon" 
+          style="cursor:pointer"
+          data-code="${code}"
+        ></i>
+      `;
               return;
             }
 
+            // 그 외 필드
             el.textContent = raw ?? "-";
           });
 
-          // 괴리율
+          // ===== 괴리율 =====
           const elPrem = row.querySelector(".premium");
           if (elPrem) {
             const nav = toNum(allData[row.dataset.code]?.NAV);
@@ -412,6 +473,7 @@
                 : "-";
           }
         });
+
 
         // ===== 필터 버튼/상태 =====
         const filterState = { mode: "basic", hedged: false, leveraged: false };
@@ -670,6 +732,25 @@
           }
           setBookmarks([...cur]);
         });
+
+        // ===== 모달: ISU 설명 =====
+        document.addEventListener("click", (e) => {
+          const icon = e.target.closest(".isu-info-icon");
+          if (!icon) return;
+
+          const code = icon.dataset.code
+            || icon.closest("tr[data-code]")?.dataset.code
+            || "-";
+
+          const codeCell = document.getElementById("detailCodeCell");
+          if (codeCell) {
+            codeCell.textContent = code;
+          }
+
+          const modal = new bootstrap.Modal(document.getElementById("detailModal"));
+          modal.show();
+        });
+
       });
     </script>
 </main>

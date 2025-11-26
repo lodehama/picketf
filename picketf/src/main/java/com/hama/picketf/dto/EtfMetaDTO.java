@@ -14,5 +14,6 @@ public class EtfMetaDTO {
   private Double etfLeverage;
   private Integer etfFxHedged; // 0/1
   private Double etfRealCost; // 모달2 추가 이후 페이지 로딩 시간이 너무 길어서 여기에 추가
-
+  private String etfListedDate;
+  private String etfUrl;
 }

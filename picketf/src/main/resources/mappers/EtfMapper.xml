@@ -11,24 +11,25 @@
     WHERE etf_code = #{code}
   </select>
 
-  <!-- 코드 목록의 메타 조회: etf_code, etf_leverage, etf_fx_hedged // 디테일 모달 -->
+  <!-- 코드 목록의 메타 조회: 디테일 모달용 -->
   <select id="selectEtfMetaByCodes"
-        parameterType="list"
-        resultType="com.hama.picketf.dto.EtfMetaDTO">
-  SELECT
-    etf_code        AS etfCode,
-    etf_full_name   AS etfFullName,
-    etf_name        AS etfName,
-    etf_issuer      AS etfIssuer, 
-    etf_leverage    AS etfLeverage,
-    etf_fx_hedged   AS etfFxHedged,
-    etf_real_cost   AS etfRealCost
-  FROM etf
-  WHERE etf_code IN
-  <foreach collection="list" item="code" open="(" separator="," close=")">
-    #{code}
-  </foreach>
-</select>
-
-
+          parameterType="list"
+          resultType="com.hama.picketf.dto.EtfMetaDTO">
+    SELECT
+      etf_code        AS etfCode,
+      etf_full_name   AS etfFullName,
+      etf_name        AS etfName,
+      etf_issuer      AS etfIssuer,
+      etf_real_cost   AS etfRealCost,
+      etf_leverage    AS etfLeverage,
+      etf_fx_hedged   AS etfFxHedged,
+      etf_listed_date AS etfListedDate,
+      etf_url         AS etfUrl
+    FROM etf
+    WHERE etf_code IN
+    <foreach collection="list" item="code" open="(" separator="," close=")">
+      #{code}
+    </foreach>
+  </select>
+  
 </mapper>

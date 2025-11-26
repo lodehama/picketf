@@ -33,6 +33,8 @@ public class EtfService {
       v.put("etf_leverage", m.getEtfLeverage());
       v.put("etf_fx_hedged", m.getEtfFxHedged());
       v.put("etf_real_cost", m.getEtfRealCost());
+      v.put("etf_listed_date", m.getEtfListedDate());
+      v.put("etf_url", m.getEtfUrl());
       result.put(m.getEtfCode(), v);
     }
     return result;

@@ -93,3 +93,8 @@
 #glossaryModal .modal-footer {
   border-top: none;
 }
+
+/* 모달2 크기 조절 */
+.modal-dialog.detail-wide {
+  max-width: 680px;
+}

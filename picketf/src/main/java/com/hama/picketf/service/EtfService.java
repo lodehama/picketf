@@ -27,8 +27,12 @@ public class EtfService {
     Map<String, Map<String, Object>> result = new LinkedHashMap<>();
     for (EtfMetaDTO m : list) {
       Map<String, Object> v = new LinkedHashMap<>();
+      v.put("etf_full_name", m.getEtfFullName());
+      v.put("etf_name", m.getEtfName());
+      v.put("etf_issuer", m.getEtfIssuer());
       v.put("etf_leverage", m.getEtfLeverage());
       v.put("etf_fx_hedged", m.getEtfFxHedged());
+      v.put("etf_real_cost", m.getEtfRealCost());
       result.put(m.getEtfCode(), v);
     }
     return result;

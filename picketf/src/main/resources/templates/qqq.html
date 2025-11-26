@@ -255,7 +255,7 @@
       <div class="modal-dialog modal-dialog-centered detail-wide">
         <div class="modal-content">
           <div class="modal-header border-0 pt-3 pb-1">
-            <h5 class="modal-title fw-bold w-100 text-center" id="detialTitle">종목 상세정보</h5>
+            <h5 class="modal-title fw-bold w-100 text-center" id="detailTitle">종목 상세정보</h5>
           </div>
           <div class="modal-body p-2 pt-0">
             <table class="table align-middle mb-0">
@@ -755,24 +755,29 @@
           setBookmarks([...cur]);
         });
 
-        // ===== 모달: ISU 설명 =====
+        // ===== 모달: ISU 설명 (느낌표 클릭 전용) =====
         document.addEventListener("click", (e) => {
           const icon = e.target.closest(".isu-info-icon");
           if (!icon) return;
 
+          // 2) 코드 가져오기: 아이콘에 data-code가 있으면 그거, 없으면 tr[data-code]에서
+          const row = icon.closest("tr[data-code]");
           const code = icon.dataset.code
-            || icon.closest("tr[data-code]")?.dataset.code
+            || row?.dataset.code
             || "-";
 
+          // 3) META 데이터에서 현재 종목 메타 정보 꺼내기
           const metaMapGlobal = window.etfMetaByCode || {};
           const meta = metaMapGlobal[code] || {};
 
+          // 4) 모달 안 요소들 찾아오기
           const nameCell = document.getElementById("detail-etf-name");
           const issuerCell = document.getElementById("detail-etf-issuer");
           const codeCell = document.getElementById("detailCodeCell");
           const listedCell = document.getElementById("detail-etf-listed-date");
           const urlAnchor = document.getElementById("detail-etf-url");
 
+          // 5) 텍스트 채우기
           if (nameCell) {
             nameCell.textContent = meta.etf_full_name || meta.etf_name || "-";
           }
@@ -780,12 +785,14 @@
             issuerCell.textContent = meta.etf_issuer || "-";
           }
           if (codeCell) {
-            codeCell.textContent = code || "-";
+            codeCell.textContent = code || "-"; // ← 여기서 data-code로 가져온 값 사용
           }
           if (listedCell) {
-            // etf_listed_date 그대로 보여주고, 나중에 필요하면 포맷만 바꾸면 됨
+            // 필요하면 여기서 날짜 포맷 함수 한 번 더 써도 됨
             listedCell.textContent = meta.etf_listed_date || "-";
           }
+
+          // 6) 바로가기 링크
           if (urlAnchor) {
             const url = meta.etf_url;
             if (url) {
@@ -799,9 +806,13 @@
             }
           }
 
-          const modal = new bootstrap.Modal(document.getElementById("detailModal"));
+          // 7) 모달 열기
+          const modalEl = document.getElementById("detailModal");
+          if (!modalEl) return;
+          const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
           modal.show();
         });
+
       });
     </script>
 </main>

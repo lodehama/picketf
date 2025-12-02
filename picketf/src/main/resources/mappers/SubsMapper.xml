@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hama.picketf.dao.SubsDAO">
+
+    <insert id="insertSubs" parameterType="com.hama.picketf.dto.SubsDTO"
+            useGeneratedKeys="true" keyProperty="subsNum">
+        INSERT INTO subs (
+            subs_us_num,
+            subs_name,
+            subs_price,
+            subs_type,
+            subs_billing_day,
+            subs_active,
+            subs_start_date,
+            subs_icon
+        ) VALUES (
+            #{subsUsNum},
+            #{subsName},
+            #{subsPrice},
+            #{subsType},
+            #{subsBillingDay},
+            #{subsActive},
+            #{subsStartDate},
+            #{subsIcon}
+        )
+    </insert>
+
+    <insert id="insertSubsList" parameterType="java.util.List">
+        INSERT INTO subs (
+            subs_us_num,
+            subs_name,
+            subs_price,
+            subs_type,
+            subs_billing_day,
+            subs_active,
+            subs_start_date,
+            subs_icon
+        )
+        VALUES
+        <foreach collection="list" item="s" separator=",">
+            (
+                #{s.subsUsNum},
+                #{s.subsName},
+                #{s.subsPrice},
+                #{s.subsType},
+                #{s.subsBillingDay},
+                #{s.subsActive},
+                #{s.subsStartDate},
+                #{s.subsIcon}
+            )
+        </foreach>
+    </insert>
+
+</mapper>

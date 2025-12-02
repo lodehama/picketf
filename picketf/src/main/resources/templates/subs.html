@@ -43,9 +43,134 @@
 
         <div class="d-flex gap-2">
           <button class="btn btn-dark btn-sm flex-fill">직접 추가</button>
-          <button class="btn btn-outline-dark btn-sm flex-fill">추천 구독 추가</button>
+          <button class="btn btn-outline-dark btn-sm flex-fill" data-bs-toggle="modal"
+            data-bs-target="#subsRecommendModal">
+            추천 구독 추가
+          </button>
+
         </div>
 
-</main>
+        <!-- 모달 -->
+        <div class="modal fade" id="subsRecommendModal" tabindex="-1">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
 
+              <div class="modal-header">
+                <h5 class="modal-title">추천 구독 추가</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+
+              <div class="modal-body">
+                <!-- 추천항목 리스트 테이블 넣기 -->
+                <div class="table-responsive">
+                  <table class="table table-sm align-middle">
+                    <thead>
+                      <tr>
+                        <th>선택</th>
+                        <th>항목명</th>
+                        <th>타입</th>
+                        <th>금액</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+
+                      <!-- 예시 1: 통신비 -->
+                      <tr data-name="통신비" data-type="생활">
+                        <td><input type="checkbox" class="rec-check"></td>
+                        <td>통신비</td>
+                        <td>생활</td>
+                        <td><input type="number" class="form-control form-control-sm rec-price" value="75000"></td>
+                      </tr>
+
+                      <!-- 예시 2: 유튜브 프리미엄 -->
+                      <tr data-name="유튜브 프리미엄" data-type="콘텐츠">
+                        <td><input type="checkbox" class="rec-check"></td>
+                        <td>유튜브 프리미엄</td>
+                        <td>콘텐츠</td>
+                        <td><input type="number" class="form-control form-control-sm rec-price" value="11800"></td>
+                      </tr>
+
+                      <!-- 예시 3: 넷플릭스 -->
+                      <tr data-name="넷플릭스" data-type="콘텐츠">
+                        <td><input type="checkbox" class="rec-check"></td>
+                        <td>넷플릭스</td>
+                        <td>콘텐츠</td>
+                        <td><input type="number" class="form-control form-control-sm rec-price" value="15900"></td>
+                      </tr>
+
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button id="btn-rec-save" class="btn btn-dark">추가하기</button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+
+    const saveBtn = document.getElementById("btn-rec-save");
+    console.log("btn-rec-save =", saveBtn);  // ✅ 버튼 제대로 잡히는지 확인
+
+    if (!saveBtn) {
+      alert("btn-rec-save를 찾을 수 없습니다.");
+      return;
+    }
+
+    saveBtn.addEventListener("click", async () => {
+
+      console.log("✅ 추가하기 버튼 클릭됨");
+
+      const rows = Array.from(document.querySelectorAll("#subsRecommendModal tbody tr"));
+      const payload = [];
+
+      rows.forEach(row => {
+        const checkbox = row.querySelector(".rec-check");
+        if (!checkbox.checked) return;
+
+        const name = row.dataset.name;
+        const type = row.dataset.type;
+        const price = parseInt(row.querySelector(".rec-price").value);
+
+        payload.push({ name, type, price });
+      });
+
+      console.log("payload =", payload);  // ✅ 서버로 보내는 데이터 확인
+
+      if (payload.length === 0) {
+        alert("선택된 항목이 없습니다.");
+        return;
+      }
+
+      try {
+        const res = await fetch("/subs/recommended", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        console.log("response status =", res.status);
+
+        if (res.ok) {
+          location.reload();
+        } else {
+          const txt = await res.text();
+          console.log("response body =", txt);
+          alert("저장 중 문제가 발생했습니다. status=" + res.status);
+        }
+      } catch (e) {
+        console.error("fetch 에러:", e);
+        alert("요청 자체가 실패했습니다.");
+      }
+    });
+
+  });
+</script>
+</main>
 </html>

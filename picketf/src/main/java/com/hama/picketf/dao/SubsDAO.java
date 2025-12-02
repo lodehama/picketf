@@ -1,0 +1,18 @@
+package com.hama.picketf.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import com.hama.picketf.dto.SubsDTO;
+
+@Mapper
+public interface SubsDAO {
+
+    // 하나만 추가도 필요하면 같이
+    void insertSubs(SubsDTO subs);
+
+    // 여러 건 한 번에 INSERT
+    void insertSubsList(@Param("list") List<SubsDTO> list);
+}

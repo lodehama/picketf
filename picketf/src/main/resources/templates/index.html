@@ -1,50 +1,111 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
   layout:decorate="~{fragments/layout/layout.html}">
-  <head>
-    <title>메인 페이지</title>
-  </head>
-  <main layout:fragment="content">
-    <div class="container">
-      <div class="row text-center">
-        <div class="col-1 border">1</div>
-        <div class="col-1 border">2</div>
-        <div class="col-1 border">3</div>
-        <div class="col-1 border">4</div>
-        <div class="col-1 border">5</div>
-        <div class="col-1 bg-warning border">6</div>
-        <div class="col-1 bg-warning border">7</div>
-        <div class="col-1 border">8</div>
-        <div class="col-1 border">9</div>
-        <div class="col-1 border">10</div>
-        <div class="col-1 border">11</div>
-        <div class="col-1 border">12</div>
+
+<head>
+  <title>메인 페이지</title>
+</head>
+<main class="app-content" layout:fragment="content">
+
+  <div class="container-fluid py-4">
+
+    <!-- 1행: Accounts / Recent Transactions -->
+    <div class="row g-4">
+      <!-- Accounts -->
+      <div class="col-lg-7">
+        <div class="card shadow-sm border-0">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="card-title mb-0">Accounts</h5>
+              <small class="text-muted">Summary</small>
+            </div>
+
+            <div class="mb-3">
+              <div class="text-muted small">Total Balance</div>
+              <div class="fs-3 fw-semibold">$26,540.25</div>
+            </div>
+
+            <div class="mb-3">
+              <div class="text-muted small mb-1">Your Accounts</div>
+              <ul class="list-unstyled mb-0">
+                <li class="d-flex justify-content-between py-1">
+                  <span>Main Savings</span>
+                  <span class="fw-semibold">$8,459.45</span>
+                </li>
+                <li class="d-flex justify-content-between py-1">
+                  <span>Checking Account</span>
+                  <span class="fw-semibold">$2,850.00</span>
+                </li>
+                <li class="d-flex justify-content-between py-1">
+                  <span>Investment Portfolio</span>
+                  <span class="fw-semibold">$15,230.80</span>
+                </li>
+                <li class="d-flex justify-content-between py-1">
+                  <span>Credit Card</span>
+                  <span class="fw-semibold">$1,200.00</span>
+                </li>
+                <li class="d-flex justify-content-between py-1">
+                  <span>Savings Account</span>
+                  <span class="fw-semibold">$3,000.00</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="d-flex gap-2">
+              <button class="btn btn-dark btn-sm flex-fill">Add</button>
+              <button class="btn btn-outline-dark btn-sm flex-fill">Send</button>
+              <button class="btn btn-outline-dark btn-sm flex-fill">Top-up</button>
+              <button class="btn btn-outline-dark btn-sm flex-fill">More</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Transactions -->
+      <div class="col-lg-5">
+        <div class="card shadow-sm border-0 h-100">
+          <div class="card-body d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="card-title mb-0">월간 구독 서비스</h5>
+              <small class="text-muted">This Month</small>
+            </div>
+
+            <div class="text-muted small mb-2">Recent Activity (23 transactions)</div>
+
+            <div class="flex-grow-1">
+              <div class="d-flex justify-content-between py-1 border-bottom">
+                <div>
+                  <div>Apple Store Purchase</div>
+                  <small class="text-muted">Today, 2:45 PM</small>
+                </div>
+                <div class="text-danger fw-semibold">- $999.00</div>
+              </div>
+              <div class="d-flex justify-content-between py-1 border-bottom">
+                <div>
+                  <div>Salary Deposit</div>
+                  <small class="text-muted">Today, 9:00 AM</small>
+                </div>
+                <div class="text-success fw-semibold">+ $4,500.00</div>
+              </div>
+              <div class="d-flex justify-content-between py-1 border-bottom">
+                <div>
+                  <div>Netflix Subscription</div>
+                  <small class="text-muted">Yesterday</small>
+                </div>
+                <div class="text-danger fw-semibold">- $15.99</div>
+              </div>
+              <!-- 필요하면 더 추가 -->
+            </div>
+
+            <div class="mt-3">
+              <button class="btn btn-dark w-100 btn-sm">
+                View All Transactions
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="bg-white border-bottom py-2 d-flex justify-content-center gap-4 small fw-semibold">
-      <div>
-        <i class="fas fa-flag text-danger"></i>
-        <span class="text-dark">
-          <img src="/img/kr.png" width="30" class="me-1" />국장</span
-        >
-        <span th:if="${isKoreaMarketOpen}" class="fw-bold" style="color: tomato"
-          >· 장 열림</span
-        >
-        <span th:unless="${isKoreaMarketOpen}" class="text-muted"
-          >· 장 닫힘</span
-        >
-      </div>
-      <div>
-        <i class="fas fa-flag-usa text-primary"></i>
-        <span class="text-dark">
-          <img src="/img/us.png" width="20" class="me-1" /> 미장</span
-        >
-        <span th:if="${isUSMarketOpen}" class="fw-bold" style="color: tomato"
-          >· 장 열림</span
-        >
-        <span th:unless="${isUSMarketOpen}" class="text-muted">· 장 닫힘</span>
-      </div>
-    </div>
-  </main>
+</main>
+
 </html>

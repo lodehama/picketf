@@ -81,8 +81,7 @@
                         <td>통신비</td>
                         <td>생활</td>
                         <td><input type="number" class="form-control form-control-sm rec-price" value="75000"></td>
-                        <td><input type="number" class="form-control form-control-sm rec-bill" min="1" max="31"
-                            value="15"></td>
+                        <td><input type="number" class="form-control form-control-sm rec-bill" min="1" max="31"></td>
                       </tr>
 
                       <!-- 예시 2: 유튜브 -->
@@ -91,8 +90,7 @@
                         <td>유튜브 프리미엄</td>
                         <td>콘텐츠</td>
                         <td><input type="number" class="form-control form-control-sm rec-price" value="11800"></td>
-                        <td><input type="number" class="form-control form-control-sm rec-bill" min="1" max="31"
-                            value="20"></td>
+                        <td><input type="number" class="form-control form-control-sm rec-bill" min="1" max="31"></td>
                       </tr>
 
                       <!-- 예시 3: 넷플릭스 -->
@@ -101,8 +99,7 @@
                         <td>넷플릭스</td>
                         <td>콘텐츠</td>
                         <td><input type="number" class="form-control form-control-sm rec-price" value="15900"></td>
-                        <td><input type="number" class="form-control form-control-sm rec-bill" min="1" max="31"
-                            value="25"></td>
+                        <td><input type="number" class="form-control form-control-sm rec-bill" min="1" max="31"></td>
                       </tr>
                     </tbody>
                   </table>
@@ -122,22 +119,46 @@
 
             const saveBtn = document.getElementById("btn-rec-save");
 
+            // ✅ 1) 오늘 날짜(1~31) 구해서 결제일 인풋 기본값으로 세팅
+            const todayDay = new Date().getDate(); // 1~31
+            document.querySelectorAll(".rec-bill").forEach(input => {
+              if (!input.value) {          // 값이 비어있을 때만 세팅
+                input.value = todayDay;
+              }
+            });
+
             saveBtn.addEventListener("click", async () => {
 
               const rows = Array.from(document.querySelectorAll("#subsRecommendModal tbody tr"));
               const payload = [];
 
-              rows.forEach(row => {
+              for (const row of rows) {
                 const checkbox = row.querySelector(".rec-check");
-                if (!checkbox.checked) return;
+                if (!checkbox.checked) continue;
 
                 const name = row.dataset.name;
                 const type = row.dataset.type;
-                const price = parseInt(row.querySelector(".rec-price").value);
-                const billingDay = parseInt(row.querySelector(".rec-bill").value);
 
-                payload.push({ name, type, price, billingDay });
-              });
+                const priceInput = row.querySelector(".rec-price");
+                const billInput = row.querySelector(".rec-bill");
+
+                const price = parseInt(priceInput.value, 10);
+                const billingDay = parseInt(billInput.value, 10);
+
+                // ✅ 2) 결제일 1~31 범위 체크
+                if (isNaN(billingDay) || billingDay < 1 || billingDay > 31) {
+                  alert("결제일은 1~31 사이 숫자만 입력할 수 있습니다.");
+                  billInput.focus();
+                  return; // 잘못된 값 하나라도 있으면 전송 중단
+                }
+
+                payload.push({
+                  name,
+                  type,
+                  price,
+                  billingDay
+                });
+              }
 
               if (payload.length === 0) {
                 alert("선택된 항목이 없습니다.");
@@ -159,6 +180,7 @@
 
           });
         </script>
+
 </main>
 
 </html>

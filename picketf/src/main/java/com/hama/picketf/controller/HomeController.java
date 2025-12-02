@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.hama.picketf.model.vo.UserVO;
 import com.hama.picketf.service.UserService;
-import org.springframework.web.bind.annotation.RequestParam;
-
 
 @Controller
 public class HomeController {

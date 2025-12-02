@@ -10,7 +10,6 @@ import com.hama.picketf.service.KrxApiService;
 
 import lombok.RequiredArgsConstructor;
 
-// KrxApiController.java
 @RestController
 @RequestMapping("/api/krx")
 @RequiredArgsConstructor

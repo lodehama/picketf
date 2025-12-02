@@ -70,25 +70,29 @@
                         <th>항목명</th>
                         <th>타입</th>
                         <th>금액</th>
+                        <th>결제일</th>
                       </tr>
                     </thead>
 
                     <tbody>
-
                       <!-- 예시 1: 통신비 -->
                       <tr data-name="통신비" data-type="생활">
                         <td><input type="checkbox" class="rec-check"></td>
                         <td>통신비</td>
                         <td>생활</td>
                         <td><input type="number" class="form-control form-control-sm rec-price" value="75000"></td>
+                        <td><input type="number" class="form-control form-control-sm rec-bill" min="1" max="31"
+                            value="15"></td>
                       </tr>
 
-                      <!-- 예시 2: 유튜브 프리미엄 -->
+                      <!-- 예시 2: 유튜브 -->
                       <tr data-name="유튜브 프리미엄" data-type="콘텐츠">
                         <td><input type="checkbox" class="rec-check"></td>
                         <td>유튜브 프리미엄</td>
                         <td>콘텐츠</td>
                         <td><input type="number" class="form-control form-control-sm rec-price" value="11800"></td>
+                        <td><input type="number" class="form-control form-control-sm rec-bill" min="1" max="31"
+                            value="20"></td>
                       </tr>
 
                       <!-- 예시 3: 넷플릭스 -->
@@ -97,8 +101,9 @@
                         <td>넷플릭스</td>
                         <td>콘텐츠</td>
                         <td><input type="number" class="form-control form-control-sm rec-price" value="15900"></td>
+                        <td><input type="number" class="form-control form-control-sm rec-bill" min="1" max="31"
+                            value="25"></td>
                       </tr>
-
                     </tbody>
                   </table>
                 </div>
@@ -112,65 +117,48 @@
           </div>
         </div>
 
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
+        <script>
+          document.addEventListener("DOMContentLoaded", () => {
 
-    const saveBtn = document.getElementById("btn-rec-save");
-    console.log("btn-rec-save =", saveBtn);  // ✅ 버튼 제대로 잡히는지 확인
+            const saveBtn = document.getElementById("btn-rec-save");
 
-    if (!saveBtn) {
-      alert("btn-rec-save를 찾을 수 없습니다.");
-      return;
-    }
+            saveBtn.addEventListener("click", async () => {
 
-    saveBtn.addEventListener("click", async () => {
+              const rows = Array.from(document.querySelectorAll("#subsRecommendModal tbody tr"));
+              const payload = [];
 
-      console.log("✅ 추가하기 버튼 클릭됨");
+              rows.forEach(row => {
+                const checkbox = row.querySelector(".rec-check");
+                if (!checkbox.checked) return;
 
-      const rows = Array.from(document.querySelectorAll("#subsRecommendModal tbody tr"));
-      const payload = [];
+                const name = row.dataset.name;
+                const type = row.dataset.type;
+                const price = parseInt(row.querySelector(".rec-price").value);
+                const billingDay = parseInt(row.querySelector(".rec-bill").value);
 
-      rows.forEach(row => {
-        const checkbox = row.querySelector(".rec-check");
-        if (!checkbox.checked) return;
+                payload.push({ name, type, price, billingDay });
+              });
 
-        const name = row.dataset.name;
-        const type = row.dataset.type;
-        const price = parseInt(row.querySelector(".rec-price").value);
+              if (payload.length === 0) {
+                alert("선택된 항목이 없습니다.");
+                return;
+              }
 
-        payload.push({ name, type, price });
-      });
+              const res = await fetch("/subs/recommended", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+              });
 
-      console.log("payload =", payload);  // ✅ 서버로 보내는 데이터 확인
+              if (res.ok) {
+                location.reload();
+              } else {
+                alert("저장 중 문제가 발생했습니다.");
+              }
+            });
 
-      if (payload.length === 0) {
-        alert("선택된 항목이 없습니다.");
-        return;
-      }
-
-      try {
-        const res = await fetch("/subs/recommended", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
-
-        console.log("response status =", res.status);
-
-        if (res.ok) {
-          location.reload();
-        } else {
-          const txt = await res.text();
-          console.log("response body =", txt);
-          alert("저장 중 문제가 발생했습니다. status=" + res.status);
-        }
-      } catch (e) {
-        console.error("fetch 에러:", e);
-        alert("요청 자체가 실패했습니다.");
-      }
-    });
-
-  });
-</script>
+          });
+        </script>
 </main>
+
 </html>

@@ -30,14 +30,27 @@ public class SubsService {
       dto.setSubsBillingDay(form.getBillingDay());
       dto.setSubsActive(1);
       dto.setSubsStartDate(LocalDate.now());
-
-      // ★ 아이콘 매핑
-      dto.setSubsIcon(form.getIcon()); // 예: "Netflix.svg" / "YouTube.svg"
+      dto.setSubsIcon(form.getIcon());
 
       list.add(dto);
     }
 
     subsDAO.insertSubsList(list);
+  }
+
+  public List<SubsDTO> getSubsListByUser(Long userNum) {
+    System.out.println("DEBUG SubsService.getSubsListByUser userNum = " + userNum);
+    List<SubsDTO> raw = subsDAO.getSubsListByUser(userNum);
+    System.out.println("DEBUG SubsService.getSubsListByUser raw size = " + (raw == null ? "null" : raw.size()));
+
+    if (raw == null) return new ArrayList<>();
+
+    for (int i = 0; i < raw.size(); i++) {
+      System.out.println("  raw[" + i + "] = " + raw.get(i));
+    }
+
+    // 일단 그대로 리턴 (필터 X)
+    return raw;
   }
 
   public void insertSubsList(List<SubsDTO> list) {

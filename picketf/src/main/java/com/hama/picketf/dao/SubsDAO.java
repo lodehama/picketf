@@ -15,4 +15,8 @@ public interface SubsDAO {
 
     // 여러 건 한 번에 INSERT
     void insertSubsList(@Param("list") List<SubsDTO> list);
+
+    // 사용자 구독 정보 조회
+    List<SubsDTO> getSubsListByUser(@Param("userNum") Long userNum);
+
 }

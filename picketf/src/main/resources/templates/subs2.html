@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{fragments/layout/layout.html}">
+
+<head>
+  <title>메인 페이지</title>
+</head>
+<main class="app-content" layout:fragment="content">
+
+  <div class="col-lg-5">
+    <div class="card shadow-sm border-0 h-100">
+      <div class="card-body d-flex flex-column">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="card-title mb-0">월간 구독 관리</h5>
+          <small class="text-muted">This Month</small>
+        </div>
+
+        <div class="text-muted small mb-2">
+          Recent Subscriptions
+          (<span th:text="${subsCount}">0</span> items)
+        </div>
+
+        <div class="flex-grow-1">
+
+          <div th:if="${#lists.isEmpty(subsList)}" class="text-muted">
+            아직 등록된 구독이 없습니다.
+          </div>
+
+          <div th:each="s : ${subsList}" class="d-flex justify-content-between py-2 border-bottom align-items-center">
+
+            <!-- 왼쪽 영역: 아이콘 + 텍스트들 -->
+            <div class="d-flex align-items-center gap-2">
+              <!-- 아이콘 -->
+              <img th:src="@{/images/subs/{icon}(icon=${s.subsIcon})}" alt=""
+                style="width:24px; height:24px; object-fit:contain;">
+
+              <div>
+                <!-- 항목명 -->
+                <div th:text="${s.subsName}">서비스 이름</div>
+
+                <!-- 타입 / 결제일 / 시작일 -->
+                <small class="text-muted">
+                  <span th:text="${s.subsType}">타입</span>
+                  · 매월
+                  <span th:text="${s.subsBillingDay}">1</span>일
+                  · 시작:
+                  <span th:text="${s.subsStartDate}">2025-12-03</span>
+                </small>
+              </div>
+            </div>
+
+            <!-- 오른쪽 영역: 가격 + 상태 -->
+            <div class="text-end">
+              <!-- 가격 -->
+              <div class="fw-semibold" th:text="${#numbers.formatInteger(s.subsPrice, 0, 'COMMA') + ' 원'}">
+                15,900 원
+              </div>
+
+              <!-- 상태: 구독중 / 해지 -->
+              <small th:text="${s.subsActive == 1 ? '구독중' : '해지'}"
+                th:classappend="${s.subsActive == 1} ? ' text-success' : ' text-muted'">
+                구독중
+              </small>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 구독 추가 -->
+        <div class="d-flex gap-2">
+          <button class="btn btn-dark btn-sm flex-fill">직접 추가</button>
+          <button class="btn btn-outline-dark btn-sm flex-fill" data-bs-toggle="modal"
+            data-bs-target="#subsRecommendModal">
+            추천 구독 추가
+          </button>
+
+        </div>
+
+        <!-- 모달 -->
+        <div class="modal fade" id="subsRecommendModal" tabindex="-1">
+          <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+
+              <div class="modal-header">
+                <h5 class="modal-title">추천 구독 추가</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+
+              <div class="modal-body">
+                <!-- 추천항목 리스트 테이블 넣기 -->
+                <div class="table-responsive">
+                  <table class="table table-sm align-middle">
+                    <thead>
+                      <tr>
+                        <th>선택</th>
+                        <th>항목명</th>
+                        <th>타입</th>
+                        <th>금액</th>
+                        <th>결제일</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- 예시 1: 통신비 -->
+                      <tr data-name="통신비" data-type="생활" data-icon="Phone.svg">
+                        <td><input type="checkbox" class="rec-check"></td>
+                        <td><img src="/img/subs/Phone.svg" alt="Phone"
+                            style="width:18px; height:18px; margin-right:2px;">
+                          통신비</td>
+                        <td>생활</td>
+                        <td><input type="number" class="form-control form-control-sm rec-price" value="75000"></td>
+                        <td><input type="number" class="form-control form-control-sm rec-bill" min="1" max="31"></td>
+                      </tr>
+
+                      <!-- 예시 2: 유튜브 -->
+                      <tr data-name="유튜브 프리미엄" data-type="콘텐츠" data-icon="YouTube.svg">
+                        <td><input type="checkbox" class="rec-check"></td>
+                        <td><img src="/img/subs/YouTube.svg" alt="YouTube"
+                            style="width:18px; height:18px; margin-right:2px;">
+                          유튜브 프리미엄</td>
+                        <td>콘텐츠</td>
+                        <td><input type="number" class="form-control form-control-sm rec-price" value="11800"></td>
+                        <td><input type="number" class="form-control form-control-sm rec-bill" min="1" max="31"></td>
+                      </tr>
+
+                      <!-- 예시 3: 넷플릭스 -->
+                      <tr data-name="넷플릭스" data-type="콘텐츠" data-icon="Netflix.svg">
+                        <td><input type="checkbox" class="rec-check"></td>
+                        <td><img src="/img/subs/Netflix.svg" alt="Netflix"
+                            style="width:18px; height:18px; margin-right:2px;">
+                          넷플릭스</td>
+                        <td>콘텐츠</td>
+                        <td><input type="number" class="form-control form-control-sm rec-price" value="15900"></td>
+                        <td><input type="number" class="form-control form-control-sm rec-bill" min="1" max="31"></td>
+                      </tr>
+
+                      <!-- 예시 3: 스포티파이 -->
+                      <tr data-name="스포티파이" data-type="콘텐츠" data-icon="Spotify.svg">
+                        <td><input type="checkbox" class="rec-check"></td>
+                        <td><img src="/img/subs/Spotify.svg" alt="스포티파이" class="subs-icon"
+                            style="width:18px; height:18px; margin-right:2px;">
+                          스포티파이</td>
+                        <td>콘텐츠</td>
+                        <td><input type="number" class="form-control form-control-sm rec-price" value="15900"></td>
+                        <td><input type="number" class="form-control form-control-sm rec-bill" min="1" max="31"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button id="btn-rec-save" class="btn btn-dark">추가하기</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <script>
+          document.addEventListener("DOMContentLoaded", () => {
+            const saveBtn = document.getElementById("btn-rec-save");
+
+            // ✅ 1) 오늘 날짜(1~31) 구해서 결제일 인풋 기본값으로 세팅
+            const todayDay = new Date().getDate(); // 1~31
+            document.querySelectorAll(".rec-bill").forEach(input => {
+              if (!input.value) {          // 값이 비어있을 때만 세팅
+                input.value = todayDay;
+              }
+            });
+
+            saveBtn.addEventListener("click", async () => {
+
+              const rows = Array.from(document.querySelectorAll("#subsRecommendModal tbody tr"));
+              const payload = [];
+
+              for (const row of rows) {
+                const checkbox = row.querySelector(".rec-check");
+                if (!checkbox.checked) continue;
+
+                const name = row.dataset.name;
+                const type = row.dataset.type;
+                const icon = row.dataset.icon;  // 추가: 파일명 읽기
+
+                const priceInput = row.querySelector(".rec-price");
+                const billInput = row.querySelector(".rec-bill");
+
+                const price = parseInt(priceInput.value, 10);
+                const billingDay = parseInt(billInput.value, 10);
+
+                // 1~31 검증
+                if (isNaN(billingDay) || billingDay < 1 || billingDay > 31) {
+                  alert("결제일은 1~31 사이 숫자만 입력할 수 있습니다.");
+                  billInput.focus();
+                  return;
+                }
+
+                payload.push({
+                  name,
+                  type,
+                  price,
+                  billingDay,
+                  icon
+                });
+              }
+
+              if (payload.length === 0) {
+                alert("선택된 항목이 없습니다.");
+                return;
+              }
+
+              const res = await fetch("/subs/recommended", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+              });
+
+              if (res.ok) {
+                location.reload();
+              } else {
+                alert("저장 중 문제가 발생했습니다.");
+              }
+            });
+          });
+        </script>
+</main>
+
+</html>

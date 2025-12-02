@@ -45,12 +45,6 @@ public class HomeController {
     return "m7";
   }
 
-  @GetMapping("subs")
-  public String subs() {
-    return "subs";
-  }
-  
-
   @GetMapping("/updates")
   public String updates() {
     return "updates";

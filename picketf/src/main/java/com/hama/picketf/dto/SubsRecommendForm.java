@@ -8,5 +8,6 @@ public class SubsRecommendForm {
   private Integer price; // 사용자가 수정한 가격
   private String type; // 지출 타입 (생활/콘텐츠/음악 등)
   private Integer billingDay;
+  private String icon; 
 
 }

@@ -12,7 +12,7 @@ public class SubsDTO {
     private Integer subsPrice;
     private String subsType;
     private Integer subsBillingDay;
-    private Boolean subsActive;
+    private Integer subsActive;
     private LocalDate subsStartDate;
     private String subsIcon;
 }

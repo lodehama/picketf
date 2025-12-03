@@ -9,53 +9,28 @@
 <body>
   <main layout:fragment="content">
     <div class="container py-3">
-
-      <!-- 페이지 제목 -->
-      <h5 class="mb-3">내 구독 서비스</h5>
-
-      <!-- 정렬 드롭다운 -->
-      
-      <div class="dropdown">
-        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="subsSortDropdown"
-          data-bs-toggle="dropdown" aria-expanded="false">
-          <span id="subs-sort-label">정렬</span>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-end">
-
-          <!-- 기본 정렬 -->
-          <li>
-            <a href="#" class="dropdown-item subs-sort-option" data-sort="" data-dir="" data-label="기본 정렬 (결제일 순)">
-              기본 정렬 (결제일 순)
-            </a>
-          </li>
-
-          <li>
-            <hr class="dropdown-divider" />
-          </li>
-
-          <!-- 가격 낮은순 -->
-          <li>
-            <a href="#" class="dropdown-item subs-sort-option" data-sort="price" data-dir="asc" data-label="가격 낮은순">
-              가격 낮은순
-            </a>
-          </li>
-
-          <!-- 가격 높은순 -->
-          <li>
-            <a href="#" class="dropdown-item subs-sort-option" data-sort="price" data-dir="desc" data-label="가격 높은순">
-              가격 높은순
-            </a>
-          </li>
-
-        </ul>
-      </div>
+      <h5 class="mb-3">내 구독 관리 (<span th:text="${subsCount}">0</span>개)</h5>
       <!-- 상단 요약 -->
       <div class="d-flex justify-content-between align-items-center mb-2 small text-muted">
         <div>
-          Recent Subscriptions
+          <!-- 왼쪽 -->
         </div>
-        <div>
-          총 <span th:text="${subsCount}">0</span>개
+        <!-- 정렬 -->
+        <div class="btn-group mb-2" role="group">
+          <!-- 가격 낮은순 (ASC) -->
+          <button type="button" class="btn btn-outline-secondary subs-sort-btn" data-sort="price" data-dir="asc">
+            가격 낮은순
+          </button>
+
+          <!-- 가격 높은순 (DESC) -->
+          <button type="button" class="btn btn-outline-secondary subs-sort-btn" data-sort="price" data-dir="desc">
+            가격 높은순
+          </button>
+
+          <!-- 기본: 결제일 순 -->
+          <button type="button" class="btn btn-outline-secondary subs-sort-btn" data-sort="" data-dir="">
+            결제일
+          </button>
         </div>
       </div>
 
@@ -76,8 +51,9 @@
 
               <div th:each="s : ${subsList}"
                 class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom subs-item" th:attr="data-price=${s.subsPrice},
-                  data-start=${s.subsStartDate},
-                  data-name=${s.subsName}">
+              data-start=${s.subsStartDate},
+              data-name=${s.subsName},
+              data-billing=${s.subsBillingDay}">
                 <!-- 왼쪽: 아이콘 + 이름/설명 -->
                 <div class="d-flex align-items-center gap-2">
 
@@ -121,120 +97,101 @@
         const wrapper = document.getElementById("subs-list-wrapper");
         if (!wrapper) return;
 
-        const itemsSelector = ".subs-item";
-        const sortOptions = document.querySelectorAll(".subs-sort-option");
-        const sortLabelSpan = document.getElementById("subs-sort-label");
+        // 처음 로딩된 순서 기준으로 계속 재정렬
+        const items = Array.from(wrapper.querySelectorAll(".subs-item"));
+        const buttons = Array.from(document.querySelectorAll(".subs-sort-btn"));
 
-        const COOKIE_NAME = "subsSort"; // 예: "price:asc"
-
+        // ===== 쿠키 유틸 =====
         function setCookie(name, value, days) {
           const d = new Date();
-          d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
-          document.cookie = name + "=" + encodeURIComponent(value)
-            + ";expires=" + d.toUTCString()
-            + ";path=/";
+          d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+          document.cookie =
+            name + "=" + encodeURIComponent(value) +
+            ";expires=" + d.toUTCString() + ";path=/";
         }
 
         function getCookie(name) {
-          const target = name + "=";
-          const parts = document.cookie.split("; ");
-          for (const p of parts) {
-            if (p.startsWith(target)) {
-              return decodeURIComponent(p.substring(target.length));
-            }
-          }
-          return null;
+          const value = document.cookie
+            .split("; ")
+            .find(row => row.startsWith(name + "="));
+          return value ? decodeURIComponent(value.split("=")[1]) : null;
         }
 
-        // 실제 정렬 함수
-        function applySort(sort, dir) {
-          const items = Array.from(wrapper.querySelectorAll(itemsSelector));
-          if (items.length === 0) return;
+        // ===== 정렬 함수 =====
+        function applySort(sort, dir, fromInit = false) {
+          const list = [...items]; // 원본 배열 복사
 
-          // 정렬 기준 없으면, DOM 순서 그대로 (서버 기본 정렬)
           if (!sort) {
-            return;
+            // 기본 정렬: 결제일(청구일) 오름차순, 같은 날이면 가격 오름차순
+            list.sort((a, b) => {
+              const billA = Number(a.dataset.billing || 0);
+              const billB = Number(b.dataset.billing || 0);
+              if (billA !== billB) return billA - billB;
+
+              const priceA = Number(a.dataset.price || 0);
+              const priceB = Number(b.dataset.price || 0);
+              return priceA - priceB;
+            });
+          } else if (sort === "price") {
+            list.sort((a, b) => {
+              const priceA = Number(a.dataset.price || 0);
+              const priceB = Number(b.dataset.price || 0);
+              return priceA - priceB;
+            });
+            if (dir === "desc") {
+              list.reverse();
+            }
           }
 
-          const factor = dir === "desc" ? -1 : 1;
+          // DOM 갱신
+          wrapper.innerHTML = "";
+          list.forEach(el => wrapper.appendChild(el));
 
-          items.sort((a, b) => {
-            let av, bv;
-
-            if (sort === "price") {
-              av = parseInt(a.dataset.price || "0", 10);
-              bv = parseInt(b.dataset.price || "0", 10);
-            } else if (sort === "start") {
-              // YYYY-MM-DD라서 문자열 비교해도 순서 맞음
-              av = a.dataset.start || "";
-              bv = b.dataset.start || "";
-            } else if (sort === "name") {
-              av = (a.dataset.name || "").toLowerCase();
-              bv = (b.dataset.name || "").toLowerCase();
+          // 버튼 active 표시
+          buttons.forEach(btn => {
+            const bSort = btn.dataset.sort || "";
+            const bDir = btn.dataset.dir || "";
+            if ((bSort || "") === (sort || "") && (bDir || "") === (dir || "")) {
+              btn.classList.add("active");
             } else {
-              return 0;
-            }
-
-            if (av < bv) return -1 * factor;
-            if (av > bv) return 1 * factor;
-            return 0;
-          });
-
-          items.forEach(el => wrapper.appendChild(el));
-        }
-
-        // 드롭다운에서 active 표시 + 라벨 변경
-        function updateUI(sort, dir) {
-          sortOptions.forEach(opt => {
-            opt.classList.remove("active");
-            const os = opt.dataset.sort || "";
-            const od = opt.dataset.dir || "";
-            if (os === (sort || "") && od === (dir || "")) {
-              opt.classList.add("active");
-              if (sortLabelSpan && opt.dataset.label) {
-                sortLabelSpan.textContent = opt.dataset.label;
-              }
+              btn.classList.remove("active");
             }
           });
 
-          // 아무 것도 매칭 안 되면 기본 텍스트
-          if (!document.querySelector(".subs-sort-option.active") && sortLabelSpan) {
-            sortLabelSpan.textContent = "정렬";
+          // 초기 로딩일 땐 쿠키 저장 X (이미 쿠키 값 기준으로 돌린 거니까)
+          if (!fromInit) {
+            setCookie("subs_sort", sort || "", 30);
+            setCookie("subs_dir", dir || "", 30);
           }
         }
 
-        // 클릭 이벤트: URL 안 바꾸고, 쿠키 저장 + 정렬
-        sortOptions.forEach(opt => {
-          opt.addEventListener("click", (e) => {
-            e.preventDefault();
+        // ===== 처음 로딩 시: 쿠키 읽어서 적용 =====
+        const cookieSort = getCookie("subs_sort");
+        const cookieDir = getCookie("subs_dir") || "";
 
-            const sort = opt.dataset.sort || "";
-            const dir = opt.dataset.dir || "";
-            const label = opt.dataset.label || "정렬";
+        // 쿠키랑 매칭되는 버튼 있으면 그걸 기준으로, 없으면 기본(결제일) 버튼
+        const defaultBtn =
+          buttons.find(btn =>
+            (btn.dataset.sort || "") === (cookieSort || "") &&
+            (btn.dataset.dir || "") === (cookieDir || "")
+          ) || buttons.find(btn => !btn.dataset.sort) || buttons[0];
 
-            // 쿠키에 저장 (예: "price:asc")
-            setCookie(COOKIE_NAME, `${sort}:${dir}`, 30);
+        const initSort = defaultBtn.dataset.sort || "";
+        const initDir = defaultBtn.dataset.dir || "";
 
-            // 정렬 적용
+        applySort(initSort, initDir, true);
+
+        // ===== 클릭 핸들러 =====
+        buttons.forEach(btn => {
+          btn.addEventListener("click", () => {
+            const sort = btn.dataset.sort || "";
+            const dir = btn.dataset.dir || "";
             applySort(sort, dir);
-
-            // 라벨/active 업데이트
-            if (sortLabelSpan) {
-              sortLabelSpan.textContent = label;
-            }
-            updateUI(sort, dir);
           });
         });
-
-        // 페이지 처음 로드될 때, 쿠키 값 있으면 그대로 적용
-        const saved = getCookie(COOKIE_NAME);  // 예: "price:asc"
-        if (saved) {
-          const [savedSort, savedDir] = saved.split(":");
-          applySort(savedSort, savedDir);
-          updateUI(savedSort, savedDir);
-        }
       });
     </script>
   </main>
 </body>
+
 </html>

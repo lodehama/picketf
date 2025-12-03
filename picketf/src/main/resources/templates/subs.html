@@ -92,8 +92,7 @@
                     <!-- 2줄: 타입 / 결제일 / 시작일 -->
                     <small class="text-muted">
                       <span th:text="${s.subsType}">타입</span>
-                      · 매월 <span th:text="${s.subsBillingDay}">1</span>일
-                      · 시작: <span th:text="${s.subsStartDate}">2025-12-03</span>
+                      · 등록일 : <span th:text="${s.subsStartDate}">2025-12-03</span>
                     </small>
                   </div>
                 </div>
@@ -103,10 +102,14 @@
                   <div class="fw-semibold" th:text="${#numbers.formatInteger(s.subsPrice, 0, 'COMMA')} + ' 원'">
                     15,900 원
                   </div>
-                  <small th:text="${s.subsActive == 1 ? '구독중' : '해지'}"
-                    th:classappend="${s.subsActive == 1} ? ' text-success' : ' text-muted'">
-                    구독중
+                  <small class="text-muted">
+                    매월 <span th:text="${s.subsBillingDay}">1</span>일
+                    · <span th:text="${s.subsActive == 1 ? '구독중' : '해지'}"
+                      th:classappend="${s.subsActive == 1} ? ' text-success' : ' text-danger'">
+                      구독중
+                    </span>
                   </small>
+
                 </div>
 
               </div> <!-- /subs-item -->

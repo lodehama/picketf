@@ -159,3 +159,16 @@ html, body {
 .modal-dialog.detail-wide {
   max-width: 640px;
 }
+
+/* subs 구독 이미지 중앙 정렬*/
+.subs-name-row {
+  display: flex;
+  align-items: center;   /* 완벽하게 세로 중앙 정렬 */
+  gap: 4px;
+}
+
+.subs-action-btn {
+  padding: 2px 4px;
+  border: none;
+  background: transparent;
+}

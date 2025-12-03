@@ -6,30 +6,31 @@
   <title>구독 서비스 관리</title>
 </head>
 
+
 <body>
   <main layout:fragment="content">
     <div class="container py-3">
       <!-- 여백용 -->
       <h5 class="mb-3">&nbsp;</h5>
+
       <!-- 상단 요약 -->
       <div class="d-flex justify-content-between align-items-center mb-2 small text-muted">
         <div>
-          <!-- 왼쪽 -->
-           <h5 class="mb-3">내 구독 관리 (<span th:text="${subsCount}">0</span>개)</h5>
+          <h5 class="mb-3">
+            내 구독 관리 (<span th:text="${subsCount}">0</span>개)
+          </h5>
         </div>
-        <!-- 정렬 -->
+
+        <!-- 정렬 버튼 영역 (스크립트 없어도 UI용으로 유지) -->
         <div class="btn-group mb-2" role="group">
-          <!-- 가격 낮은순 (ASC) -->
           <button type="button" class="btn btn-outline-secondary subs-sort-btn" data-sort="price" data-dir="asc">
             가격 낮은순
           </button>
 
-          <!-- 가격 높은순 (DESC) -->
           <button type="button" class="btn btn-outline-secondary subs-sort-btn" data-sort="price" data-dir="desc">
             가격 높은순
           </button>
 
-          <!-- 기본: 결제일 순 -->
           <button type="button" class="btn btn-outline-secondary subs-sort-btn" data-sort="" data-dir="">
             결제일
           </button>
@@ -48,28 +49,43 @@
           <!-- 구독 리스트 -->
           <div th:if="${!#lists.isEmpty(subsList)}">
 
-            <!-- 정렬 대상 래퍼 -->
+            <!-- (나중에 스크립트 연결할 수 있게 래퍼 유지) -->
             <div id="subs-list-wrapper">
 
               <div th:each="s : ${subsList}"
                 class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom subs-item" th:attr="data-price=${s.subsPrice},
-              data-start=${s.subsStartDate},
-              data-name=${s.subsName},
-              data-billing=${s.subsBillingDay}">
-                <!-- 왼쪽: 아이콘 + 이름/설명 -->
-                <div class="d-flex align-items-center gap-2">
+                          data-start=${s.subsStartDate},
+                          data-name=${s.subsName},
+                          data-billing=${s.subsBillingDay}">
+
+                <!-- 왼쪽: 아이콘 + (이름 + 액션버튼) + 설명 -->
+                <div class="d-flex align-items-center gap-3">
 
                   <!-- 아이콘: 값이 있을 때 -->
                   <img th:if="${s.subsIcon != null and s.subsIcon != ''}"
-                    th:src="@{/img/subs/{icon}(icon=${s.subsIcon})}"
-                    style="width:32px;height:32px;object-fit:contain;margin-right:8px;">
+                    th:src="@{/img/subs/{icon}(icon=${s.subsIcon})}" style="width:32px;height:32px;object-fit:contain;">
 
                   <!-- 아이콘 없을 때 기본 이미지 -->
                   <img th:if="${s.subsIcon == null or s.subsIcon == ''}" th:src="@{/img/subs/default.svg}"
-                    style="width:32px;height:32px;object-fit:contain;margin-right:8px;">
+                    style="width:32px;height:32px;object-fit:contain;">
 
+                  <!-- 텍스트 영역 -->
                   <div>
-                    <div class="fw-semibold" th:text="${s.subsName}">서비스 이름</div>
+
+                    <!-- 1줄: 이름 + 수정/삭제 아이콘 -->
+                    <div class="subs-name-row">
+                      <span class="fw-semibold me-1" th:text="${s.subsName}">서비스 이름</span>
+
+                      <button type="button" class="subs-action-btn" title="수정">
+                        <i class="bi bi-pencil-square"></i>
+                      </button>
+
+                      <button type="button" class="subs-action-btn" title="삭제">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+
+                    <!-- 2줄: 타입 / 결제일 / 시작일 -->
                     <small class="text-muted">
                       <span th:text="${s.subsType}">타입</span>
                       · 매월 <span th:text="${s.subsBillingDay}">1</span>일
@@ -88,12 +104,14 @@
                     구독중
                   </small>
                 </div>
+
               </div> <!-- /subs-item -->
+
             </div> <!-- /subs-list-wrapper -->
-          </div>
-        </div>
-      </div>
-    </div>
+          </div> <!-- /!empty -->
+        </div> <!-- /card-body -->
+      </div> <!-- /card -->
+    </div> <!-- /container -->
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const wrapper = document.getElementById("subs-list-wrapper");

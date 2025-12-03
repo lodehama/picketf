@@ -112,6 +112,10 @@
         <when test="sort == 'price'">
             ORDER BY subs_price
         </when>
+        <!-- 등록순(sort=created) -->
+        <when test="sort == 'created'">
+            ORDER BY subs_num
+        </when>
         <!-- 기본: 구독일 기준 정렬 -->
         <otherwise>
             ORDER BY subs_start_date

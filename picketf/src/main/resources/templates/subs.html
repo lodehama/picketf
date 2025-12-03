@@ -34,6 +34,10 @@
           <button type="button" class="btn btn-outline-secondary subs-sort-btn" data-sort="" data-dir="">
             결제일
           </button>
+
+          <button type="button" class="btn btn-outline-secondary subs-sort-btn" data-sort="created" data-dir="asc">
+            등록순
+          </button>
         </div>
       </div>
 
@@ -158,6 +162,14 @@
               const priceB = Number(b.dataset.price || 0);
               return priceA - priceB;
             });
+            if (dir === "desc") {
+              list.reverse();
+            }
+
+          } else if (sort === "created") {
+            // 등록순: 처음 로딩된 순서(items 배열 순서) 기준
+            list.sort((a, b) => items.indexOf(a) - items.indexOf(b));
+            // dir이 desc면 뒤집고 싶으면 아래 추가
             if (dir === "desc") {
               list.reverse();
             }

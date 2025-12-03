@@ -52,4 +52,17 @@ public class SubsService {
     }
     subsDAO.insertSubsList(list);
   }
+
+  // 정렬 추가
+  public List<SubsDTO> getSubsListByUserSorted(Long userNum, String sort, String dir) {
+
+    if (!"price".equals(sort)) {
+      sort = "date";
+    }
+    if (!"asc".equals(dir) && !"desc".equals(dir)) {
+      dir = "desc";
+    }
+
+    return subsDAO.getSubsListByUserSorted(userNum, sort, dir);
+  }
 }

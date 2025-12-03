@@ -3,13 +3,13 @@ package com.hama.picketf.controller;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hama.picketf.dto.SubsDTO;
@@ -26,13 +26,29 @@ public class SubsController {
   private final SubsService subsService;
 
   @GetMapping("/subs")
-  public String viewSubsPage(@AuthenticationPrincipal CustomUser user, Model model) {
+  public String viewSubsPage(
+      @AuthenticationPrincipal CustomUser user,
+      @RequestParam(defaultValue = "date") String sort, // date 또는 price
+      @RequestParam(defaultValue = "desc") String dir, // asc 또는 desc
+      Model model) {
 
     Long userNum = user.getUsNum();
-    List<SubsDTO> subsList = subsService.getSubsListByUser(userNum);
+
+    // 방어 로직 (이상한 값 들어와도 기본값으로 맞춰줌)
+    if (!"price".equals(sort)) {
+      sort = "date"; // 기본: 구독일 기준
+    }
+    if (!"asc".equals(dir) && !"desc".equals(dir)) {
+      dir = "desc"; // 기본: 최신순(내림차순)
+    }
+
+    // 새로 만들 정렬 지원 메서드 호출
+    List<SubsDTO> subsList = subsService.getSubsListByUserSorted(userNum, sort, dir);
 
     model.addAttribute("subsList", subsList);
     model.addAttribute("subsCount", subsList.size());
+    model.addAttribute("sort", sort);
+    model.addAttribute("dir", dir);
 
     return "subs";
   }

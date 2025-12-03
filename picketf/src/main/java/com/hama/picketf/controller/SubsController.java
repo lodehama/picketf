@@ -1,12 +1,15 @@
 package com.hama.picketf.controller;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +20,7 @@ import com.hama.picketf.dto.SubsRecommendForm;
 import com.hama.picketf.security.CustomUser;
 import com.hama.picketf.service.SubsService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -79,6 +83,25 @@ public class SubsController {
 
     subsService.insertSubsList(list);
     return "OK";
+  }
+
+  // 구독 활성/비활성 변경
+  @PostMapping("/subs/{subsNum}/active")
+  @ResponseBody
+  public Map<String, Object> updateSubsActive(
+      @PathVariable Long subsNum,
+      @RequestBody Map<String, Integer> body,
+      @AuthenticationPrincipal CustomUser user) {
+
+    Long userNum = user.getUsNum(); // 세션 대신 시큐리티 사용
+
+    int active = body.getOrDefault("active", 0);
+    subsService.updateSubsActive(userNum, subsNum, active);
+
+    Map<String, Object> res = new HashMap<>();
+    res.put("success", true);
+    res.put("active", active);
+    return res;
   }
 
   @GetMapping("/subs2")

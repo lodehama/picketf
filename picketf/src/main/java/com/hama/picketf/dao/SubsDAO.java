@@ -25,4 +25,9 @@ public interface SubsDAO {
       @Param("sort") String sort,
       @Param("dir") String dir);
 
+  // 스위치 ON/OFF로 subs_active 값 바꾸는 메서드
+  void updateSubsActive(
+      @Param("userNum") Long userNum,
+      @Param("subsNum") Long subsNum,
+      @Param("active") int active);
 }

@@ -11,222 +11,279 @@
     <div class="container py-3">
       <div class="container-fluid py-3" style="max-width:760px; margin-left:0;">
 
-      <!-- 여백용 -->
-      <h5 class="mb-3">&nbsp;</h5>
+        <!-- 여백용 -->
+        <h5 class="mb-3">&nbsp;</h5>
 
-      <!-- 상단 요약 -->
-      <div class="d-flex justify-content-between align-items-center mb-2 small text-muted">
-        <div>
-          <h5 class="mb-3">
-            내 구독 관리 (<span th:text="${subsCount}">0</span>개)
-          </h5>
-        </div>
-
-        <!-- 정렬 버튼 영역 (스크립트 없어도 UI용으로 유지) -->
-        <div class="btn-group mb-2" role="group">
-          <button type="button" class="btn btn-outline-secondary subs-sort-btn" data-sort="price" data-dir="asc">
-            가격 낮은순
-          </button>
-
-          <button type="button" class="btn btn-outline-secondary subs-sort-btn" data-sort="price" data-dir="desc">
-            가격 높은순
-          </button>
-
-          <button type="button" class="btn btn-outline-secondary subs-sort-btn" data-sort="" data-dir="">
-            결제일
-          </button>
-
-          <button type="button" class="btn btn-outline-secondary subs-sort-btn" data-sort="created" data-dir="asc">
-            등록순
-          </button>
-        </div>
-      </div>
-
-      <!-- 메인 카드 -->
-      <div class="card">
-        <div class="card-body p-0">
-
-          <!-- 비어 있을 때 -->
-          <div th:if="${#lists.isEmpty(subsList)}" class="text-muted text-center py-4">
-            아직 등록된 구독이 없습니다.
+        <!-- 상단 요약 -->
+        <div class="d-flex justify-content-between align-items-center mb-2 small text-muted">
+          <div>
+            <h5 class="mb-3">
+              내 구독 관리 (<span th:text="${subsCount}">0</span>개)
+            </h5>
           </div>
 
-          <!-- 구독 리스트 -->
-          <div th:if="${!#lists.isEmpty(subsList)}">
+          <!-- 정렬 버튼 영역 (스크립트 없어도 UI용으로 유지) -->
+          <div class="btn-group mb-2" role="group">
+            <button type="button" class="btn btn-outline-secondary subs-sort-btn" data-sort="price" data-dir="asc">
+              가격 낮은순
+            </button>
 
-            <!-- (나중에 스크립트 연결할 수 있게 래퍼 유지) -->
-            <div id="subs-list-wrapper">
+            <button type="button" class="btn btn-outline-secondary subs-sort-btn" data-sort="price" data-dir="desc">
+              가격 높은순
+            </button>
 
-              <div th:each="s : ${subsList}"
-                class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom subs-item" th:attr="data-price=${s.subsPrice},
+            <button type="button" class="btn btn-outline-secondary subs-sort-btn" data-sort="" data-dir="">
+              결제일
+            </button>
+
+            <button type="button" class="btn btn-outline-secondary subs-sort-btn" data-sort="created" data-dir="asc">
+              등록순
+            </button>
+          </div>
+        </div>
+
+        <!-- 메인 카드 -->
+        <div class="card">
+          <div class="card-body p-0">
+
+            <!-- 비어 있을 때 -->
+            <div th:if="${#lists.isEmpty(subsList)}" class="text-muted text-center py-4">
+              아직 등록된 구독이 없습니다.
+            </div>
+
+            <!-- 구독 리스트 -->
+            <div th:if="${!#lists.isEmpty(subsList)}">
+
+              <!-- (나중에 스크립트 연결할 수 있게 래퍼 유지) -->
+              <div id="subs-list-wrapper">
+
+                <div th:each="s : ${subsList}"
+                  class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom subs-item" th:attr="data-price=${s.subsPrice},
                           data-start=${s.subsStartDate},
                           data-name=${s.subsName},
                           data-billing=${s.subsBillingDay}">
 
-                <!-- 왼쪽: 아이콘 + (이름 + 액션버튼) + 설명 -->
-                <div class="d-flex align-items-center gap-3">
+                  <!-- 왼쪽: 아이콘 + (이름 + 액션버튼) + 설명 -->
+                  <div class="d-flex align-items-center gap-3">
 
-                  <!-- 아이콘: 값이 있을 때 -->
-                  <img th:if="${s.subsIcon != null and s.subsIcon != ''}"
-                    th:src="@{/img/subs/{icon}(icon=${s.subsIcon})}" style="width:32px;height:32px;object-fit:contain;">
+                    <!-- 아이콘: 값이 있을 때 -->
+                    <img th:if="${s.subsIcon != null and s.subsIcon != ''}"
+                      th:src="@{/img/subs/{icon}(icon=${s.subsIcon})}"
+                      style="width:32px;height:32px;object-fit:contain;">
 
-                  <!-- 아이콘 없을 때 기본 이미지 -->
-                  <img th:if="${s.subsIcon == null or s.subsIcon == ''}" th:src="@{/img/subs/default.svg}"
-                    style="width:32px;height:32px;object-fit:contain;">
-
-                  <!-- 텍스트 영역 -->
-                  <div>
+                    <!-- 아이콘 없을 때 기본 이미지 -->
+                    <img th:if="${s.subsIcon == null or s.subsIcon == ''}" th:src="@{/img/subs/default.svg}"
+                      style="width:32px;height:32px;object-fit:contain;">
 
                     <!-- 1줄: 이름 + 수정/삭제 아이콘 -->
-                    <div class="subs-name-row">
-                      <span class="fw-semibold me-1" th:text="${s.subsName}">서비스 이름</span>
+                    <div>
+                      <div class="subs-name-row">
+                        <span class="fw-semibold me-1" th:text="${s.subsName}">서비스 이름</span>
 
-                      <button type="button" class="subs-action-btn" title="수정">
-                        <i class="bi bi-pencil-square"></i>
-                      </button>
+                        <!-- ON/OFF 스위치 -->
+                        <div class="form-check form-switch">
+                          <input class="form-check-input subs-active-switch" type="checkbox"
+                            th:id="'subsSwitch-' + ${s.subsNum}" th:checked="${s.subsActive == 1}"
+                            th:data-subs-num="${s.subsNum}">
+                          <label class="form-check-label" th:for="'subsSwitch-' + ${s.subsNum}"></label>
+                        </div>
 
-                      <button type="button" class="subs-action-btn" title="삭제">
-                        <i class="bi bi-trash"></i>
-                      </button>
+                        <button type="button" class="subs-action-btn" title="수정">
+                          <i class="bi bi-pencil-square"></i>
+                        </button>
+
+                        <button type="button" class="subs-action-btn" title="삭제">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </div>
+
+                      <!-- 2줄: 타입 / 결제일 / 시작일 -->
+                      <small class="text-muted">
+                        <span th:text="${s.subsType}">타입</span>
+                        · 등록일 : <span th:text="${s.subsStartDate}">2025-12-03</span>
+                      </small>
                     </div>
+                  </div>
 
-                    <!-- 2줄: 타입 / 결제일 / 시작일 -->
+                  <!-- 오른쪽: 가격 + 상태 -->
+                  <div class="text-end">
+                    <div class="fw-semibold" th:text="${#numbers.formatInteger(s.subsPrice, 0, 'COMMA')} + ' 원'">
+                      15,900 원
+                    </div>
                     <small class="text-muted">
-                      <span th:text="${s.subsType}">타입</span>
-                      · 등록일 : <span th:text="${s.subsStartDate}">2025-12-03</span>
+                      매월 <span th:text="${s.subsBillingDay}">1</span>일
+                      · <span class="subs-status" th:text="${s.subsActive == 1 ? '구독중' : '해지'}"
+                        th:classappend="${s.subsActive == 1} ? ' text-success' : ' text-danger'">
+                        구독중
+                      </span>
                     </small>
                   </div>
-                </div>
+                </div> <!-- /subs-item -->
+              </div> <!-- /subs-list-wrapper -->
+            </div> <!-- /!empty -->
+          </div> <!-- /card-body -->
+        </div> <!-- /card -->
+      </div> <!-- /container -->
+      <script>
+        document.addEventListener("DOMContentLoaded", () => {
+          const wrapper = document.getElementById("subs-list-wrapper");
+          if (!wrapper) return;
 
-                <!-- 오른쪽: 가격 + 상태 -->
-                <div class="text-end">
-                  <div class="fw-semibold" th:text="${#numbers.formatInteger(s.subsPrice, 0, 'COMMA')} + ' 원'">
-                    15,900 원
-                  </div>
-                  <small class="text-muted">
-                    매월 <span th:text="${s.subsBillingDay}">1</span>일
-                    · <span th:text="${s.subsActive == 1 ? '구독중' : '해지'}"
-                      th:classappend="${s.subsActive == 1} ? ' text-success' : ' text-danger'">
-                      구독중
-                    </span>
-                  </small>
+          // 처음 로딩된 순서 기준으로 계속 재정렬
+          const items = Array.from(wrapper.querySelectorAll(".subs-item"));
+          const buttons = Array.from(document.querySelectorAll(".subs-sort-btn"));
 
-                </div>
+          // ===== 쿠키 유틸 =====
+          function setCookie(name, value, days) {
+            const d = new Date();
+            d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie =
+              name + "=" + encodeURIComponent(value) +
+              ";expires=" + d.toUTCString() + ";path=/";
+          }
 
-              </div> <!-- /subs-item -->
+          function getCookie(name) {
+            const value = document.cookie
+              .split("; ")
+              .find(row => row.startsWith(name + "="));
+            return value ? decodeURIComponent(value.split("=")[1]) : null;
+          }
 
-            </div> <!-- /subs-list-wrapper -->
-          </div> <!-- /!empty -->
-        </div> <!-- /card-body -->
-      </div> <!-- /card -->
-    </div> <!-- /container -->
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const wrapper = document.getElementById("subs-list-wrapper");
-        if (!wrapper) return;
+          // ===== 정렬 함수 =====
+          function applySort(sort, dir, fromInit = false) {
+            const list = [...items]; // 원본 배열 복사
 
-        // 처음 로딩된 순서 기준으로 계속 재정렬
-        const items = Array.from(wrapper.querySelectorAll(".subs-item"));
-        const buttons = Array.from(document.querySelectorAll(".subs-sort-btn"));
+            if (!sort) {
+              // 기본 정렬: 결제일(청구일) 오름차순, 같은 날이면 가격 오름차순
+              list.sort((a, b) => {
+                const billA = Number(a.dataset.billing || 0);
+                const billB = Number(b.dataset.billing || 0);
+                if (billA !== billB) return billA - billB;
 
-        // ===== 쿠키 유틸 =====
-        function setCookie(name, value, days) {
-          const d = new Date();
-          d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
-          document.cookie =
-            name + "=" + encodeURIComponent(value) +
-            ";expires=" + d.toUTCString() + ";path=/";
-        }
+                const priceA = Number(a.dataset.price || 0);
+                const priceB = Number(b.dataset.price || 0);
+                return priceA - priceB;
+              });
 
-        function getCookie(name) {
-          const value = document.cookie
-            .split("; ")
-            .find(row => row.startsWith(name + "="));
-          return value ? decodeURIComponent(value.split("=")[1]) : null;
-        }
+            } else if (sort === "price") {
+              list.sort((a, b) => {
+                const priceA = Number(a.dataset.price || 0);
+                const priceB = Number(b.dataset.price || 0);
+                return priceA - priceB;
+              });
+              if (dir === "desc") {
+                list.reverse();
+              }
 
-        // ===== 정렬 함수 =====
-        function applySort(sort, dir, fromInit = false) {
-          const list = [...items]; // 원본 배열 복사
-
-          if (!sort) {
-            // 기본 정렬: 결제일(청구일) 오름차순, 같은 날이면 가격 오름차순
-            list.sort((a, b) => {
-              const billA = Number(a.dataset.billing || 0);
-              const billB = Number(b.dataset.billing || 0);
-              if (billA !== billB) return billA - billB;
-
-              const priceA = Number(a.dataset.price || 0);
-              const priceB = Number(b.dataset.price || 0);
-              return priceA - priceB;
-            });
-          } else if (sort === "price") {
-            list.sort((a, b) => {
-              const priceA = Number(a.dataset.price || 0);
-              const priceB = Number(b.dataset.price || 0);
-              return priceA - priceB;
-            });
-            if (dir === "desc") {
-              list.reverse();
+            } else if (sort === "created") {
+              // 등록순: 처음 로딩된 순서(items 배열 순서) 기준
+              list.sort((a, b) => items.indexOf(a) - items.indexOf(b));
+              if (dir === "desc") {
+                list.reverse();
+              }
             }
 
-          } else if (sort === "created") {
-            // 등록순: 처음 로딩된 순서(items 배열 순서) 기준
-            list.sort((a, b) => items.indexOf(a) - items.indexOf(b));
-            // dir이 desc면 뒤집고 싶으면 아래 추가
-            if (dir === "desc") {
-              list.reverse();
+            // DOM 갱신
+            wrapper.innerHTML = "";
+            list.forEach(el => wrapper.appendChild(el));
+
+            // 버튼 active 표시
+            buttons.forEach(btn => {
+              const bSort = btn.dataset.sort || "";
+              const bDir = btn.dataset.dir || "";
+              if ((bSort || "") === (sort || "") && (bDir || "") === (dir || "")) {
+                btn.classList.add("active");
+              } else {
+                btn.classList.remove("active");
+              }
+            });
+
+            // 초기 로딩일 땐 쿠키 저장 X (이미 쿠키 값 기준으로 돌린 거니까)
+            if (!fromInit) {
+              setCookie("subs_sort", sort || "", 30);
+              setCookie("subs_dir", dir || "", 30);
             }
           }
 
-          // DOM 갱신
-          wrapper.innerHTML = "";
-          list.forEach(el => wrapper.appendChild(el));
+          // ===== 처음 로딩 시: 쿠키 읽어서 적용 =====
+          const cookieSort = getCookie("subs_sort");
+          const cookieDir = getCookie("subs_dir") || "";
 
-          // 버튼 active 표시
+          // 쿠키랑 매칭되는 버튼 있으면 그걸 기준으로, 없으면 기본(결제일) 버튼
+          const defaultBtn =
+            buttons.find(btn =>
+              (btn.dataset.sort || "") === (cookieSort || "") &&
+              (btn.dataset.dir || "") === (cookieDir || "")
+            ) || buttons.find(btn => !btn.dataset.sort) || buttons[0];
+
+          const initSort = defaultBtn.dataset.sort || "";
+          const initDir = defaultBtn.dataset.dir || "";
+
+          applySort(initSort, initDir, true);
+
+          // ===== 정렬 버튼 클릭 핸들러 =====
           buttons.forEach(btn => {
-            const bSort = btn.dataset.sort || "";
-            const bDir = btn.dataset.dir || "";
-            if ((bSort || "") === (sort || "") && (bDir || "") === (dir || "")) {
-              btn.classList.add("active");
-            } else {
-              btn.classList.remove("active");
-            }
+            btn.addEventListener("click", () => {
+              const sort = btn.dataset.sort || "";
+              const dir = btn.dataset.dir || "";
+              applySort(sort, dir);
+            });
           });
 
-          // 초기 로딩일 땐 쿠키 저장 X (이미 쿠키 값 기준으로 돌린 거니까)
-          if (!fromInit) {
-            setCookie("subs_sort", sort || "", 30);
-            setCookie("subs_dir", dir || "", 30);
-          }
-        }
+          // ===== 구독 활성/비활성 스위치 이벤트 =====
+          const switches = document.querySelectorAll(".subs-active-switch");
 
-        // ===== 처음 로딩 시: 쿠키 읽어서 적용 =====
-        const cookieSort = getCookie("subs_sort");
-        const cookieDir = getCookie("subs_dir") || "";
+          switches.forEach(sw => {
+            sw.addEventListener("change", (e) => {
+              const checkbox = e.target;
+              const subsNum = checkbox.dataset.subsNum;
+              const active = checkbox.checked ? 1 : 0;
 
-        // 쿠키랑 매칭되는 버튼 있으면 그걸 기준으로, 없으면 기본(결제일) 버튼
-        const defaultBtn =
-          buttons.find(btn =>
-            (btn.dataset.sort || "") === (cookieSort || "") &&
-            (btn.dataset.dir || "") === (cookieDir || "")
-          ) || buttons.find(btn => !btn.dataset.sort) || buttons[0];
+              fetch(`/subs/${subsNum}/active`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "X-Requested-With": "XMLHttpRequest"
+                  // Spring Security 쓰면 여기 CSRF 헤더 추가
+                },
+                body: JSON.stringify({ active: active })
+              })
+                .then(res => {
+                  if (!res.ok) {
+                    throw new Error("http error");
+                  }
+                  return res.json();
+                })
+                .then(data => {
+                  if (!data.success) {
+                    throw new Error("biz error");
+                  }
 
-        const initSort = defaultBtn.dataset.sort || "";
-        const initDir = defaultBtn.dataset.dir || "";
+                  // 화면 상태 텍스트 업데이트
+                  const item = checkbox.closest(".subs-item");
+                  const statusSpan = item.querySelector(".subs-status");
+                  if (!statusSpan) return;
 
-        applySort(initSort, initDir, true);
-
-        // ===== 클릭 핸들러 =====
-        buttons.forEach(btn => {
-          btn.addEventListener("click", () => {
-            const sort = btn.dataset.sort || "";
-            const dir = btn.dataset.dir || "";
-            applySort(sort, dir);
+                  if (active === 1) {
+                    statusSpan.textContent = "구독중";
+                    statusSpan.classList.remove("text-danger");
+                    statusSpan.classList.add("text-success");
+                  } else {
+                    statusSpan.textContent = "해지";
+                    statusSpan.classList.remove("text-success");
+                    statusSpan.classList.add("text-danger");
+                  }
+                })
+                .catch(err => {
+                  // 실패하면 체크 상태 되돌리기
+                  checkbox.checked = !checkbox.checked;
+                  alert("구독 상태 변경에 실패했습니다. 다시 시도해 주세요.");
+                });
+            });
           });
         });
-      });
-    </script>
+      </script>
+
   </main>
 </body>
 

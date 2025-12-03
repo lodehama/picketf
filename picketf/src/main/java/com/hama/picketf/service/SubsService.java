@@ -65,4 +65,9 @@ public class SubsService {
 
     return subsDAO.getSubsListByUserSorted(userNum, sort, dir);
   }
+
+  // 구독 활성/비활성 상태 업데이트
+  public void updateSubsActive(Long userNum, Long subsNum, int active) {
+    subsDAO.updateSubsActive(userNum, subsNum, active);
+  }
 }

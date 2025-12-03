@@ -19,7 +19,6 @@
     <result column="subs_icon"        property="subsIcon" />
   </resultMap>
 
-  <!-- ====================== INSERT ====================== -->
    <!-- 추천 구독 추가 -->
   <insert id="insertSubs"
           parameterType="com.hama.picketf.dto.SubsDTO"
@@ -93,7 +92,6 @@
   </select>
   <!-- 정렬 추가 -->
    <select id="getSubsListByUserSorted"
-        parameterType="long"
         resultMap="SubsResultMap">
     SELECT
         subs_num,
@@ -129,5 +127,13 @@
     </if>
 </select>
 
-
+<!-- 구독 스위치 ON/OFF -->
+<update id="updateSubsActive">
+    UPDATE subs
+    SET subs_active = #{active}
+    WHERE subs_num = #{subsNum}
+    <if test="userNum != null">
+        AND subs_us_num = #{userNum}
+    </if>
+</update>
 </mapper>

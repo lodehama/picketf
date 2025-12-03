@@ -26,16 +26,10 @@ public class SubsController {
   private final SubsService subsService;
 
   @GetMapping("/subs")
-  public String viewSubsPage(Model model, Authentication authentication) {
-    System.out.println("===== SubsController /subs 진입함 =====");
-    System.out.println("authentication = " + authentication);
+  public String viewSubsPage(@AuthenticationPrincipal CustomUser user, Model model) {
 
-    CustomUser customUser = (CustomUser) authentication.getPrincipal();
-    Long userNum = customUser.getUsNum();
-    System.out.println("DEBUG /subs userNum = " + userNum);
-
+    Long userNum = user.getUsNum();
     List<SubsDTO> subsList = subsService.getSubsListByUser(userNum);
-    System.out.println("DEBUG SubsService.getSubsListByUser size = " + subsList.size());
 
     model.addAttribute("subsList", subsList);
     model.addAttribute("subsCount", subsList.size());

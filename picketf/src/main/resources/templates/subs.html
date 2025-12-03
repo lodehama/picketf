@@ -42,13 +42,12 @@
               <div class="d-flex align-items-center gap-2">
 
                 <!-- 아이콘 -->
-                <img th:if="${s.subsIcon != null}" th:src="@{/img/subs/{icon}(icon=${s.subsIcon})}" alt=""
-                  style="width:24px; height:24px; object-fit:contain;">
+                <img th:if="${s.subsIcon != null and !s.subsIcon.isEmpty()}"
+                  th:src="@{/img/subs/{icon}(icon=${s.subsIcon})}" style="width:32px;height:32px;object-fit:contain;margin-right:8px;">
 
                 <!-- 아이콘 없을 때 기본 이미지 -->
-                <img th:if="${s.subsIcon == null}" th:src="@{/img/subs/default.svg}" alt=""
-                  style="width:24px; height:24px; object-fit:contain;">
-
+                <img th:if="${s.subsIcon == null or s.subsIcon.isEmpty()}" th:src="@{/img/subs/default.svg}"
+                  style="width:32px;height:32px;object-fit:contain;margin-right:8px;">
 
                 <div>
                   <div class="fw-semibold" th:text="${s.subsName}">서비스 이름</div>

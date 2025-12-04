@@ -172,3 +172,23 @@ html, body {
   border: none;
   background: transparent;
 }
+
+/* subs 구독 수정 제목 가운데 정렬 */
+/* 모달 제목 가운데 정렬 */
+#subsEditModal .modal-header {
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+/* 닫기 버튼은 오른쪽에 그대로 두기 위한 조정 */
+#subsEditModal .btn-close {
+  position: absolute;
+  right: 1rem;
+}
+
+/* subs 구독 수정 내용 행렬 가운데 정렬 */
+.subs-edit-table th.subs-edit-label {
+  text-align: center !important;
+}
+

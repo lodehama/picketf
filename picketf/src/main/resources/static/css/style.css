@@ -173,8 +173,7 @@ html, body {
   background: transparent;
 }
 
-/* subs 구독 수정 제목 가운데 정렬 */
-/* 모달 제목 가운데 정렬 */
+/* subs 구독 수정 모달 제목 가운데 정렬 */
 #subsEditModal .modal-header {
   display: flex;
   justify-content: center;
@@ -197,11 +196,40 @@ html, body {
   max-width: 320px;
 }
 
-/* sbus 구독 수정 여백 */
-/* 레이블 오른쪽 여백 */
+/* subs 구독 수정 여백 */
 .subs-edit-table th.subs-edit-label {
   padding-right: 12px !important;
 }
 
+/* 금액, 결제일만 오른쪽 정렬 */
+#edit-subs-price,
+#edit-subs-billing {
+  text-align: right !important;
+}
+
+/* 등록일은 가운데 정렬 */
+#edit-subs-start {
+  text-align: center !important;
+}
+
+
+/* 금액 input number 스피너 제거 */
+#edit-subs-price::-webkit-outer-spin-button,
+#edit-subs-price::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* 결제일 input number 스피너 제거 */
+#edit-subs-billing::-webkit-outer-spin-button,
+#edit-subs-billing::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* 날짜 뒤에 여백 */
+#edit-subs-start::-webkit-calendar-picker-indicator {
+  margin-left: 4px;
+}
 
 

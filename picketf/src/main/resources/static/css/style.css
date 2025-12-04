@@ -1,3 +1,4 @@
+/* #region sidebar-layout */
 html, body {
   height: 100%;
 }
@@ -56,8 +57,7 @@ html, body {
   padding: 24px;
 }
 
-/* 위 코드는 메인 레이아웃 */
-
+/* #endregion sidebar-layout */
 
 /* #region qqq.html ETF table */
 /* 테이블 전체 경계선 제거 */

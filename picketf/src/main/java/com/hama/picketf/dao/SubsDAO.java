@@ -34,4 +34,8 @@ public interface SubsDAO {
   // 구독 정보 수정
   void updateSubs(SubsDTO subs);
 
+  // 구독 정보 삭제
+  void deleteSubsByUser(@Param("subsNum") Long subsNum,
+      @Param("userNum") Long userNum);
+
 }

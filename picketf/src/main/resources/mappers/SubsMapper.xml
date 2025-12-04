@@ -149,4 +149,10 @@
     WHERE subs_num    = #{subsNum}
       AND subs_us_num = #{subsUsNum}
   </update>
+<!-- 구독 정보 삭제 -->
+ <delete id="deleteSubsByUser">
+  DELETE FROM subs
+  WHERE subs_num = #{subsNum}
+    AND subs_us_num = #{userNum}
+ </delete>
 </mapper>

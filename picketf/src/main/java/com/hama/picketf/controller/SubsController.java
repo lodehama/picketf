@@ -112,15 +112,19 @@ public class SubsController {
 
   // 구독 정보 수정
   @PostMapping("/subs/edit")
-  public String edit(@ModelAttribute SubsDTO form) {
-
-    Long userNum = 1L; // 나중에 세션/시큐리티에서 가져오기
-
-    // LocalDate 필드가 String으로 넘어오는 경우에는 수동 파싱 필요
-    // 지금 DTO에 subsStartDate가 LocalDate라면,
-    // <input type="date" name="subsStartDate"> 로 보내면 자동 바인딩도 잘 됨.
+  public String edit(@AuthenticationPrincipal CustomUser user,
+      @ModelAttribute SubsDTO form) {
+    Long userNum = user.getUsNum();
     subsService.updateSubs(userNum, form);
+    return "redirect:/subs";
+  }
 
+  // 구독 정보 삭제
+  @PostMapping("/subs/delete")
+  public String deleteSubs(@RequestParam("subsNum") Long subsNum,
+      @AuthenticationPrincipal CustomUser user) {
+    Long userNum = user.getUsNum();
+    subsService.deleteSubs(subsNum, userNum);
     return "redirect:/subs";
   }
 

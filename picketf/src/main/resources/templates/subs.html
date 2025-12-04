@@ -5,6 +5,7 @@
 <head>
   <title>구독 서비스 관리</title>
 </head>
+
 <body>
   <main layout:fragment="content">
     <div class="container py-3">
@@ -90,7 +91,7 @@
                           <i class="bi bi-pencil-square"></i>
                         </button>
 
-                        <button type="button" class="subs-action-btn" title="삭제">
+                        <button type="button" class="subs-action-btn subs-delete-btn" title="삭제">
                           <i class="bi bi-trash"></i>
                         </button>
                       </div>
@@ -182,9 +183,8 @@
                     </tbody>
                   </table>
                 </div>
-
               </div>
-
+              <!-- 수정용 폼 -->
               <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">
                   취소
@@ -193,6 +193,10 @@
                   저장
                 </button>
               </div>
+            </form>
+            <!-- 삭제용 폼 (공용) -->
+            <form th:action="@{/subs/delete}" method="post" id="subs-delete-form" style="display:none;">
+              <input type="hidden" name="subsNum" id="delete-subs-num">
             </form>
           </div>
         </div>
@@ -389,6 +393,32 @@
               });
             });
           }
+
+          // ===== 삭제 버튼 클릭 =====
+          const deleteForm = document.getElementById("subs-delete-form");
+          const deleteInput = document.getElementById("delete-subs-num");
+
+          document.querySelectorAll(".subs-delete-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+              const item = btn.closest(".subs-item");
+              if (!item) return;
+
+              const subsNum = item.dataset.subsNum;
+              const name = item.dataset.name || "";
+
+              // 확인 메시지
+              const ok = confirm(`'${name}' 정말 삭제하시겠습니까?`);
+              if (!ok) {
+                // 아니오(취소) → 그냥 아무것도 안 함
+                return;
+              }
+
+              // 예 → 폼에 번호 넣고 제출
+              deleteInput.value = subsNum;
+              deleteForm.submit();
+            });
+          });
+
         });
       </script>
 

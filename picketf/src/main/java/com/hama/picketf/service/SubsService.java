@@ -77,4 +77,10 @@ public class SubsService {
     dto.setSubsUsNum(userNum);
     subsDAO.updateSubs(dto);
   }
+
+  // 구독 정보 삭제
+  public void deleteSubs(Long subsNum, Long userNum) {
+    subsDAO.deleteSubsByUser(subsNum, userNum);
+  }
+
 }

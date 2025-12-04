@@ -70,4 +70,11 @@ public class SubsService {
   public void updateSubsActive(Long userNum, Long subsNum, int active) {
     subsDAO.updateSubsActive(userNum, subsNum, active);
   }
+
+  // 구독 정보 수정
+  public void updateSubs(Long userNum, SubsDTO dto) {
+    // 안전하게 현재 로그인 유저 번호 세팅
+    dto.setSubsUsNum(userNum);
+    subsDAO.updateSubs(dto);
+  }
 }

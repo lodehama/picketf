@@ -9,6 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -107,6 +108,20 @@ public class SubsController {
   @GetMapping("/subs2")
   public String subs2() {
     return "subs2";
+  }
+
+  // 구독 정보 수정
+  @PostMapping("/subs/edit")
+  public String edit(@ModelAttribute SubsDTO form) {
+
+    Long userNum = 1L; // 나중에 세션/시큐리티에서 가져오기
+
+    // LocalDate 필드가 String으로 넘어오는 경우에는 수동 파싱 필요
+    // 지금 DTO에 subsStartDate가 LocalDate라면,
+    // <input type="date" name="subsStartDate"> 로 보내면 자동 바인딩도 잘 됨.
+    subsService.updateSubs(userNum, form);
+
+    return "redirect:/subs";
   }
 
 }

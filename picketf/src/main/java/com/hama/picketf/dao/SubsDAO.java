@@ -30,4 +30,8 @@ public interface SubsDAO {
       @Param("userNum") Long userNum,
       @Param("subsNum") Long subsNum,
       @Param("active") int active);
+
+  // 구독 정보 수정
+  void updateSubs(SubsDTO subs);
+
 }

@@ -27,15 +27,12 @@
             <button type="button" class="btn btn-outline-secondary subs-sort-btn" data-sort="price" data-dir="asc">
               가격 낮은순
             </button>
-
             <button type="button" class="btn btn-outline-secondary subs-sort-btn" data-sort="price" data-dir="desc">
               가격 높은순
             </button>
-
             <button type="button" class="btn btn-outline-secondary subs-sort-btn" data-sort="" data-dir="">
               결제일
             </button>
-
             <button type="button" class="btn btn-outline-secondary subs-sort-btn" data-sort="created" data-dir="asc">
               등록순
             </button>
@@ -58,10 +55,12 @@
               <div id="subs-list-wrapper">
 
                 <div th:each="s : ${subsList}"
-                  class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom subs-item" th:attr="data-price=${s.subsPrice},
-                          data-start=${s.subsStartDate},
-                          data-name=${s.subsName},
-                          data-billing=${s.subsBillingDay}">
+                  class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom subs-item" th:attr="data-subs-num=${s.subsNum},
+                        data-name=${s.subsName},
+                        data-type=${s.subsType},
+                        data-price=${s.subsPrice},
+                        data-billing=${s.subsBillingDay},
+                        data-start=${s.subsStartDate}">
 
                   <!-- 왼쪽: 아이콘 + (이름 + 액션버튼) + 설명 -->
                   <div class="d-flex align-items-center gap-3">
@@ -88,7 +87,7 @@
                           <label class="form-check-label" th:for="'subsSwitch-' + ${s.subsNum}"></label>
                         </div>
 
-                        <button type="button" class="subs-action-btn" title="수정">
+                        <button type="button" class="subs-action-btn subs-edit-btn" title="수정">
                           <i class="bi bi-pencil-square"></i>
                         </button>
 
@@ -124,6 +123,60 @@
           </div> <!-- /card-body -->
         </div> <!-- /card -->
       </div> <!-- /container -->
+      <!-- 구독 수정 모달 -->
+      <div class="modal fade" id="subsEditModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+
+            <form th:action="@{/subs/edit}" method="post">
+              <div class="modal-header">
+                <h5 class="modal-title">구독 수정</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+
+              <div class="modal-body">
+                <!-- PK -->
+                <input type="hidden" name="subsNum" id="edit-subs-num">
+
+                <div class="mb-2">
+                  <label class="form-label small mb-1">이름</label>
+                  <input type="text" class="form-control form-control-sm" name="subsName" id="edit-subs-name" required>
+                </div>
+
+                <div class="mb-2">
+                  <label class="form-label small mb-1">타입</label>
+                  <input type="text" class="form-control form-control-sm" name="subsType" id="edit-subs-type" required>
+                  <!-- 나중에 select 박스로 바꿔도 됨 -->
+                </div>
+
+                <div class="mb-2">
+                  <label class="form-label small mb-1">금액</label>
+                  <input type="number" class="form-control form-control-sm" name="subsPrice" id="edit-subs-price"
+                    min="0" required>
+                </div>
+
+                <div class="mb-2">
+                  <label class="form-label small mb-1">결제일</label>
+                  <input type="number" class="form-control form-control-sm" name="subsBillingDay" id="edit-subs-billing"
+                    min="1" max="31" required>
+                </div>
+
+                <div class="mb-2">
+                  <label class="form-label small mb-1">등록일</label>
+                  <input type="date" class="form-control form-control-sm" name="subsStartDate" id="edit-subs-start"
+                    required>
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-dark btn-sm">저장</button>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+
       <script>
         document.addEventListener("DOMContentLoaded", () => {
           const wrapper = document.getElementById("subs-list-wrapper");
@@ -281,6 +334,41 @@
                 });
             });
           });
+          // ===== 수정 버튼 → 모달 열기 =====
+    const editModalEl = document.getElementById("subsEditModal");
+    const editModal = editModalEl ? new bootstrap.Modal(editModalEl) : null;
+
+    if (editModal) {
+      const nameInput    = document.getElementById("edit-subs-name");
+      const typeInput    = document.getElementById("edit-subs-type");
+      const priceInput   = document.getElementById("edit-subs-price");
+      const billingInput = document.getElementById("edit-subs-billing");
+      const startInput   = document.getElementById("edit-subs-start");
+      const numInput     = document.getElementById("edit-subs-num");
+
+      document.querySelectorAll(".subs-edit-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const item = btn.closest(".subs-item");
+          if (!item) return;
+
+          const subsNum    = item.dataset.subsNum;
+          const name       = item.dataset.name;
+          const type       = item.dataset.type;
+          const price      = item.dataset.price;
+          const billing    = item.dataset.billing;
+          const startDate  = item.dataset.start; // '2025-12-03' 형식
+
+          numInput.value     = subsNum;
+          nameInput.value    = name;
+          typeInput.value    = type;
+          priceInput.value   = price;
+          billingInput.value = billing;
+          startInput.value   = startDate;
+
+          editModal.show();
+        });
+      });
+    }
         });
       </script>
 

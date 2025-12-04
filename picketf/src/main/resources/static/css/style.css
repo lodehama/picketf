@@ -212,7 +212,6 @@ html, body {
   text-align: center !important;
 }
 
-
 /* 금액 input number 스피너 제거 */
 #edit-subs-price::-webkit-outer-spin-button,
 #edit-subs-price::-webkit-inner-spin-button {
@@ -229,7 +228,35 @@ html, body {
 
 /* 날짜 뒤에 여백 */
 #edit-subs-start::-webkit-calendar-picker-indicator {
-  margin-left: 4px;
+  margin-left: 2px;
 }
 
+/* 금액, 결제일, 등록일 input 폭 줄이기 */
+/* 금액 */
+#subsEditModal #edit-subs-price {
+  max-width: 80px;
+}
 
+/* 결제일 */
+#subsEditModal #edit-subs-billing {
+  max-width: 33px;
+}
+
+/* 등록일 */
+#subsEditModal #edit-subs-start {
+  max-width: 120px;
+}
+
+/* 금액 결제일 날짜 박스 우측정렬 */
+#subsEditModal .subs-edit-table td {
+  text-align: right !important;
+}
+
+#subsEditModal .input-group {
+  justify-content: flex-end !important;
+}
+
+#subsEditModal #edit-subs-start {
+  margin-left: auto;
+  margin-right: 0;
+}

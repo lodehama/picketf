@@ -5,125 +5,123 @@
 
 <mapper namespace="com.hama.picketf.dao.SubsDAO">
 
-  <!-- 이렇게 안 하면 뭘해도 에러 발생 -->
-  <!-- ====================== 공통 resultMap ====================== -->
-  <resultMap id="SubsResultMap" type="com.hama.picketf.dto.SubsDTO">
-    <id     column="subs_num"         property="subsNum" />
-    <result column="subs_us_num"      property="subsUsNum" />
-    <result column="subs_name"        property="subsName" />
-    <result column="subs_price"       property="subsPrice" />
-    <result column="subs_type"        property="subsType" />
-    <result column="subs_billing_day" property="subsBillingDay" />
-    <result column="subs_active"      property="subsActive" />
-    <result column="subs_start_date"  property="subsStartDate" />
-    <result column="subs_icon"        property="subsIcon" />
-  </resultMap>
+<!-- 이렇게 안 하면 뭘해도 에러 발생 -->
+<!-- ====================== 공통 resultMap ====================== -->
+<resultMap id="SubsResultMap" type="com.hama.picketf.dto.SubsDTO">
+  <id     column="subs_num"         property="subsNum" />
+  <result column="subs_us_num"      property="subsUsNum" />
+  <result column="subs_name"        property="subsName" />
+  <result column="subs_price"       property="subsPrice" />
+  <result column="subs_type"        property="subsType" />
+  <result column="subs_billing_day" property="subsBillingDay" />
+  <result column="subs_active"      property="subsActive" />
+  <result column="subs_start_date"  property="subsStartDate" />
+  <result column="subs_icon"        property="subsIcon" />
+</resultMap>
 
-  <!-- 추천 구독 추가 -->
-  <insert id="insertSubs"
-          parameterType="com.hama.picketf.dto.SubsDTO"
-          useGeneratedKeys="true"
-          keyProperty="subsNum">
-    INSERT INTO subs (
-      subs_us_num,
-      subs_name,
-      subs_price,
-      subs_type,
-      subs_billing_day,
-      subs_active,
-      subs_start_date,
-      subs_icon
-    ) VALUES (
-      #{subsUsNum},
-      #{subsName},
-      #{subsPrice},
-      #{subsType},
-      #{subsBillingDay},
-      #{subsActive},
-      #{subsStartDate},
-      #{subsIcon}
+<!-- 추천 구독 추가 -->
+<insert id="insertSubs"
+        parameterType="com.hama.picketf.dto.SubsDTO"
+        useGeneratedKeys="true"
+        keyProperty="subsNum">
+  INSERT INTO subs (
+    subs_us_num,
+    subs_name,
+    subs_price,
+    subs_type,
+    subs_billing_day,
+    subs_active,
+    subs_start_date,
+    subs_icon
+  ) VALUES (
+    #{subsUsNum},
+    #{subsName},
+    #{subsPrice},
+    #{subsType},
+    #{subsBillingDay},
+    #{subsActive},
+    #{subsStartDate},
+    #{subsIcon}
+  )
+</insert>
+
+<insert id="insertSubsList" parameterType="java.util.List">
+  INSERT INTO subs (
+    subs_us_num,
+    subs_name,
+    subs_price,
+    subs_type,
+    subs_billing_day,
+    subs_active,
+    subs_start_date,
+    subs_icon
+  )
+  VALUES
+  <foreach collection="list" item="s" separator=",">
+    (
+      #{s.subsUsNum},
+      #{s.subsName},
+      #{s.subsPrice},
+      #{s.subsType},
+      #{s.subsBillingDay},
+      #{s.subsActive},
+      #{s.subsStartDate},
+      #{s.subsIcon}
     )
-  </insert>
+  </foreach>
+</insert>
 
-  <insert id="insertSubsList" parameterType="java.util.List">
-    INSERT INTO subs (
-      subs_us_num,
-      subs_name,
-      subs_price,
-      subs_type,
-      subs_billing_day,
-      subs_active,
-      subs_start_date,
-      subs_icon
-    )
-    VALUES
-    <foreach collection="list" item="s" separator=",">
-      (
-        #{s.subsUsNum},
-        #{s.subsName},
-        #{s.subsPrice},
-        #{s.subsType},
-        #{s.subsBillingDay},
-        #{s.subsActive},
-        #{s.subsStartDate},
-        #{s.subsIcon}
-      )
-    </foreach>
-  </insert>
+<!-- 구독 목록 조회 -->
+<select id="getSubsListByUser"
+        parameterType="long"
+        resultMap="SubsResultMap">
+  SELECT
+    subs_num,
+    subs_us_num,
+    subs_name,
+    subs_price,
+    subs_type,
+    subs_billing_day,
+    subs_active,
+    subs_start_date,
+    subs_icon
+  FROM subs
+  WHERE subs_us_num = #{userNum}
+  ORDER BY subs_billing_day, subs_num
+</select>
 
-  <!-- 구독 목록 조회 -->
-  <select id="getSubsListByUser"
-          parameterType="long"
-          resultMap="SubsResultMap">
-    SELECT
+<!-- 정렬 추가 -->
+  <select id="getSubsListByUserSorted"
+    resultMap="SubsResultMap">
+  SELECT
       subs_num,
       subs_us_num,
       subs_name,
-      subs_price,
       subs_type,
+      subs_price,
       subs_billing_day,
       subs_active,
       subs_start_date,
       subs_icon
-    FROM subs
-    WHERE subs_us_num = #{userNum}
-    ORDER BY subs_billing_day, subs_num
-  </select>
-  <!-- 정렬 추가 -->
-   <select id="getSubsListByUserSorted"
-        resultMap="SubsResultMap">
-    SELECT
-        subs_num,
-        subs_us_num,
-        subs_name,
-        subs_type,
-        subs_price,
-        subs_billing_day,
-        subs_active,
-        subs_start_date,
-        subs_icon
-    FROM subs
-    WHERE subs_us_num = #{userNum}
-    <choose>
-        <!-- 가격순 정렬 -->
-        <when test="sort == 'price'">
-            ORDER BY subs_price
-        </when>
-        <!-- 등록순(sort=created) -->
-        <when test="sort == 'created'">
-            ORDER BY subs_num
-        </when>
-        <!-- 기본: 구독일 기준 정렬 -->
-        <otherwise>
-            ORDER BY subs_start_date
-        </otherwise>
-    </choose>
-    <if test="dir == 'desc'">
-        DESC
-    </if>
-    <if test="dir == 'asc'">
-        ASC
-    </if>
+  FROM subs
+  WHERE subs_us_num = #{userNum}
+  <choose>
+      <!-- 가격순 정렬 -->
+      <when test="sort == 'price'">
+          ORDER BY subs_price
+      </when>
+
+      <!-- 기본: 등록순 = subs_num 기준 -->
+      <otherwise>
+          ORDER BY subs_num
+      </otherwise>
+  </choose>
+  <if test="dir == 'desc'">
+      DESC
+  </if>
+  <if test="dir == 'asc'">
+      ASC
+  </if>
 </select>
 
 <!-- 구독 스위치 ON/OFF -->
@@ -136,7 +134,7 @@
     </if>
 </update>
 <!-- 구독 정보 수정 -->
- <update id="updateSubs"
+<update id="updateSubs"
           parameterType="com.hama.picketf.dto.SubsDTO">
     UPDATE subs
     SET
@@ -149,9 +147,9 @@
       AND subs_us_num = #{subsUsNum}
   </update>
 <!-- 구독 정보 삭제 -->
- <delete id="deleteSubsByUser">
+<delete id="deleteSubsByUser">
   DELETE FROM subs
   WHERE subs_num = #{subsNum}
     AND subs_us_num = #{userNum}
- </delete>
+</delete>
 </mapper>

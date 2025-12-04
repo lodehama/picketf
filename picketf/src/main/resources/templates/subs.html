@@ -302,7 +302,26 @@
           buttons.forEach(btn => {
             btn.addEventListener("click", () => {
               const sort = btn.dataset.sort || "";
-              const dir = btn.dataset.dir || "";
+              let dir = btn.dataset.dir || "";
+
+              // 등록순 버튼일 때만 특별 동작
+              if (sort === "created") {
+                const isActive = btn.classList.contains("active");
+
+                if (isActive) {
+                  // 이미 등록순이 켜져 있는 상태에서 다시 클릭
+                  // → ASC / DESC 토글
+                  dir = (btn.dataset.dir === "desc") ? "asc" : "desc";
+                  btn.dataset.dir = dir;
+                } else {
+                  // 가격/결제일 등 다른 정렬에서 등록순을 처음 누름
+                  // → 항상 최신순부터(desc)
+                  dir = "desc";
+                  btn.dataset.dir = "desc";
+                }
+              }
+
+              // 나머지(가격/결제일)는 기존 로직 그대로
               applySort(sort, dir);
             });
           });

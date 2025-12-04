@@ -192,3 +192,16 @@ html, body {
   text-align: center !important;
 }
 
+/* subs 구독 수정 모달 크기 */
+#subsEditModal .modal-dialog {
+  max-width: 320px;
+}
+
+/* sbus 구독 수정 여백 */
+/* 레이블 오른쪽 여백 */
+.subs-edit-table th.subs-edit-label {
+  padding-right: 12px !important;
+}
+
+
+

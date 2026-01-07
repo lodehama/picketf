@@ -118,7 +118,7 @@
             </div>
           </div>
         </div>
-
+        
         <!-- 구독 추가 버튼 -->
         <br>
         <div class="d-flex gap-2">
@@ -126,10 +126,11 @@
             직접 추가
           </button>
           <button class="btn btn-dark btn-sm flex-fill" type="button" data-bs-toggle="modal"
-            data-bs-target="#subsRecommendModal">
-            추천 구독 추가
-          </button>
-        </div>
+          data-bs-target="#subsRecommendModal">
+          추천 구독 추가
+        </button>
+      </div>
+      <canvas id="subsTypeDonut" style="max-width:520px;"></canvas>
 
       </div>
     </div>
@@ -295,282 +296,364 @@
       </div>
     </div>
 
-    <!-- =========================================================
-         스크립트 (모든 모달/DOM 아래)
-         ========================================================= -->
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
+    <th:block layout:fragment="script">
+      <script th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", () => {
 
-        /* =========================================================
-         * 1) 정렬/쿠키
-         * ========================================================= */
-        const wrapper = document.getElementById("subs-list-wrapper");
-        if (wrapper) {
-          const items = Array.from(wrapper.querySelectorAll(".subs-item"));
-          const buttons = Array.from(document.querySelectorAll(".subs-sort-btn"));
+          // ===== 도넛 차트 =====
+          console.log("Chart loaded?", typeof Chart);
 
-          function setCookie(name, value, days) {
-            const d = new Date();
-            d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
-            document.cookie =
-              name + "=" + encodeURIComponent(value) +
-              ";expires=" + d.toUTCString() + ";path=/";
+          // 1) 선언(초기화) 먼저
+          const donutLabels = /*[[${donutLabels}]]*/[];
+          const donutValues = /*[[${donutValues}]]*/[];
+          const donutTotal = /*[[${donutTotal}]]*/ 0;
+
+          const safeTotal = Number(donutTotal || 0);
+          const canvas = document.getElementById("subsTypeDonut");
+
+          // 2) 그 다음 로그
+          console.log("labels", donutLabels);
+          console.log("values", donutValues);
+          console.log("total", safeTotal);
+          console.log("Canvas?", canvas);
+
+          // 3) 방어 로직
+          if (typeof Chart === "undefined") {
+            console.error("Chart.js가 로드되지 않았습니다.");
+            return;
+          }
+          if (!canvas) {
+            console.error("canvas #subsTypeDonut 요소를 찾지 못했습니다.");
+            return;
           }
 
-          function getCookie(name) {
-            const value = document.cookie
-              .split("; ")
-              .find(row => row.startsWith(name + "="));
-            return value ? decodeURIComponent(value.split("=")[1]) : null;
+          // 4) 데이터 방어
+          let labelsForChart = Array.isArray(donutLabels) ? donutLabels : [];
+          let valuesForChart = Array.isArray(donutValues) ? donutValues : [];
+
+          const hasData = labelsForChart.length > 0
+            && valuesForChart.length > 0
+            && valuesForChart.some(v => Number(v) > 0);
+
+          if (!hasData) {
+            console.warn("구독 차트 데이터가 없습니다. 차트를 렌더링하지 않습니다.");
+            canvas.style.display = "none";
+
+            // 안내 문구(원하면)
+            const msg = document.createElement("div");
+            msg.className = "text-muted small mt-2";
+            msg.textContent = "활성화된 구독이 없어 차트를 표시할 수 없습니다.";
+            canvas.parentElement?.appendChild(msg);
+            return;
           }
 
-          function applySort(sort, dir, fromInit = false) {
-            const list = [...items];
 
-            if (!sort) {
-              list.sort((a, b) => {
-                const billA = Number(a.dataset.billing || 0);
-                const billB = Number(b.dataset.billing || 0);
-                if (billA !== billB) return billA - billB;
+          const data = {
+            labels: labelsForChart,
+            datasets: [{
+              label: "월 구독비",
+              data: valuesForChart,
+              backgroundColor: [
+                "#4e79a7", "#f28e2b", "#e15759", "#76b7b2", "#59a14f",
+                "#edc949", "#af7aa1", "#ff9da7", "#9c755f", "#bab0ac"
+              ],
+              borderWidth: 1
+            }]
+          };
 
-                const priceA = Number(a.dataset.price || 0);
-                const priceB = Number(b.dataset.price || 0);
-                return priceA - priceB;
-              });
-            } else if (sort === "price") {
-              list.sort((a, b) => Number(a.dataset.price || 0) - Number(b.dataset.price || 0));
-              if (dir === "desc") list.reverse();
-            } else if (sort === "created") {
-              // 등록순 = subs_start_date 기준
-              // 같은 날짜면 subs_num으로 2차 정렬(안정성)
-              list.sort((a, b) => {
-                const da = Date.parse(a.dataset.start || "1970-01-01") || 0;
-                const db = Date.parse(b.dataset.start || "1970-01-01") || 0;
-                if (da !== db) return da - db;
+          const config = {
+            type: "doughnut",
+            data,
+            options: {
+              responsive: true,
+              cutout: "62%",
+              plugins: {
+                legend: { position: "top" },
+                title: {
+                  display: true,
+                  text: `구독 유형별 비중 (총합: ${safeTotal.toLocaleString()}원)`
+                },
+                tooltip: {
+                  callbacks: {
+                    label: function (context) {
+                      const v = Number(context.raw || 0);
+                      const pct = safeTotal ? (v / safeTotal * 100) : 0;
+                      return `${context.label}: ${v.toLocaleString()}원 (${pct.toFixed(1)}%)`;
+                    }
+                  }
+                }
+              }
+            }
+          };
+          new Chart(canvas, config);
 
-                const na = Number(a.dataset.subsNum || 0);
-                const nb = Number(b.dataset.subsNum || 0);
-                return na - nb;
-              });
 
-              if (dir === "desc") list.reverse(); // 최신 -> 오래된
+
+
+          /* =========================================================
+           * 1) 정렬/쿠키
+           * ========================================================= */
+          const wrapper = document.getElementById("subs-list-wrapper");
+          if (wrapper) {
+            const items = Array.from(wrapper.querySelectorAll(".subs-item"));
+            const buttons = Array.from(document.querySelectorAll(".subs-sort-btn"));
+
+            function setCookie(name, value, days) {
+              const d = new Date();
+              d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+              document.cookie =
+                name + "=" + encodeURIComponent(value) +
+                ";expires=" + d.toUTCString() + ";path=/";
             }
 
+            function getCookie(name) {
+              const value = document.cookie
+                .split("; ")
+                .find(row => row.startsWith(name + "="));
+              return value ? decodeURIComponent(value.split("=")[1]) : null;
+            }
 
-            wrapper.innerHTML = "";
-            list.forEach(el => wrapper.appendChild(el));
+            function applySort(sort, dir, fromInit = false) {
+              const list = [...items];
+
+              if (!sort) {
+                list.sort((a, b) => {
+                  const billA = Number(a.dataset.billing || 0);
+                  const billB = Number(b.dataset.billing || 0);
+                  if (billA !== billB) return billA - billB;
+
+                  const priceA = Number(a.dataset.price || 0);
+                  const priceB = Number(b.dataset.price || 0);
+                  return priceA - priceB;
+                });
+              } else if (sort === "price") {
+                list.sort((a, b) => Number(a.dataset.price || 0) - Number(b.dataset.price || 0));
+                if (dir === "desc") list.reverse();
+              } else if (sort === "created") {
+                list.sort((a, b) => {
+                  const da = Date.parse(a.dataset.start || "1970-01-01") || 0;
+                  const db = Date.parse(b.dataset.start || "1970-01-01") || 0;
+                  if (da !== db) return da - db;
+
+                  const na = Number(a.dataset.subsNum || 0);
+                  const nb = Number(b.dataset.subsNum || 0);
+                  return na - nb;
+                });
+
+                if (dir === "desc") list.reverse();
+              }
+
+              wrapper.innerHTML = "";
+              list.forEach(el => wrapper.appendChild(el));
+
+              buttons.forEach(btn => {
+                const bSort = btn.dataset.sort || "";
+                const bDir = btn.dataset.dir || "";
+
+                const sortMatch = (bSort === (sort || ""));
+                const dirMatch = (bSort === "created") ? true : (bDir === (dir || ""));
+                btn.classList.toggle("active", sortMatch && dirMatch);
+              });
+
+              if (!fromInit) {
+                setCookie("subs_sort", sort || "", 30);
+                setCookie("subs_dir", dir || "", 30);
+              }
+            }
+
+            const cookieSort = getCookie("subs_sort") || "";
+            const cookieDir = getCookie("subs_dir") || "";
+
+            const sortBtn = buttons.find(btn => (btn.dataset.sort || "") === cookieSort);
+            const initSort = sortBtn ? cookieSort : "";
+            const initDir = sortBtn ? cookieDir : "";
+
+            applySort(initSort, initDir, true);
 
             buttons.forEach(btn => {
-              const bSort = btn.dataset.sort || "";
-              const bDir = btn.dataset.dir || "";
+              btn.addEventListener("click", () => {
+                let sort = btn.dataset.sort || "";
+                let dir = btn.dataset.dir || "";
 
-              const sortMatch = (bSort === (sort || ""));
-              const dirMatch = (bSort === "created") ? true : (bDir === (dir || ""));
-              btn.classList.toggle("active", sortMatch && dirMatch);
+                if (sort === "created") {
+                  dir = btn.classList.contains("active") && dir === "desc" ? "asc" : "desc";
+                  btn.dataset.dir = dir;
+                }
+                applySort(sort, dir);
+              });
             });
-
-            if (!fromInit) {
-              setCookie("subs_sort", sort || "", 30);
-              setCookie("subs_dir", dir || "", 30);
-            }
           }
 
-          const cookieSort = getCookie("subs_sort") || "";
-          const cookieDir = getCookie("subs_dir") || "";
+          /* =========================================================
+           * 2) 추천 구독 추가
+           * ========================================================= */
+          const saveBtn = document.getElementById("btn-rec-save");
+          const recommendModalEl = document.getElementById("subsRecommendModal");
 
-          const sortBtn = buttons.find(btn => (btn.dataset.sort || "") === cookieSort);
-          const initSort = sortBtn ? cookieSort : "";
-          const initDir = sortBtn ? cookieDir : "";
+          if (saveBtn && recommendModalEl) {
+            recommendModalEl.addEventListener("shown.bs.modal", () => {
+              const todayDay = new Date().getDate();
+              recommendModalEl.querySelectorAll(".rec-bill").forEach(input => {
+                if (!input.value) input.value = todayDay;
+              });
+            });
 
-          applySort(initSort, initDir, true);
+            saveBtn.addEventListener("click", async () => {
+              const rows = Array.from(recommendModalEl.querySelectorAll("tbody tr"));
+              const payload = [];
 
-          buttons.forEach(btn => {
-            btn.addEventListener("click", () => {
-              let sort = btn.dataset.sort || "";
-              let dir = btn.dataset.dir || "";
+              for (const row of rows) {
+                const checkbox = row.querySelector(".rec-check");
+                if (!checkbox || !checkbox.checked) continue;
 
-              if (sort === "created") {
-                dir = btn.classList.contains("active") && dir === "desc" ? "asc" : "desc";
-                btn.dataset.dir = dir;
+                const priceInput = row.querySelector(".rec-price");
+                const billInput = row.querySelector(".rec-bill");
+
+                const price = parseInt(priceInput?.value || "0", 10);
+                const billingDay = parseInt(billInput?.value || "0", 10);
+
+                if (isNaN(billingDay) || billingDay < 1 || billingDay > 31) {
+                  alert("결제일은 1~31 사이 숫자만 입력할 수 있습니다.");
+                  billInput?.focus();
+                  return;
+                }
+
+                payload.push({
+                  name: row.dataset.name,
+                  type: row.dataset.type,
+                  icon: row.dataset.icon,
+                  price,
+                  billingDay
+                });
               }
-              applySort(sort, dir);
-            });
-          });
-        }
 
-        /* =========================================================
-         * 2) 추천 구독 추가 (결제일 오늘 자동 세팅 + 저장)
-         *    -> 모달 "열릴 때마다" 자동 세팅되게 수정 (핵심!)
-         * ========================================================= */
-        const saveBtn = document.getElementById("btn-rec-save");
-        const recommendModalEl = document.getElementById("subsRecommendModal");
-
-        if (saveBtn && recommendModalEl) {
-
-          // 모달이 열릴 때마다 결제일 기본값 주입 (이게 제일 안정적)
-          recommendModalEl.addEventListener("shown.bs.modal", () => {
-            const todayDay = new Date().getDate();
-            recommendModalEl.querySelectorAll(".rec-bill").forEach(input => {
-              if (!input.value) input.value = todayDay;
-            });
-          });
-
-          saveBtn.addEventListener("click", async () => {
-            const rows = Array.from(recommendModalEl.querySelectorAll("tbody tr"));
-            const payload = [];
-
-            for (const row of rows) {
-              const checkbox = row.querySelector(".rec-check");
-              if (!checkbox || !checkbox.checked) continue;
-
-              const priceInput = row.querySelector(".rec-price");
-              const billInput = row.querySelector(".rec-bill");
-
-              const price = parseInt(priceInput?.value || "0", 10);
-              const billingDay = parseInt(billInput?.value || "0", 10);
-
-              if (isNaN(billingDay) || billingDay < 1 || billingDay > 31) {
-                alert("결제일은 1~31 사이 숫자만 입력할 수 있습니다.");
-                billInput?.focus();
+              if (payload.length === 0) {
+                alert("선택된 항목이 없습니다.");
                 return;
               }
 
-              payload.push({
-                name: row.dataset.name,
-                type: row.dataset.type,
-                icon: row.dataset.icon,
-                price,
-                billingDay
-              });
-            }
+              try {
+                const res = await fetch("/subs/recommended", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    "X-Requested-With": "XMLHttpRequest"
+                  },
+                  body: JSON.stringify(payload)
+                });
 
-            if (payload.length === 0) {
-              alert("선택된 항목이 없습니다.");
-              return;
-            }
+                if (res.ok) location.reload();
+                else {
+                  const txt = await res.text().catch(() => "");
+                  alert("저장 실패 (서버 응답 오류)\n" + txt);
+                }
+              } catch (e) {
+                alert("저장 요청 중 네트워크 오류가 발생했습니다.");
+              }
+            });
+          }
 
-            try {
-              const res = await fetch("/subs/recommended", {
+          /* =========================================================
+           * 3) 활성/비활성 스위치
+           * ========================================================= */
+          document.querySelectorAll(".subs-active-switch").forEach(sw => {
+            sw.addEventListener("change", (e) => {
+              const checkbox = e.target;
+              const subsNum = checkbox.dataset.subsNum;
+              const active = checkbox.checked ? 1 : 0;
+
+              fetch(`/subs/${subsNum}/active`, {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
                   "X-Requested-With": "XMLHttpRequest"
                 },
-                body: JSON.stringify(payload)
-              });
-
-              if (res.ok) {
-                location.reload();
-              } else {
-                const txt = await res.text().catch(() => "");
-                alert("저장 실패 (서버 응답 오류)\n" + txt);
-              }
-            } catch (e) {
-              alert("저장 요청 중 네트워크 오류가 발생했습니다.");
-            }
-          });
-        }
-
-        /* =========================================================
-         * 3) 활성/비활성 스위치
-         * ========================================================= */
-        document.querySelectorAll(".subs-active-switch").forEach(sw => {
-          sw.addEventListener("change", (e) => {
-            const checkbox = e.target;
-            const subsNum = checkbox.dataset.subsNum;
-            const active = checkbox.checked ? 1 : 0;
-
-            fetch(`/subs/${subsNum}/active`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "X-Requested-With": "XMLHttpRequest"
-              },
-              body: JSON.stringify({ active })
-            })
-              .then(res => {
-                if (!res.ok) throw new Error("http error");
-                return res.json();
+                body: JSON.stringify({ active })
               })
-              .then(data => {
-                if (!data.success) throw new Error("biz error");
+                .then(res => {
+                  if (!res.ok) throw new Error("http error");
+                  return res.json();
+                })
+                .then(data => {
+                  if (!data.success) throw new Error("biz error");
 
-                const item = checkbox.closest(".subs-item");
-                const statusSpan = item?.querySelector(".subs-status");
-                if (!statusSpan) return;
+                  const item = checkbox.closest(".subs-item");
+                  const statusSpan = item?.querySelector(".subs-status");
+                  if (!statusSpan) return;
 
-                if (active === 1) {
-                  statusSpan.textContent = "구독중";
-                  statusSpan.classList.remove("text-danger");
-                  statusSpan.classList.add("text-success");
-                } else {
-                  statusSpan.textContent = "해지";
-                  statusSpan.classList.remove("text-success");
-                  statusSpan.classList.add("text-danger");
-                }
-              })
-              .catch(() => {
-                checkbox.checked = !checkbox.checked;
-                alert("구독 상태 변경에 실패했습니다. 다시 시도해 주세요.");
-              });
+                  if (active === 1) {
+                    statusSpan.textContent = "구독중";
+                    statusSpan.classList.remove("text-danger");
+                    statusSpan.classList.add("text-success");
+                  } else {
+                    statusSpan.textContent = "해지";
+                    statusSpan.classList.remove("text-success");
+                    statusSpan.classList.add("text-danger");
+                  }
+                })
+                .catch(() => {
+                  checkbox.checked = !checkbox.checked;
+                  alert("구독 상태 변경에 실패했습니다. 다시 시도해 주세요.");
+                });
+            });
           });
-        });
 
-        /* =========================================================
-         * 4) 수정 모달
-         * ========================================================= */
-        const editModalEl = document.getElementById("subsEditModal");
-        const editModal = editModalEl ? new bootstrap.Modal(editModalEl) : null;
+          /* =========================================================
+           * 4) 수정 모달
+           * ========================================================= */
+          const editModalEl = document.getElementById("subsEditModal");
+          const editModal = editModalEl ? new bootstrap.Modal(editModalEl) : null;
 
-        if (editModal) {
-          const nameInput = document.getElementById("edit-subs-name");
-          const typeInput = document.getElementById("edit-subs-type");
-          const priceInput = document.getElementById("edit-subs-price");
-          const billingInput = document.getElementById("edit-subs-billing");
-          const startInput = document.getElementById("edit-subs-start");
-          const numInput = document.getElementById("edit-subs-num");
+          if (editModal) {
+            const nameInput = document.getElementById("edit-subs-name");
+            const typeInput = document.getElementById("edit-subs-type");
+            const priceInput = document.getElementById("edit-subs-price");
+            const billingInput = document.getElementById("edit-subs-billing");
+            const startInput = document.getElementById("edit-subs-start");
+            const numInput = document.getElementById("edit-subs-num");
 
-          document.querySelectorAll(".subs-edit-btn").forEach(btn => {
+            document.querySelectorAll(".subs-edit-btn").forEach(btn => {
+              btn.addEventListener("click", () => {
+                const item = btn.closest(".subs-item");
+                if (!item) return;
+
+                numInput.value = item.dataset.subsNum || "";
+                nameInput.value = item.dataset.name || "";
+                typeInput.value = item.dataset.type || "";
+                priceInput.value = item.dataset.price || "";
+                billingInput.value = item.dataset.billing || "";
+                startInput.value = item.dataset.start || "";
+
+                editModal.show();
+              });
+            });
+          }
+
+          /* =========================================================
+           * 5) 삭제
+           * ========================================================= */
+          const deleteForm = document.getElementById("subs-delete-form");
+          const deleteInput = document.getElementById("delete-subs-num");
+
+          document.querySelectorAll(".subs-delete-btn").forEach(btn => {
             btn.addEventListener("click", () => {
               const item = btn.closest(".subs-item");
               if (!item) return;
 
-              numInput.value = item.dataset.subsNum || "";
-              nameInput.value = item.dataset.name || "";
-              typeInput.value = item.dataset.type || "";
-              priceInput.value = item.dataset.price || "";
-              billingInput.value = item.dataset.billing || "";
-              startInput.value = item.dataset.start || "";
+              const subsNum = item.dataset.subsNum;
+              const name = item.dataset.name || "";
 
-              editModal.show();
+              const ok = confirm(`'${name}' 정말 삭제하시겠습니까?`);
+              if (!ok) return;
+
+              deleteInput.value = subsNum;
+              deleteForm.submit();
             });
           });
-        }
 
-        /* =========================================================
-         * 5) 삭제
-         * ========================================================= */
-        const deleteForm = document.getElementById("subs-delete-form");
-        const deleteInput = document.getElementById("delete-subs-num");
-
-        document.querySelectorAll(".subs-delete-btn").forEach(btn => {
-          btn.addEventListener("click", () => {
-            const item = btn.closest(".subs-item");
-            if (!item) return;
-
-            const subsNum = item.dataset.subsNum;
-            const name = item.dataset.name || "";
-
-            const ok = confirm(`'${name}' 정말 삭제하시겠습니까?`);
-            if (!ok) return;
-
-            deleteInput.value = subsNum;
-            deleteForm.submit();
-          });
         });
-
-      });
-    </script>
+      </script>
+    </th:block>
 
   </main>
 </body>

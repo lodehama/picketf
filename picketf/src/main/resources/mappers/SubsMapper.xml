@@ -133,6 +133,7 @@
         AND subs_us_num = #{userNum}
     </if>
 </update>
+
 <!-- 구독 정보 수정 -->
 <update id="updateSubs"
           parameterType="com.hama.picketf.dto.SubsDTO">
@@ -146,10 +147,25 @@
     WHERE subs_num    = #{subsNum}
       AND subs_us_num = #{subsUsNum}
   </update>
+
 <!-- 구독 정보 삭제 -->
 <delete id="deleteSubsByUser">
   DELETE FROM subs
   WHERE subs_num = #{subsNum}
     AND subs_us_num = #{userNum}
 </delete>
+
+<!-- 구독 차트 추가 -->
+<select id="selectSubsTypeSumPrice" parameterType="long" resultType="map">
+  SELECT
+    subs_type AS type,
+    SUM(subs_price) AS sumPrice
+  FROM subs
+  WHERE subs_us_num = #{subsUsNum}
+    AND subs_active = 1
+  GROUP BY subs_type
+  ORDER BY SUM(subs_price) DESC
+</select>
+
+
 </mapper>

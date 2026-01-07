@@ -1,6 +1,7 @@
 package com.hama.picketf.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -21,21 +22,25 @@ public interface SubsDAO {
 
   // 정렬 추가
   List<SubsDTO> getSubsListByUserSorted(
-      @Param("userNum") Long userNum,
-      @Param("sort") String sort,
-      @Param("dir") String dir);
+    @Param("userNum") Long userNum,
+    @Param("sort") String sort,
+    @Param("dir") String dir);
 
   // 스위치 ON/OFF로 subs_active 값 바꾸는 메서드
   void updateSubsActive(
-      @Param("userNum") Long userNum,
-      @Param("subsNum") Long subsNum,
-      @Param("active") int active);
+    @Param("userNum") Long userNum,
+    @Param("subsNum") Long subsNum,
+    @Param("active") int active);
 
   // 구독 정보 수정
   void updateSubs(SubsDTO subs);
 
   // 구독 정보 삭제
   void deleteSubsByUser(@Param("subsNum") Long subsNum,
-      @Param("userNum") Long userNum);
+    @Param("userNum") Long userNum);
+
+  // 구독 차트 추가
+  List<Map<String, Object>> selectSubsTypeSumPrice(@Param("subsUsNum") Long subsUsNum);
+
 
 }

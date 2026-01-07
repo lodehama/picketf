@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.hama.picketf.dto.SubsDTO;
 import com.hama.picketf.dto.SubsRecommendForm;
 import com.hama.picketf.security.CustomUser;
 import com.hama.picketf.service.SubsService;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -54,6 +54,12 @@ public class SubsController {
     model.addAttribute("subsCount", subsList.size());
     model.addAttribute("sort", sort);
     model.addAttribute("dir", dir);
+
+    // 구독 차트 추가
+    Map<String, Object> donut = subsService.getSubsTypeDonutData(userNum);
+    model.addAttribute("donutLabels", donut.get("labels"));
+    model.addAttribute("donutValues", donut.get("values"));
+    model.addAttribute("donutTotal", donut.get("total"));
 
     return "subs";
   }

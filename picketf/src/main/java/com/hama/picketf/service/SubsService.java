@@ -2,7 +2,9 @@ package com.hama.picketf.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -81,6 +83,36 @@ public class SubsService {
   // 구독 정보 삭제
   public void deleteSubs(Long subsNum, Long userNum) {
     subsDAO.deleteSubsByUser(subsNum, userNum);
+  }
+
+  // 구독 차트 추가
+  public Map<String, Object> getSubsTypeDonutData(Long subsUsNum) {
+    List<Map<String, Object>> rows = subsDAO.selectSubsTypeSumPrice(subsUsNum);
+
+    List<String> labels = new ArrayList<>();
+    List<Integer> values = new ArrayList<>();
+    int total = 0;
+
+    for (Map<String, Object> r : rows) {
+
+      // type 방어 (null이면 "기타")
+      Object typeObj = r.get("type");
+      String type = (typeObj == null) ? "기타" : String.valueOf(typeObj);
+
+      // sumPrice 방어 (키 불일치/NULL 대비)
+      Object sumObj = r.get("sumPrice");
+      int sumPrice = (sumObj instanceof Number) ? ((Number) sumObj).intValue() : 0;
+
+      labels.add(type);
+      values.add(sumPrice);
+      total += sumPrice;
+    }
+
+    Map<String, Object> res = new HashMap<>();
+    res.put("labels", labels);
+    res.put("values", values);
+    res.put("total", total);
+    return res;
   }
 
 }

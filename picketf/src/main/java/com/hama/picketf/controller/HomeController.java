@@ -45,9 +45,9 @@ public class HomeController {
     return "m7";
   }
 
-  @GetMapping("/updates")
-  public String updates() {
-    return "updates";
+  @GetMapping("/devlog")
+  public String devlog() {
+    return "devlog";
   }
 
 }

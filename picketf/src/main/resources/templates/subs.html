@@ -9,128 +9,143 @@
 <body>
   <main layout:fragment="content">
     <div class="container py-3">
-      <div class="container-fluid py-3" style="max-width:760px; margin-left:0;">
 
-        <!-- 여백용 -->
-        <h5 class="mb-3">&nbsp;</h5>
+      <!-- ✅ 왼쪽(리스트) + 오른쪽(차트) 레이아웃 래퍼 -->
+      <div class="d-flex align-items-start gap-4">
 
-        <!-- 상단 요약 -->
-        <div class="d-flex justify-content-between align-items-center mb-2 small text-muted">
-          <div>
-            <h5 class="mb-3">
-              내 구독 관리 (<span th:text="${subsCount}">0</span>개)
-            </h5>
-          </div>
+        <!-- ✅ 왼쪽: 기존 리스트 영역 -->
+        <div class="container-fluid py-3" style="max-width:760px; margin-left:0; flex: 0 0 760px;">
 
-          <!-- 정렬 버튼 -->
-          <div class="btn-group mb-2" role="group">
-            <button type="button" class="btn btn-outline-secondary subs-sort-btn" data-sort="price" data-dir="asc">
-              가격 낮은순
-            </button>
-            <button type="button" class="btn btn-outline-secondary subs-sort-btn" data-sort="price" data-dir="desc">
-              가격 높은순
-            </button>
-            <button type="button" class="btn btn-outline-secondary subs-sort-btn" data-sort="" data-dir="">
-              결제일
-            </button>
-            <button type="button" class="btn btn-outline-secondary subs-sort-btn" data-sort="created" data-dir="asc">
-              등록일
-            </button>
-          </div>
-        </div>
+          <!-- 여백용 -->
+          <h5 class="mb-3">&nbsp;</h5>
 
-        <!-- 메인 카드 -->
-        <div class="card">
-          <div class="card-body p-0">
-
-            <!-- 비어 있을 때 -->
-            <div th:if="${#lists.isEmpty(subsList)}" class="text-muted text-center py-4">
-              아직 등록된 구독이 없습니다.
+          <!-- 상단 요약 -->
+          <div class="d-flex justify-content-between align-items-center mb-2 small text-muted">
+            <div>
+              <h5 class="mb-3">
+                내 구독 관리 (<span th:text="${subsCount}">0</span>개)
+              </h5>
             </div>
 
-            <!-- 구독 리스트 -->
-            <div th:if="${!#lists.isEmpty(subsList)}">
+            <!-- 정렬 버튼 -->
+            <div class="btn-group mb-2" role="group">
+              <button type="button" class="btn btn-outline-secondary subs-sort-btn" data-sort="price" data-dir="asc">
+                가격 낮은순
+              </button>
+              <button type="button" class="btn btn-outline-secondary subs-sort-btn" data-sort="price" data-dir="desc">
+                가격 높은순
+              </button>
+              <button type="button" class="btn btn-outline-secondary subs-sort-btn" data-sort="" data-dir="">
+                결제일
+              </button>
+              <button type="button" class="btn btn-outline-secondary subs-sort-btn" data-sort="created" data-dir="asc">
+                등록일
+              </button>
+            </div>
+          </div>
 
-              <div id="subs-list-wrapper">
-                <div th:each="s : ${subsList}"
-                  class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom subs-item" th:attr="data-subs-num=${s.subsNum},
-                           data-name=${s.subsName},
-                           data-type=${s.subsType},
-                           data-price=${s.subsPrice},
-                           data-billing=${s.subsBillingDay},
-                           data-start=${s.subsStartDate}">
+          <!-- 메인 카드 -->
+          <div class="card">
+            <div class="card-body p-0">
 
-                  <!-- 왼쪽 -->
-                  <div class="d-flex align-items-center gap-3">
+              <!-- 비어 있을 때 -->
+              <div th:if="${#lists.isEmpty(subsList)}" class="text-muted text-center py-4">
+                아직 등록된 구독이 없습니다.
+              </div>
 
-                    <img th:if="${s.subsIcon != null and s.subsIcon != ''}"
-                      th:src="@{/img/subs/{icon}(icon=${s.subsIcon})}"
-                      style="width:32px;height:32px;object-fit:contain;">
+              <!-- 구독 리스트 -->
+              <div th:if="${!#lists.isEmpty(subsList)}">
+                <div id="subs-list-wrapper">
+                  <div th:each="s : ${subsList}"
+                    class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom subs-item" th:attr="data-subs-num=${s.subsNum},
+                         data-name=${s.subsName},
+                         data-type=${s.subsType},
+                         data-price=${s.subsPrice},
+                         data-billing=${s.subsBillingDay},
+                         data-start=${s.subsStartDate}">
 
-                    <img th:if="${s.subsIcon == null or s.subsIcon == ''}" th:src="@{/img/subs/default.svg}"
-                      style="width:32px;height:32px;object-fit:contain;">
+                    <!-- 왼쪽 -->
+                    <div class="d-flex align-items-center gap-3">
 
-                    <div>
-                      <div class="subs-name-row">
-                        <span class="fw-semibold me-1" th:text="${s.subsName}">서비스 이름</span>
+                      <img th:if="${s.subsIcon != null and s.subsIcon != ''}"
+                        th:src="@{/img/subs/{icon}(icon=${s.subsIcon})}"
+                        style="width:32px;height:32px;object-fit:contain;">
 
-                        <!-- ON/OFF 스위치 -->
-                        <div class="form-check form-switch d-inline-block align-middle ms-2">
-                          <input class="form-check-input subs-active-switch" type="checkbox"
-                            th:id="'subsSwitch-' + ${s.subsNum}" th:checked="${s.subsActive == 1}"
-                            th:data-subs-num="${s.subsNum}">
-                          <label class="form-check-label" th:for="'subsSwitch-' + ${s.subsNum}"></label>
+                      <img th:if="${s.subsIcon == null or s.subsIcon == ''}" th:src="@{/img/subs/default.svg}"
+                        style="width:32px;height:32px;object-fit:contain;">
+
+                      <div>
+                        <div class="subs-name-row">
+                          <span class="fw-semibold me-1" th:text="${s.subsName}">서비스 이름</span>
+
+                          <!-- ON/OFF 스위치 -->
+                          <div class="form-check form-switch d-inline-block align-middle ms-2">
+                            <input class="form-check-input subs-active-switch" type="checkbox"
+                              th:id="'subsSwitch-' + ${s.subsNum}" th:checked="${s.subsActive == 1}"
+                              th:data-subs-num="${s.subsNum}">
+                            <label class="form-check-label" th:for="'subsSwitch-' + ${s.subsNum}"></label>
+                          </div>
+
+                          <button type="button" class="subs-action-btn subs-edit-btn" title="수정">
+                            <i class="bi bi-pencil-square"></i>
+                          </button>
+
+                          <button type="button" class="subs-action-btn subs-delete-btn" title="삭제">
+                            <i class="bi bi-trash"></i>
+                          </button>
                         </div>
 
-                        <button type="button" class="subs-action-btn subs-edit-btn" title="수정">
-                          <i class="bi bi-pencil-square"></i>
-                        </button>
-
-                        <button type="button" class="subs-action-btn subs-delete-btn" title="삭제">
-                          <i class="bi bi-trash"></i>
-                        </button>
+                        <small class="text-muted">
+                          <span th:text="${s.subsType}">타입</span>
+                          · 등록일 : <span th:text="${s.subsStartDate}">2025-12-03</span>
+                        </small>
                       </div>
+                    </div>
 
+                    <!-- 오른쪽 -->
+                    <div class="text-end">
+                      <div class="fw-semibold" th:text="${#numbers.formatInteger(s.subsPrice, 0, 'COMMA')} + ' 원'">
+                        15,900 원
+                      </div>
                       <small class="text-muted">
-                        <span th:text="${s.subsType}">타입</span>
-                        · 등록일 : <span th:text="${s.subsStartDate}">2025-12-03</span>
+                        매월 <span th:text="${s.subsBillingDay}">1</span>일
+                        · <span class="subs-status" th:text="${s.subsActive == 1 ? '구독중' : '해지'}"
+                          th:classappend="${s.subsActive == 1} ? ' text-success' : ' text-danger'">
+                          구독중
+                        </span>
                       </small>
                     </div>
-                  </div>
 
-                  <!-- 오른쪽 -->
-                  <div class="text-end">
-                    <div class="fw-semibold" th:text="${#numbers.formatInteger(s.subsPrice, 0, 'COMMA')} + ' 원'">
-                      15,900 원
-                    </div>
-                    <small class="text-muted">
-                      매월 <span th:text="${s.subsBillingDay}">1</span>일
-                      · <span class="subs-status" th:text="${s.subsActive == 1 ? '구독중' : '해지'}"
-                        th:classappend="${s.subsActive == 1} ? ' text-success' : ' text-danger'">
-                        구독중
-                      </span>
-                    </small>
                   </div>
-
                 </div>
               </div>
 
             </div>
           </div>
+
+          <!-- 구독 추가 버튼 -->
+          <br>
+          <div class="d-flex gap-2">
+            <button class="btn btn-outline-dark btn-sm flex-fill" type="button">
+              직접 추가
+            </button>
+            <button class="btn btn-dark btn-sm flex-fill" type="button" data-bs-toggle="modal"
+              data-bs-target="#subsRecommendModal">
+              추천 구독 추가
+            </button>
+          </div>
+
         </div>
-        
-        <!-- 구독 추가 버튼 -->
-        <br>
-        <div class="d-flex gap-2">
-          <button class="btn btn-outline-dark btn-sm flex-fill" type="button">
-            직접 추가
-          </button>
-          <button class="btn btn-dark btn-sm flex-fill" type="button" data-bs-toggle="modal"
-          data-bs-target="#subsRecommendModal">
-          추천 구독 추가
-        </button>
-      </div>
-      <canvas id="subsTypeDonut" style="max-width:520px;"></canvas>
+
+        <!-- ✅ 오른쪽: 차트 영역 -->
+        <div style="width: 520px; position: sticky; top: 90px;">
+          <div class="card-body">
+            <!-- ✅ 캔버스는 width/height를 부모가 잡아주는 게 안정적 -->
+            <div style="height: 460px;">
+              <canvas id="subsTypeDonut"></canvas>
+            </div>
+          </div>
+        </div>
 
       </div>
     </div>

@@ -323,6 +323,16 @@
           const donutValues = /*[[${donutValues}]]*/[];
           const donutTotal = /*[[${donutTotal}]]*/ 0;
 
+          const CHARTJS_COLORS = [
+            '#36A2EB', // Blue
+            '#FF9F40', // Orange
+            '#FFCD56', // Yellow
+            '#4BC0C0', // Teal
+            '#9966FF', // Purple
+            '#FF6384', // Pink
+            '#8BC34A', // Green
+          ];
+
           const safeTotal = Number(donutTotal || 0);
           const canvas = document.getElementById("subsTypeDonut");
 
@@ -368,12 +378,15 @@
             datasets: [{
               label: "월 구독비",
               data: valuesForChart,
-              backgroundColor: [
-                "#4e79a7", "#f28e2b", "#e15759", "#76b7b2", "#59a14f",
-                "#edc949", "#af7aa1", "#ff9da7", "#9c755f", "#bab0ac"
-              ],
-              borderWidth: 1
+
+              // ✅ 밝은 Chart.js 샘플 색상
+              backgroundColor: CHARTJS_COLORS,
+
+              // ✅ 조각 경계 흰색
+              borderColor: "#ffffff",
+              borderWidth: 2
             }]
+
           };
 
           const config = {
@@ -381,6 +394,8 @@
             data,
             options: {
               responsive: true,
+              // 부모 컨테이너에 맞춤
+              maintainAspectRatio: false,
               cutout: "62%",
               plugins: {
                 legend: { position: "top" },
@@ -401,8 +416,6 @@
             }
           };
           new Chart(canvas, config);
-
-
 
 
           /* =========================================================

@@ -268,7 +268,13 @@
             buttons.forEach(btn => {
               const bSort = btn.dataset.sort || "";
               const bDir = btn.dataset.dir || "";
-              if ((bSort || "") === (sort || "") && (bDir || "") === (dir || "")) {
+
+              const sortMatch = (bSort === (sort || ""));
+
+              // 등록순(created)은 dir 비교를 무시하고 active 처리
+              const dirMatch = (bSort === "created") ? true : (bDir === (dir || ""));
+
+              if (sortMatch && dirMatch) {
                 btn.classList.add("active");
               } else {
                 btn.classList.remove("active");
@@ -283,20 +289,28 @@
           }
 
           // ===== 처음 로딩 시: 쿠키 읽어서 적용 =====
-          const cookieSort = getCookie("subs_sort");
+          const cookieSort = getCookie("subs_sort") || "";
           const cookieDir = getCookie("subs_dir") || "";
 
-          // 쿠키랑 매칭되는 버튼 있으면 그걸 기준으로, 없으면 기본(결제일) 버튼
-          const defaultBtn =
-            buttons.find(btn =>
-              (btn.dataset.sort || "") === (cookieSort || "") &&
-              (btn.dataset.dir || "") === (cookieDir || "")
-            ) || buttons.find(btn => !btn.dataset.sort) || buttons[0];
+          let initSort = "";
+          let initDir = "";
 
-          const initSort = defaultBtn.dataset.sort || "";
-          const initDir = defaultBtn.dataset.dir || "";
+          // 1) sort 기준으로 버튼 찾기 (dir 무시)
+          const sortBtn = buttons.find(btn => (btn.dataset.sort || "") === cookieSort);
+
+          // 2) init 값은 쿠키를 우선 사용
+          if (sortBtn) {
+            initSort = cookieSort;
+            initDir = cookieDir; // 쿠키값 그대로
+          } else {
+            // 쿠키에 해당 sort가 없으면 결제일 기본
+            const fallbackBtn = buttons.find(btn => !btn.dataset.sort) || buttons[0];
+            initSort = fallbackBtn.dataset.sort || "";
+            initDir = fallbackBtn.dataset.dir || "";
+          }
 
           applySort(initSort, initDir, true);
+
 
           // ===== 정렬 버튼 클릭 핸들러 =====
           buttons.forEach(btn => {

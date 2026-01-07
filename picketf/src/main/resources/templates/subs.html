@@ -34,7 +34,7 @@
               결제일
             </button>
             <button type="button" class="btn btn-outline-secondary subs-sort-btn" data-sort="created" data-dir="asc">
-              등록순
+              등록일
             </button>
           </div>
         </div>
@@ -53,8 +53,7 @@
 
               <div id="subs-list-wrapper">
                 <div th:each="s : ${subsList}"
-                  class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom subs-item"
-                  th:attr="data-subs-num=${s.subsNum},
+                  class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom subs-item" th:attr="data-subs-num=${s.subsNum},
                            data-name=${s.subsName},
                            data-type=${s.subsType},
                            data-price=${s.subsPrice},
@@ -68,8 +67,7 @@
                       th:src="@{/img/subs/{icon}(icon=${s.subsIcon})}"
                       style="width:32px;height:32px;object-fit:contain;">
 
-                    <img th:if="${s.subsIcon == null or s.subsIcon == ''}"
-                      th:src="@{/img/subs/default.svg}"
+                    <img th:if="${s.subsIcon == null or s.subsIcon == ''}" th:src="@{/img/subs/default.svg}"
                       style="width:32px;height:32px;object-fit:contain;">
 
                     <div>
@@ -79,8 +77,7 @@
                         <!-- ON/OFF 스위치 -->
                         <div class="form-check form-switch d-inline-block align-middle ms-2">
                           <input class="form-check-input subs-active-switch" type="checkbox"
-                            th:id="'subsSwitch-' + ${s.subsNum}"
-                            th:checked="${s.subsActive == 1}"
+                            th:id="'subsSwitch-' + ${s.subsNum}" th:checked="${s.subsActive == 1}"
                             th:data-subs-num="${s.subsNum}">
                           <label class="form-check-label" th:for="'subsSwitch-' + ${s.subsNum}"></label>
                         </div>
@@ -108,9 +105,8 @@
                     </div>
                     <small class="text-muted">
                       매월 <span th:text="${s.subsBillingDay}">1</span>일
-                      · <span class="subs-status"
-                          th:text="${s.subsActive == 1 ? '구독중' : '해지'}"
-                          th:classappend="${s.subsActive == 1} ? ' text-success' : ' text-danger'">
+                      · <span class="subs-status" th:text="${s.subsActive == 1 ? '구독중' : '해지'}"
+                        th:classappend="${s.subsActive == 1} ? ' text-success' : ' text-danger'">
                         구독중
                       </span>
                     </small>
@@ -129,8 +125,8 @@
           <button class="btn btn-outline-dark btn-sm flex-fill" type="button">
             직접 추가
           </button>
-          <button class="btn btn-dark btn-sm flex-fill" type="button"
-            data-bs-toggle="modal" data-bs-target="#subsRecommendModal">
+          <button class="btn btn-dark btn-sm flex-fill" type="button" data-bs-toggle="modal"
+            data-bs-target="#subsRecommendModal">
             추천 구독 추가
           </button>
         </div>
@@ -241,7 +237,8 @@
                     <tr>
                       <th scope="row" class="subs-edit-label">이름</th>
                       <td>
-                        <input type="text" class="form-control form-control-sm" name="subsName" id="edit-subs-name" required>
+                        <input type="text" class="form-control form-control-sm" name="subsName" id="edit-subs-name"
+                          required>
                       </td>
                     </tr>
                     <tr>
@@ -255,7 +252,8 @@
                       <th scope="row" class="subs-edit-label">금액</th>
                       <td>
                         <div class="input-group input-group-sm">
-                          <input type="number" class="form-control" name="subsPrice" id="edit-subs-price" min="0" required>
+                          <input type="number" class="form-control" name="subsPrice" id="edit-subs-price" min="0"
+                            required>
                           <span class="input-group-text">원</span>
                         </div>
                       </td>
@@ -264,7 +262,8 @@
                       <th scope="row" class="subs-edit-label">결제일</th>
                       <td>
                         <div class="input-group input-group-sm">
-                          <input type="number" class="form-control" name="subsBillingDay" id="edit-subs-billing" min="1" max="31" required>
+                          <input type="number" class="form-control" name="subsBillingDay" id="edit-subs-billing" min="1"
+                            max="31" required>
                           <span class="input-group-text">일</span>
                         </div>
                       </td>
@@ -272,7 +271,8 @@
                     <tr>
                       <th scope="row" class="subs-edit-label">등록일</th>
                       <td>
-                        <input type="date" class="form-control form-control-sm" name="subsStartDate" id="edit-subs-start" required>
+                        <input type="date" class="form-control form-control-sm" name="subsStartDate"
+                          id="edit-subs-start" required>
                       </td>
                     </tr>
                   </tbody>
@@ -341,9 +341,21 @@
               list.sort((a, b) => Number(a.dataset.price || 0) - Number(b.dataset.price || 0));
               if (dir === "desc") list.reverse();
             } else if (sort === "created") {
-              list.sort((a, b) => items.indexOf(a) - items.indexOf(b));
-              if (dir === "desc") list.reverse();
+              // 등록순 = subs_start_date 기준
+              // 같은 날짜면 subs_num으로 2차 정렬(안정성)
+              list.sort((a, b) => {
+                const da = Date.parse(a.dataset.start || "1970-01-01") || 0;
+                const db = Date.parse(b.dataset.start || "1970-01-01") || 0;
+                if (da !== db) return da - db;
+
+                const na = Number(a.dataset.subsNum || 0);
+                const nb = Number(b.dataset.subsNum || 0);
+                return na - nb;
+              });
+
+              if (dir === "desc") list.reverse(); // 최신 -> 오래된
             }
+
 
             wrapper.innerHTML = "";
             list.forEach(el => wrapper.appendChild(el));

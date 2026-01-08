@@ -141,7 +141,6 @@
         <!-- 오른쪽: 차트 영역 -->
         <div style="width: 600px; position: sticky; top: 90px;">
           <div class="card-body" style="padding-top: 20px;">
-            <!-- 캔버스는 width/height를 부모가 잡아주는 게 안정적 -->
             <div style="height: 580px;">
               <canvas id="subsTypeDonut"></canvas>
             </div>
@@ -150,7 +149,8 @@
 
       </div>
     </div>
-    <!-- 직접 구독 추가 모달  -->
+
+    <!-- 직접 구독 추가 모달 -->
     <div class="modal fade" id="subsManualModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
@@ -180,7 +180,7 @@
                       <input type="text" class="form-control form-control-sm rec-type" placeholder="타입 입력">
                     </td>
                     <td>
-                      <input type="number" class="form-control form-control-sm rec-price" placeholder="금액">
+                      <input type="number" class="form-control form-control-sm rec-price" placeholder="금액" min="0">
                     </td>
                     <td>
                       <input type="number" class="form-control form-control-sm rec-bill" min="1" max="31"
@@ -193,14 +193,15 @@
           </div>
 
           <div class="modal-footer">
-            <button id="btn-rec-save" type="button" class="btn btn-dark">추가하기</button>
+            <!-- ✅ id 충돌 방지: 직접추가는 별도 id -->
+            <button id="btn-manual-save" type="button" class="btn btn-dark">추가하기</button>
           </div>
 
         </div>
       </div>
     </div>
 
-    <!-- 추천 구독 추가 모달  -->
+    <!-- 추천 구독 추가 모달 -->
     <div class="modal fade" id="subsRecommendModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
@@ -242,7 +243,7 @@
                       관리비
                     </td>
                     <td>주거</td>
-                    <td><input type="number" class="form-control form-control-sm rec-price" value="100000"></td>
+                    <td><input type="number" class="form-control form-control-sm rec-price" value="100000" min="0"></td>
                     <td><input type="number" class="form-control form-control-sm rec-bill" min="1" max="31"></td>
                   </tr>
 
@@ -256,7 +257,7 @@
                       월세
                     </td>
                     <td>주거</td>
-                    <td><input type="number" class="form-control form-control-sm rec-price" value="400000"></td>
+                    <td><input type="number" class="form-control form-control-sm rec-price" value="400000" min="0"></td>
                     <td><input type="number" class="form-control form-control-sm rec-bill" min="1" max="31"></td>
                   </tr>
 
@@ -269,7 +270,7 @@
                       통신비
                     </td>
                     <td>통신</td>
-                    <td><input type="number" class="form-control form-control-sm rec-price" value="30000"></td>
+                    <td><input type="number" class="form-control form-control-sm rec-price" value="30000" min="0"></td>
                     <td><input type="number" class="form-control form-control-sm rec-bill" min="1" max="31"></td>
                   </tr>
 
@@ -283,7 +284,7 @@
                       보험료
                     </td>
                     <td>보험</td>
-                    <td><input type="number" class="form-control form-control-sm rec-price" value="40000"></td>
+                    <td><input type="number" class="form-control form-control-sm rec-price" value="40000" min="0"></td>
                     <td><input type="number" class="form-control form-control-sm rec-bill" min="1" max="31"></td>
                   </tr>
 
@@ -296,7 +297,7 @@
                       유튜브 프리미엄
                     </td>
                     <td>미디어</td>
-                    <td><input type="number" class="form-control form-control-sm rec-price" value="14900"></td>
+                    <td><input type="number" class="form-control form-control-sm rec-price" value="14900" min="0"></td>
                     <td><input type="number" class="form-control form-control-sm rec-bill" min="1" max="31"></td>
                   </tr>
 
@@ -309,7 +310,7 @@
                       넷플릭스
                     </td>
                     <td>영화</td>
-                    <td><input type="number" class="form-control form-control-sm rec-price" value="13500"></td>
+                    <td><input type="number" class="form-control form-control-sm rec-price" value="13500" min="0"></td>
                     <td><input type="number" class="form-control form-control-sm rec-bill" min="1" max="31"></td>
                   </tr>
 
@@ -322,7 +323,7 @@
                       스포티파이
                     </td>
                     <td>음악</td>
-                    <td><input type="number" class="form-control form-control-sm rec-price" value="8690"></td>
+                    <td><input type="number" class="form-control form-control-sm rec-price" value="8690" min="0"></td>
                     <td><input type="number" class="form-control form-control-sm rec-bill" min="1" max="31"></td>
                   </tr>
 
@@ -335,7 +336,7 @@
                       쿠팡
                     </td>
                     <td>배달</td>
-                    <td><input type="number" class="form-control form-control-sm rec-price" value="7890"></td>
+                    <td><input type="number" class="form-control form-control-sm rec-price" value="7890" min="0"></td>
                     <td><input type="number" class="form-control form-control-sm rec-bill" min="1" max="31"></td>
                   </tr>
 
@@ -348,7 +349,7 @@
                       배달의 민족
                     </td>
                     <td>배달</td>
-                    <td><input type="number" class="form-control form-control-sm rec-price" value="3900"></td>
+                    <td><input type="number" class="form-control form-control-sm rec-price" value="3900" min="0"></td>
                     <td><input type="number" class="form-control form-control-sm rec-bill" min="1" max="31"></td>
                   </tr>
 
@@ -361,7 +362,7 @@
                       클라우드
                     </td>
                     <td>클라우드</td>
-                    <td><input type="number" class="form-control form-control-sm rec-price" value="10000"></td>
+                    <td><input type="number" class="form-control form-control-sm rec-price" value="10000" min="0"></td>
                     <td><input type="number" class="form-control form-control-sm rec-bill" min="1" max="31"></td>
                   </tr>
 
@@ -479,13 +480,11 @@
            * 0-1) 차트 렌더(절대 return으로 아래 기능 죽이지 않기)
            * ========================================================= */
           try {
-            // Chart.js 로드 여부
             if (typeof Chart === "undefined") {
               console.warn("Chart.js가 로드되지 않았습니다. 차트를 스킵합니다.");
             } else if (!canvas) {
               console.warn("canvas #subsTypeDonut 요소가 없습니다. 차트를 스킵합니다.");
             } else {
-              // 데이터 방어
               const labelsForChart = Array.isArray(donutLabels) ? donutLabels : [];
               const valuesForChart = Array.isArray(donutValues) ? donutValues : [];
 
@@ -535,7 +534,6 @@
                     maintainAspectRatio: false,
                     cutout: "62%",
                     plugins: {
-                      // datalabels는 플러그인 로드된 경우에만 정상 동작
                       datalabels: {
                         anchor: "center",
                         align: "center",
@@ -583,12 +581,10 @@
                   }
                 };
 
-                // ✅ ChartDataLabels가 없으면 등록/사용 안 함(에러로 스크립트 중단 방지)
                 if (typeof ChartDataLabels !== "undefined") {
                   Chart.register(ChartDataLabels);
                 } else {
                   console.warn("ChartDataLabels 플러그인이 로드되지 않았습니다. datalabels는 비활성화됩니다.");
-                  // datalabels 옵션이 있어도 플러그인 없으면 의미가 없지만, 에러는 안 나게 위에서 가드함
                 }
 
                 new Chart(canvas, config);
@@ -597,7 +593,6 @@
           } catch (err) {
             console.error("차트 렌더 중 오류 (아래 기능은 계속 진행):", err);
           }
-
 
           /* =========================================================
            * 1) 정렬/쿠키
@@ -626,7 +621,6 @@
               const list = [...items];
 
               if (!sort) {
-                // 결제일 우선, 같으면 가격 낮은 순
                 list.sort((a, b) => {
                   const billA = Number(a.dataset.billing || 0);
                   const billB = Number(b.dataset.billing || 0);
@@ -694,52 +688,106 @@
           }
 
           /* =========================================================
-          * 1-1) 메인 리스트 모두선택 (관리비/월세 제외)
+          * 2) 직접 구독 추가 (✅ 신규)
           * ========================================================= */
-          const selectAllBtn = document.getElementById("selectAllBtn");
+          const manualModalEl = document.getElementById("subsManualModal");
+          const manualSaveBtn = document.getElementById("btn-manual-save");
 
-          if (selectAllBtn) {
-            selectAllBtn.addEventListener("click", () => {
-              document.querySelectorAll(".subs-check").forEach(cb => {
-                if (cb.dataset.exclude === "true") return; // 관리비, 월세 제외
-                cb.checked = true;
-              });
+          if (manualModalEl && manualSaveBtn) {
+
+            // 모달 열릴 때 결제일 기본값(오늘 날짜) 세팅
+            manualModalEl.addEventListener("shown.bs.modal", () => {
+              const todayDay = new Date().getDate();
+              const billInput = manualModalEl.querySelector(".rec-bill");
+              if (billInput && !billInput.value) billInput.value = todayDay;
             });
-          } else {
-            console.warn("#selectAllBtn 요소가 없습니다. (메인 모두선택 스킵)");
+
+            manualSaveBtn.addEventListener("click", async () => {
+              const name = manualModalEl.querySelector(".rec-name")?.value?.trim();
+              const type = manualModalEl.querySelector(".rec-type")?.value?.trim();
+              const price = parseInt(manualModalEl.querySelector(".rec-price")?.value || "0", 10);
+              const billingDay = parseInt(manualModalEl.querySelector(".rec-bill")?.value || "0", 10);
+
+              if (!name) {
+                alert("항목명을 입력해줘");
+                manualModalEl.querySelector(".rec-name")?.focus();
+                return;
+              }
+              if (!type) {
+                alert("타입을 입력해줘");
+                manualModalEl.querySelector(".rec-type")?.focus();
+                return;
+              }
+              if (isNaN(price) || price <= 0) {
+                alert("금액은 1원 이상 입력해줘");
+                manualModalEl.querySelector(".rec-price")?.focus();
+                return;
+              }
+              if (isNaN(billingDay) || billingDay < 1 || billingDay > 31) {
+                alert("결제일은 1~31 사이 숫자만 입력할 수 있습니다.");
+                manualModalEl.querySelector(".rec-bill")?.focus();
+                return;
+              }
+
+              // ✅ 컨트롤러가 List<SubsDTO>를 받으므로 배열로 보낸다
+              // ✅ 필드명은 네 화면에서 쓰는 subsBillingDay 기준으로 맞춤
+              const payload = [{
+                subsName: name,
+                subsType: type,
+                subsPrice: price,
+                subsBillingDay: billingDay
+              }];
+
+              try {
+                const res = await fetch("/subs/add", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    "X-Requested-With": "XMLHttpRequest"
+                  },
+                  body: JSON.stringify(payload)
+                });
+
+                const txt = await res.text().catch(() => "");
+                if (res.ok && txt === "OK") {
+                  location.reload();
+                } else {
+                  alert("저장 실패 (서버 응답 오류)\n" + txt);
+                }
+              } catch (e) {
+                alert("저장 요청 중 네트워크 오류가 발생했습니다.");
+                console.error(e);
+              }
+            });
           }
 
-
           /* =========================================================
-          * 2) 추천 구독 추가 (+ 모두 선택)
+          * 3) 추천 구독 추가 (+ 모두 선택) (✅ 안전하게 버튼 탐색 수정)
           * ========================================================= */
-          const saveBtn = document.getElementById("btn-rec-save");
           const recommendModalEl = document.getElementById("subsRecommendModal");
           const recSelectAll = document.getElementById("recSelectAll");
+          const recSaveBtn = recommendModalEl ? recommendModalEl.querySelector("#btn-rec-save") : null;
 
-          console.log("saveBtn?", saveBtn, "recommendModalEl?", recommendModalEl, "recSelectAll?", recSelectAll);
+          console.log("recSaveBtn?", recSaveBtn, "recommendModalEl?", recommendModalEl, "recSelectAll?", recSelectAll);
 
-          if (saveBtn && recommendModalEl) {
+          if (recSaveBtn && recommendModalEl) {
 
             // ✅ 모두 선택 기능
             if (recSelectAll) {
               const getRecChecks = () =>
                 Array.from(recommendModalEl.querySelectorAll(".rec-check"));
 
-              // 전체선택 클릭 -> 전부 체크/해제
               recSelectAll.addEventListener("change", () => {
                 const checks = getRecChecks();
 
                 checks.forEach(chk => {
-                  if (chk.dataset.exclude === "true") return; // ✅ 관리비/월세 제외
+                  if (chk.dataset.exclude === "true") return; // 관리비/월세 제외
                   chk.checked = recSelectAll.checked;
                 });
 
-                // 전체선택은 "전체(제외 항목 빼고)" 기준으로 판단해야 깔끔함
                 recSelectAll.indeterminate = false;
               });
 
-              // 개별 체크 변경 -> 전체선택 상태 갱신(일부 선택 indeterminate)
               recommendModalEl.addEventListener("change", (e) => {
                 if (!e.target.classList.contains("rec-check")) return;
 
@@ -758,7 +806,6 @@
                 }
               });
 
-              // 모달 열릴 때 초기화(원하면 삭제해서 선택 유지 가능)
               recommendModalEl.addEventListener("shown.bs.modal", () => {
                 recSelectAll.checked = false;
                 recSelectAll.indeterminate = false;
@@ -766,7 +813,7 @@
               });
             }
 
-            // ✅ 모달 열릴 때 결제일 기본값(오늘 날짜) 세팅
+            // ✅ 모달 열릴 때 결제일 기본값 세팅
             recommendModalEl.addEventListener("shown.bs.modal", () => {
               const todayDay = new Date().getDate();
               recommendModalEl.querySelectorAll(".rec-bill").forEach(input => {
@@ -775,7 +822,7 @@
             });
 
             // ✅ 추가하기
-            saveBtn.addEventListener("click", async () => {
+            recSaveBtn.addEventListener("click", async () => {
               const rows = Array.from(recommendModalEl.querySelectorAll("tbody tr"));
               const payload = [];
 
@@ -827,12 +874,13 @@
                 }
               } catch (e) {
                 alert("저장 요청 중 네트워크 오류가 발생했습니다.");
+                console.error(e);
               }
             });
           }
 
           /* =========================================================
-           * 3) 활성/비활성 스위치
+           * 4) 활성/비활성 스위치
            * ========================================================= */
           document.querySelectorAll(".subs-active-switch").forEach(sw => {
             sw.addEventListener("change", (e) => {
@@ -876,9 +924,8 @@
             });
           });
 
-
           /* =========================================================
-           * 4) 수정 모달
+           * 5) 수정 모달
            * ========================================================= */
           const editModalEl = document.getElementById("subsEditModal");
           const editModal = editModalEl ? new bootstrap.Modal(editModalEl) : null;
@@ -908,9 +955,8 @@
             });
           }
 
-
           /* =========================================================
-           * 5) 삭제
+           * 6) 삭제
            * ========================================================= */
           const deleteForm = document.getElementById("subs-delete-form");
           const deleteInput = document.getElementById("delete-subs-num");
@@ -933,7 +979,6 @@
 
         });
       </script>
-
     </th:block>
 
   </main>

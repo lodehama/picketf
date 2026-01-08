@@ -376,13 +376,11 @@
             datasets: [{
               label: "월 구독비",
               data: valuesForChart,
-
-              // ✅ 밝은 Chart.js 샘플 색상
+              // 밝은 Chart.js 샘플 색상
               backgroundColor: CHARTJS_COLORS,
-
-              // ✅ 조각 경계 흰색
+              // 조각 경계 흰색
               borderColor: "#ffffff",
-              borderWidth: 2
+              borderWidth: 4
             }]
 
           };
@@ -396,9 +394,10 @@
               maintainAspectRatio: false,
               cutout: "62%",
               plugins: {
-                legend: { position: "top" },
+                legend: { position: "bottom" },
                 title: {
                   display: true,
+                  position: "bottom",
                   text: `구독 유형별 비중 (총합: ${safeTotal.toLocaleString()}원)`
                 },
                 tooltip: {

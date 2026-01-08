@@ -281,4 +281,12 @@ label[for="recSelectAll"] {
   border-color: #555;
 }
 
+/* 추천 구독 추가 => 모두 선택에서 recSelectAll이 indeterminate여도 1번(빈 네모)처럼 보이게 강제 */
+#recSelectAll:indeterminate {
+  background-image: none !important;
+  background-color: #fff !important;
+  border-color: #b3b8c2 !important;
+  box-shadow: none !important;
+}
+
 /* #endregion subs.html 모달 */

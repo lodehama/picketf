@@ -166,7 +166,7 @@
             <div class="d-flex align-items-center justify-content-between mb-2">
               <div class="form-check m-0">
                 <input class="form-check-input" type="checkbox" id="recSelectAll">
-                <label class="form-check-label small text-muted" for="recSelectAll">모두 선택</label>
+                <label class="form-check-label small text-muted" for="recSelectAll">모두 선택 (집 제외)</label>
               </div>
             </div>
 
@@ -182,19 +182,8 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr data-name="통신비" data-type="필수" data-icon="Phone.svg">
-                    <td><input type="checkbox" class="rec-check"></td>
-                    <td>
-                      <img src="/img/subs/Phone.svg" alt="Phone" style="width:18px; height:18px; margin-right:2px;">
-                      통신비
-                    </td>
-                    <td>필수</td>
-                    <td><input type="number" class="form-control form-control-sm rec-price" value="50000"></td>
-                    <td><input type="number" class="form-control form-control-sm rec-bill" min="1" max="31"></td>
-                  </tr>
-
                   <tr data-name="관리비" data-type="필수" data-icon="home.svg">
-                    <td><input type="checkbox" class="rec-check"></td>
+                    <td><input type="checkbox" class="rec-check" data-exclude="true"></td>
                     <td>
                       <img src="/img/subs/home.svg" alt="Management Fee"
                         style="width:18px; height:18px; margin-right:2px;">
@@ -206,7 +195,7 @@
                   </tr>
 
                   <tr data-name="월세" data-type="필수" data-icon="home.svg">
-                    <td><input type="checkbox" class="rec-check"></td>
+                    <td><input type="checkbox" class="rec-check" data-exclude="true"></td>
                     <td>
                       <img src="/img/subs/home.svg" alt="monthly-rent"
                         style="width:18px; height:18px; margin-right:2px;">
@@ -214,6 +203,17 @@
                     </td>
                     <td>필수</td>
                     <td><input type="number" class="form-control form-control-sm rec-price" value="400000"></td>
+                    <td><input type="number" class="form-control form-control-sm rec-bill" min="1" max="31"></td>
+                  </tr>
+
+                  <tr data-name="통신비" data-type="필수" data-icon="Phone.svg">
+                    <td><input type="checkbox" class="rec-check"></td>
+                    <td>
+                      <img src="/img/subs/Phone.svg" alt="Phone" style="width:18px; height:18px; margin-right:2px;">
+                      통신비
+                    </td>
+                    <td>필수</td>
+                    <td><input type="number" class="form-control form-control-sm rec-price" value="50000"></td>
                     <td><input type="number" class="form-control form-control-sm rec-bill" min="1" max="31"></td>
                   </tr>
 
@@ -494,7 +494,8 @@
                           `월간 총합 : ${monthlyTotal.toLocaleString()} 원`,
                           `연간 총합: ${yearlyTotal.toLocaleString()} 원`,
                           ``,
-                          `항목을 클릭해 표시 / 숨김 가능 (구독중만 표기)`
+                          `항목을 클릭해 표시 / 숨김 가능 (구독중만 표기)`,
+                          `좌측 토글은 새로고침시 반영`
                         ],
                         font: { size: 16, weight: 600 },
                         padding: { top: 16, bottom: 0 }
@@ -623,6 +624,23 @@
           }
 
           /* =========================================================
+          * 1-1) 메인 리스트 모두선택 (관리비/월세 제외)
+          * ========================================================= */
+          const selectAllBtn = document.getElementById("selectAllBtn");
+
+          if (selectAllBtn) {
+            selectAllBtn.addEventListener("click", () => {
+              document.querySelectorAll(".subs-check").forEach(cb => {
+                if (cb.dataset.exclude === "true") return; // 관리비, 월세 제외
+                cb.checked = true;
+              });
+            });
+          } else {
+            console.warn("#selectAllBtn 요소가 없습니다. (메인 모두선택 스킵)");
+          }
+
+
+          /* =========================================================
           * 2) 추천 구독 추가 (+ 모두 선택)
           * ========================================================= */
           const saveBtn = document.getElementById("btn-rec-save");
@@ -641,7 +659,13 @@
               // 전체선택 클릭 -> 전부 체크/해제
               recSelectAll.addEventListener("change", () => {
                 const checks = getRecChecks();
-                checks.forEach(chk => (chk.checked = recSelectAll.checked));
+
+                checks.forEach(chk => {
+                  if (chk.dataset.exclude === "true") return; // ✅ 관리비/월세 제외
+                  chk.checked = recSelectAll.checked;
+                });
+
+                // 전체선택은 "전체(제외 항목 빼고)" 기준으로 판단해야 깔끔함
                 recSelectAll.indeterminate = false;
               });
 

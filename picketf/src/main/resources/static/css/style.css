@@ -249,4 +249,21 @@ html, body {
   margin-left: auto;
   margin-right: 0;
 }
+
+/* 추천 구독금액 */
+.rec-price {
+  width: 90px;
+}
+
+/* 추천 구독 결제일 */
+.rec-bill {
+  width: 48px;
+}
+
+/* 추천 구독 모달 */
+.modal-dialog {
+  --bs-modal-width: 700px;
+}
+
+
 /* #endregion subs.html 모달 */

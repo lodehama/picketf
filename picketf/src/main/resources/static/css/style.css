@@ -265,5 +265,22 @@ html, body {
   --bs-modal-width: 700px;
 }
 
+/* 추천 구독 모두선택 글자 */
+label[for="recSelectAll"] {
+  font-size: 16px;
+}
+
+/* 모두선택 체크박스 테두리 진하게 */
+#recSelectAll.form-check-input {
+  border-color: #b3b8c2;     /* 더 진한 회색 */
+  border-width: 2px;
+}
+
+#recSelectAll.form-check-input:checked {
+  background-color: #555;
+  border-color: #555;
+}
+
+
 
 /* #endregion subs.html 모달 */

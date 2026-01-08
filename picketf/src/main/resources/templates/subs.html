@@ -164,9 +164,9 @@
 
             <!-- ✅ 테이블 위 왼쪽: 모두 선택 -->
             <div class="d-flex align-items-center justify-content-between mb-2">
-              <div class="form-check m-0 ms-2">
+              <div class="form-check m-0 ms-4">
                 <input class="form-check-input" type="checkbox" id="recSelectAll">
-                <label class="form-check-label small text-muted" for="recSelectAll">모두 선택 (집 제외)</label>
+                <label class="form-check-label small text-muted" for="recSelectAll">&nbsp;모두 선택 (집 제외)</label>
               </div>
             </div>
 
@@ -174,16 +174,18 @@
               <table class="table table-sm align-middle">
                 <thead>
                   <tr>
-                    <th>선택</th>
-                    <th>항목명</th>
+                    <th class="text-center align-middle">선택</th>
+                    <th>&nbsp;&nbsp;&nbsp;&nbsp;항목명</th>
                     <th>타입</th>
-                    <th>금액</th>
+                    <th>&nbsp;금액</th>
                     <th>결제일</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr data-name="관리비" data-type="필수" data-icon="home.svg">
-                    <td><input type="checkbox" class="rec-check" data-exclude="true"></td>
+                    <td class="text-center align-middle">
+                      <input type="checkbox" class="rec-check" data-exclude="true">
+                    </td>
                     <td>
                       <img src="/img/subs/home.svg" alt="Management Fee"
                         style="width:18px; height:18px; margin-right:2px;">
@@ -195,7 +197,9 @@
                   </tr>
 
                   <tr data-name="월세" data-type="필수" data-icon="home.svg">
-                    <td><input type="checkbox" class="rec-check" data-exclude="true"></td>
+                    <td class="text-center align-middle">
+                      <input type="checkbox" class="rec-check" data-exclude="true">
+                    </td>
                     <td>
                       <img src="/img/subs/home.svg" alt="monthly-rent"
                         style="width:18px; height:18px; margin-right:2px;">
@@ -207,7 +211,9 @@
                   </tr>
 
                   <tr data-name="통신비" data-type="필수" data-icon="Phone.svg">
-                    <td><input type="checkbox" class="rec-check"></td>
+                    <td class="text-center align-middle">
+                      <input type="checkbox" class="rec-check">
+                    </td>
                     <td>
                       <img src="/img/subs/Phone.svg" alt="Phone" style="width:18px; height:18px; margin-right:2px;">
                       통신비
@@ -218,7 +224,9 @@
                   </tr>
 
                   <tr data-name="보험료" data-type="보험" data-icon="hospital.svg">
-                    <td><input type="checkbox" class="rec-check"></td>
+                    <td class="text-center align-middle">
+                      <input type="checkbox" class="rec-check">
+                    </td>
                     <td>
                       <img src="/img/subs/hospital.svg" alt="hospital"
                         style="width:18px; height:18px; margin-right:2px;">
@@ -230,7 +238,9 @@
                   </tr>
 
                   <tr data-name="유튜브 프리미엄" data-type="미디어" data-icon="youtube.svg">
-                    <td><input type="checkbox" class="rec-check"></td>
+                    <td class="text-center align-middle">
+                      <input type="checkbox" class="rec-check">
+                    </td>
                     <td>
                       <img src="/img/subs/youtube.svg" alt="youtube" style="width:18px; height:18px; margin-right:2px;">
                       유튜브 프리미엄
@@ -241,7 +251,9 @@
                   </tr>
 
                   <tr data-name="넷플릭스" data-type="영화" data-icon="netflix.svg">
-                    <td><input type="checkbox" class="rec-check"></td>
+                    <td class="text-center align-middle">
+                      <input type="checkbox" class="rec-check">
+                    </td>
                     <td>
                       <img src="/img/subs/netflix.svg" alt="netflix" style="width:18px; height:18px; margin-right:2px;">
                       넷플릭스
@@ -252,7 +264,9 @@
                   </tr>
 
                   <tr data-name="스포티파이" data-type="음악" data-icon="spotify.svg">
-                    <td><input type="checkbox" class="rec-check"></td>
+                    <td class="text-center align-middle">
+                      <input type="checkbox" class="rec-check">
+                    </td>
                     <td>
                       <img src="/img/subs/spotify.svg" alt="spotify" style="width:18px; height:18px; margin-right:2px;">
                       스포티파이
@@ -263,7 +277,9 @@
                   </tr>
 
                   <tr data-name="쿠팡" data-type="배달" data-icon="coupang.png">
-                    <td><input type="checkbox" class="rec-check"></td>
+                    <td class="text-center align-middle">
+                      <input type="checkbox" class="rec-check">
+                    </td>
                     <td>
                       <img src="/img/subs/coupang.png" alt="coupang" style="width:18px; height:18px; margin-right:2px;">
                       쿠팡
@@ -274,7 +290,9 @@
                   </tr>
 
                   <tr data-name="배달의 민족" data-type="배달" data-icon="baemin.png">
-                    <td><input type="checkbox" class="rec-check"></td>
+                    <td class="text-center align-middle">
+                      <input type="checkbox" class="rec-check">
+                    </td>
                     <td>
                       <img src="/img/subs/baemin.png" alt="baemin" style="width:18px; height:18px; margin-right:2px;">
                       배달의 민족
@@ -285,7 +303,9 @@
                   </tr>
 
                   <tr data-name="클라우드" data-type="클라우드" data-icon="cloud.svg">
-                    <td><input type="checkbox" class="rec-check"></td>
+                    <td class="text-center align-middle">
+                      <input type="checkbox" class="rec-check">
+                    </td>
                     <td>
                       <img src="/img/subs/cloud.svg" alt="cloud" style="width:18px; height:18px; margin-right:2px;">
                       클라우드

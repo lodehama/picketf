@@ -10,10 +10,10 @@
   <main layout:fragment="content">
     <div class="container py-3">
 
-      <!-- ✅ 왼쪽(리스트) + 오른쪽(차트) 레이아웃 래퍼 -->
+      <!-- 왼쪽(리스트) + 오른쪽(차트) 레이아웃 래퍼 -->
       <div class="d-flex align-items-start gap-4">
 
-        <!-- ✅ 왼쪽: 기존 리스트 영역 -->
+        <!-- 왼쪽: 기존 리스트 영역 -->
         <div class="container-fluid py-3" style="max-width:760px; margin-left:0; flex: 0 0 660px;">
 
           <!-- 여백용 -->
@@ -196,7 +196,7 @@
             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
               닫기
             </button>
-            <!-- ✅ id 충돌 방지: 직접추가는 별도 id -->
+            <!-- id 충돌 방지: 직접추가는 별도 id -->
             <button id="btn-manual-save" type="button" class="btn btn-dark">추가하기</button>
           </div>
 
@@ -216,7 +216,7 @@
 
           <div class="modal-body">
 
-            <!-- ✅ 테이블 위 왼쪽: 모두 선택 -->
+            <!-- 테이블 위 왼쪽: 모두 선택 -->
             <div class="d-flex align-items-center justify-content-between mb-2">
               <div class="form-check m-0 ms-4">
                 <input class="form-check-input" type="checkbox" id="recSelectAll">
@@ -694,7 +694,7 @@
           }
 
           /* =========================================================
-          * 2) 직접 구독 추가 (✅ 신규)
+          * 2) 직접 구독 추가
           * ========================================================= */
           const manualModalEl = document.getElementById("subsManualModal");
           const manualSaveBtn = document.getElementById("btn-manual-save");
@@ -715,17 +715,17 @@
               const billingDay = parseInt(manualModalEl.querySelector(".rec-bill")?.value || "0", 10);
 
               if (!name) {
-                alert("항목명을 입력해줘");
+                alert("항목명을 입력해주세요.");
                 manualModalEl.querySelector(".rec-name")?.focus();
                 return;
               }
               if (!type) {
-                alert("타입을 입력해줘");
+                alert("타입을 입력해주세요.");
                 manualModalEl.querySelector(".rec-type")?.focus();
                 return;
               }
               if (isNaN(price) || price <= 0) {
-                alert("금액은 1원 이상 입력해줘");
+                alert("금액은 1원 이상 입력해주세요.");
                 manualModalEl.querySelector(".rec-price")?.focus();
                 return;
               }
@@ -735,8 +735,7 @@
                 return;
               }
 
-              // ✅ 컨트롤러가 List<SubsDTO>를 받으므로 배열로 보낸다
-              // ✅ 필드명은 네 화면에서 쓰는 subsBillingDay 기준으로 맞춤
+              // 컨트롤러가 List<SubsDTO>를 받으므로 배열로 보낸다
               const payload = [{
                 subsName: name,
                 subsType: type,
@@ -768,7 +767,7 @@
           }
 
           /* =========================================================
-          * 3) 추천 구독 추가 (+ 모두 선택) (✅ 안전하게 버튼 탐색 수정)
+          * 3) 추천 구독 추가 (+ 모두 선택) (안전하게 버튼 탐색 수정)
           * ========================================================= */
           const recommendModalEl = document.getElementById("subsRecommendModal");
           const recSelectAll = document.getElementById("recSelectAll");
@@ -778,7 +777,7 @@
 
           if (recSaveBtn && recommendModalEl) {
 
-            // ✅ 모두 선택 기능
+            // 모두 선택 기능
             if (recSelectAll) {
               const getRecChecks = () =>
                 Array.from(recommendModalEl.querySelectorAll(".rec-check"));
@@ -819,7 +818,7 @@
               });
             }
 
-            // ✅ 모달 열릴 때 결제일 기본값 세팅
+            // 모달 열릴 때 결제일 기본값 세팅
             recommendModalEl.addEventListener("shown.bs.modal", () => {
               const todayDay = new Date().getDate();
               recommendModalEl.querySelectorAll(".rec-bill").forEach(input => {
@@ -827,7 +826,7 @@
               });
             });
 
-            // ✅ 추가하기
+            // 추가하기
             recSaveBtn.addEventListener("click", async () => {
               const rows = Array.from(recommendModalEl.querySelectorAll("tbody tr"));
               const payload = [];

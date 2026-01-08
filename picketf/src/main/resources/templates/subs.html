@@ -385,6 +385,9 @@
 
           };
 
+          const monthlyTotal = safeTotal;
+          const yearlyTotal = monthlyTotal * 12;
+
           const config = {
             type: "doughnut",
             data,
@@ -398,7 +401,10 @@
                 title: {
                   display: true,
                   position: "bottom",
-                  text: `구독 유형별 비중 (총합: ${safeTotal.toLocaleString()}원)`,
+                  text: [
+                    `구독 유형별 비중 : ${monthlyTotal.toLocaleString()} 원`,
+                    `연간 총합: ${(yearlyTotal).toLocaleString()} 원`
+                  ],
                   font: {
                     size: 16,
                     weight: "600"    // 선택: 500~700

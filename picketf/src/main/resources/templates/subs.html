@@ -126,11 +126,10 @@
           <!-- 구독 추가 버튼 -->
           <br>
           <div class="d-flex gap-2">
-            <button class="btn btn-outline-dark btn-sm flex-fill" type="button">
+            <button class="btn btn-outline-dark btn-sm flex-fill" type="button" data-bs-toggle="modal" data-bs-target="#subsManualModal">
               직접 추가
             </button>
-            <button class="btn btn-dark btn-sm flex-fill" type="button" data-bs-toggle="modal"
-              data-bs-target="#subsRecommendModal">
+            <button class="btn btn-dark btn-sm flex-fill" type="button" data-bs-toggle="modal" data-bs-target="#subsRecommendModal">
               추천 구독 추가
             </button>
           </div>
@@ -150,7 +149,7 @@
       </div>
     </div>
 
-    <!-- 추천 구독 추가 모달 (모달1) -->
+    <!-- 추천 구독 추가 모달  -->
     <div class="modal fade" id="subsRecommendModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">

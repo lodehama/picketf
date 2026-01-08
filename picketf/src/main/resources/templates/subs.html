@@ -313,9 +313,6 @@
       <script th:inline="javascript">
         document.addEventListener("DOMContentLoaded", () => {
 
-          // ===== 도넛 차트 =====
-          console.log("Chart loaded?", typeof Chart);
-
           // 1) 선언(초기화) 먼저
           const donutLabels = /*[[${donutLabels}]]*/[];
           const donutValues = /*[[${donutValues}]]*/[];
@@ -393,34 +390,50 @@
             data,
             options: {
               responsive: true,
-              // 부모 컨테이너에 맞춤
               maintainAspectRatio: false,
               cutout: "62%",
               plugins: {
+                datalabels: {
+                  anchor: "center",
+                  align: "center",
+                  formatter: (value, ctx) => {
+                    const label = ctx.chart.data.labels?.[ctx.dataIndex] ?? "";
+                    const arr = ctx.chart.data.datasets[0].data.map(Number);
+                    const total = arr.reduce((a, b) => a + b, 0);
+                    const pct = total ? (Number(value) / total) * 100 : 0;
+                    return `${label}\n${pct.toFixed(1)}%`;
+                  },
+
+                  color: "#2b2b2b",
+                  font: { size: 17, weight: 600 }, // 고정 (weight 숫자 권장)
+
+                  // 너무 작은 조각은 글씨 숨김(겹침 방지)
+                  display: (ctx) => {
+                    const value = Number(ctx.dataset.data[ctx.dataIndex] || 0);
+                    const arr = ctx.dataset.data.map(Number);
+                    const total = arr.reduce((a, b) => a + b, 0);
+                    return total ? (value / total) >= 0.05 : true;
+                  }
+                },
+
                 legend: { position: "bottom" },
                 title: {
                   display: true,
                   position: "bottom",
                   text: [
                     `월간 총합 : ${monthlyTotal.toLocaleString()} 원`,
-                    `연간 총합: ${(yearlyTotal).toLocaleString()} 원`,
+                    `연간 총합: ${yearlyTotal.toLocaleString()} 원`,
                     ``,
                     `항목을 클릭해 표시 / 숨김 가능`
                   ],
-                  font: {
-                    size: 16,
-                    weight: "600"    // 선택: 500~700
-                  },
-                  padding: {
-                    top: 16,
-                    bottom: 0
-                  }
+                  font: { size: 16, weight: 600 },
+                  padding: { top: 16, bottom: 0 }
                 },
                 tooltip: {
                   callbacks: {
                     label: function (context) {
                       const v = Number(context.raw || 0);
-                      const pct = safeTotal ? (v / safeTotal * 100) : 0;
+                      const pct = safeTotal ? (v / safeTotal) * 100 : 0;
                       return `${context.label}: ${v.toLocaleString()}원 (${pct.toFixed(1)}%)`;
                     }
                   }
@@ -428,6 +441,8 @@
               }
             }
           };
+
+          Chart.register(ChartDataLabels);
           new Chart(canvas, config);
 
 

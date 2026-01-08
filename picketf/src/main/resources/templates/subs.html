@@ -161,6 +161,15 @@
           </div>
 
           <div class="modal-body">
+
+            <!-- ✅ 테이블 위 왼쪽: 모두 선택 -->
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <div class="form-check m-0">
+                <input class="form-check-input" type="checkbox" id="recSelectAll">
+                <label class="form-check-label small text-muted" for="recSelectAll">모두 선택</label>
+              </div>
+            </div>
+
             <div class="table-responsive">
               <table class="table table-sm align-middle">
                 <thead>
@@ -219,9 +228,6 @@
                     <td><input type="number" class="form-control form-control-sm rec-price" value="75000"></td>
                     <td><input type="number" class="form-control form-control-sm rec-bill" min="1" max="31"></td>
                   </tr>
-
-
-
 
                   <tr data-name="유튜브 프리미엄" data-type="미디어" data-icon="youtube.svg">
                     <td><input type="checkbox" class="rec-check"></td>
@@ -616,16 +622,56 @@
             });
           }
 
-
           /* =========================================================
-           * 2) 추천 구독 추가
-           * ========================================================= */
+          * 2) 추천 구독 추가 (+ 모두 선택)
+          * ========================================================= */
           const saveBtn = document.getElementById("btn-rec-save");
           const recommendModalEl = document.getElementById("subsRecommendModal");
+          const recSelectAll = document.getElementById("recSelectAll");
 
-          console.log("saveBtn?", saveBtn, "recommendModalEl?", recommendModalEl);
+          console.log("saveBtn?", saveBtn, "recommendModalEl?", recommendModalEl, "recSelectAll?", recSelectAll);
 
           if (saveBtn && recommendModalEl) {
+
+            // ✅ 모두 선택 기능
+            if (recSelectAll) {
+              const getRecChecks = () =>
+                Array.from(recommendModalEl.querySelectorAll(".rec-check"));
+
+              // 전체선택 클릭 -> 전부 체크/해제
+              recSelectAll.addEventListener("change", () => {
+                const checks = getRecChecks();
+                checks.forEach(chk => (chk.checked = recSelectAll.checked));
+                recSelectAll.indeterminate = false;
+              });
+
+              // 개별 체크 변경 -> 전체선택 상태 갱신(일부 선택 indeterminate)
+              recommendModalEl.addEventListener("change", (e) => {
+                if (!e.target.classList.contains("rec-check")) return;
+
+                const checks = getRecChecks();
+                const checkedCount = checks.filter(chk => chk.checked).length;
+
+                if (checkedCount === 0) {
+                  recSelectAll.checked = false;
+                  recSelectAll.indeterminate = false;
+                } else if (checkedCount === checks.length) {
+                  recSelectAll.checked = true;
+                  recSelectAll.indeterminate = false;
+                } else {
+                  recSelectAll.checked = false;
+                  recSelectAll.indeterminate = true;
+                }
+              });
+
+              // 모달 열릴 때 초기화(원하면 삭제해서 선택 유지 가능)
+              recommendModalEl.addEventListener("shown.bs.modal", () => {
+                recSelectAll.checked = false;
+                recSelectAll.indeterminate = false;
+                getRecChecks().forEach(chk => (chk.checked = false));
+              });
+            }
+
             // ✅ 모달 열릴 때 결제일 기본값(오늘 날짜) 세팅
             recommendModalEl.addEventListener("shown.bs.modal", () => {
               const todayDay = new Date().getDate();
@@ -690,7 +736,6 @@
               }
             });
           }
-
 
           /* =========================================================
            * 3) 활성/비활성 스위치

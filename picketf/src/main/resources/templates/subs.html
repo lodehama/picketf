@@ -187,7 +187,8 @@
                   <tr data-name="관리비" data-type="필수" data-icon="home.svg">
                     <td><input type="checkbox" class="rec-check"></td>
                     <td>
-                      <img src="/img/subs/home.svg" alt="Management Fee" style="width:18px; height:18px; margin-right:2px;">
+                      <img src="/img/subs/home.svg" alt="Management Fee"
+                        style="width:18px; height:18px; margin-right:2px;">
                       관리비
                     </td>
                     <td>필수</td>
@@ -198,7 +199,8 @@
                   <tr data-name="월세" data-type="필수" data-icon="home.svg">
                     <td><input type="checkbox" class="rec-check"></td>
                     <td>
-                      <img src="/img/subs/home.svg" alt="monthly-rent" style="width:18px; height:18px; margin-right:2px;">
+                      <img src="/img/subs/home.svg" alt="monthly-rent"
+                        style="width:18px; height:18px; margin-right:2px;">
                       월세
                     </td>
                     <td>필수</td>
@@ -209,7 +211,8 @@
                   <tr data-name="보험료" data-type="보험" data-icon="hospital.svg">
                     <td><input type="checkbox" class="rec-check"></td>
                     <td>
-                      <img src="/img/subs/hospital.svg" alt="hospital" style="width:18px; height:18px; margin-right:2px;">
+                      <img src="/img/subs/hospital.svg" alt="hospital"
+                        style="width:18px; height:18px; margin-right:2px;">
                       보험료
                     </td>
                     <td>보험</td>
@@ -381,137 +384,142 @@
       <script th:inline="javascript">
         document.addEventListener("DOMContentLoaded", () => {
 
-          // 1) 선언(초기화) 먼저
+          /* =========================================================
+           * 0) 차트 데이터(Thymeleaf) 선언
+           * ========================================================= */
           const donutLabels = /*[[${donutLabels}]]*/[];
           const donutValues = /*[[${donutValues}]]*/[];
           const donutTotal = /*[[${donutTotal}]]*/ 0;
 
-          const CHARTJS_COLORS = [
-            '#36A2EB', // Blue
-            '#FF9F40', // Orange
-            '#FFCD56', // Yellow
-            '#4BC0C0', // Teal
-            '#9966FF', // Purple
-            '#FF6384', // Pink
-            '#8BC34A', // Green
-          ];
-
           const safeTotal = Number(donutTotal || 0);
           const canvas = document.getElementById("subsTypeDonut");
 
-          // 2) 그 다음 로그
           console.log("labels", donutLabels);
           console.log("values", donutValues);
           console.log("total", safeTotal);
           console.log("Canvas?", canvas);
 
-          // 3) 방어 로직
-          if (typeof Chart === "undefined") {
-            console.error("Chart.js가 로드되지 않았습니다.");
-            return;
-          }
-          if (!canvas) {
-            console.error("canvas #subsTypeDonut 요소를 찾지 못했습니다.");
-            return;
-          }
+          /* =========================================================
+           * 0-1) 차트 렌더(절대 return으로 아래 기능 죽이지 않기)
+           * ========================================================= */
+          try {
+            // Chart.js 로드 여부
+            if (typeof Chart === "undefined") {
+              console.warn("Chart.js가 로드되지 않았습니다. 차트를 스킵합니다.");
+            } else if (!canvas) {
+              console.warn("canvas #subsTypeDonut 요소가 없습니다. 차트를 스킵합니다.");
+            } else {
+              // 데이터 방어
+              const labelsForChart = Array.isArray(donutLabels) ? donutLabels : [];
+              const valuesForChart = Array.isArray(donutValues) ? donutValues : [];
 
-          // 4) 데이터 방어
-          let labelsForChart = Array.isArray(donutLabels) ? donutLabels : [];
-          let valuesForChart = Array.isArray(donutValues) ? donutValues : [];
+              const hasData =
+                labelsForChart.length > 0 &&
+                valuesForChart.length > 0 &&
+                valuesForChart.some(v => Number(v) > 0);
 
-          const hasData = labelsForChart.length > 0
-            && valuesForChart.length > 0
-            && valuesForChart.some(v => Number(v) > 0);
+              if (!hasData) {
+                console.warn("구독 차트 데이터가 없습니다. 차트를 숨깁니다.");
+                canvas.style.display = "none";
 
-          if (!hasData) {
-            console.warn("구독 차트 데이터가 없습니다. 차트를 렌더링하지 않습니다.");
-            canvas.style.display = "none";
+                const msg = document.createElement("div");
+                msg.className = "text-muted small mt-2";
+                msg.textContent = "활성화된 구독이 없어 차트를 표시할 수 없습니다.";
+                canvas.parentElement?.appendChild(msg);
+              } else {
+                const CHARTJS_COLORS = [
+                  "#36A2EB",
+                  "#FF9F40",
+                  "#FFCD56",
+                  "#4BC0C0",
+                  "#9966FF",
+                  "#FF6384",
+                  "#8BC34A",
+                ];
 
-            // 안내 문구(원하면)
-            const msg = document.createElement("div");
-            msg.className = "text-muted small mt-2";
-            msg.textContent = "활성화된 구독이 없어 차트를 표시할 수 없습니다.";
-            canvas.parentElement?.appendChild(msg);
-            return;
-          }
+                const monthlyTotal = safeTotal;
+                const yearlyTotal = monthlyTotal * 12;
 
+                const data = {
+                  labels: labelsForChart,
+                  datasets: [{
+                    label: "월 구독비",
+                    data: valuesForChart,
+                    backgroundColor: CHARTJS_COLORS,
+                    borderColor: "#ffffff",
+                    borderWidth: 4
+                  }]
+                };
 
-          const data = {
-            labels: labelsForChart,
-            datasets: [{
-              label: "월 구독비",
-              data: valuesForChart,
-              // 밝은 Chart.js 샘플 색상
-              backgroundColor: CHARTJS_COLORS,
-              // 조각 경계 흰색
-              borderColor: "#ffffff",
-              borderWidth: 4
-            }]
+                const config = {
+                  type: "doughnut",
+                  data,
+                  options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: "62%",
+                    plugins: {
+                      // datalabels는 플러그인 로드된 경우에만 정상 동작
+                      datalabels: {
+                        anchor: "center",
+                        align: "center",
+                        formatter: (value, ctx) => {
+                          const label = ctx.chart.data.labels?.[ctx.dataIndex] ?? "";
+                          const arr = ctx.chart.data.datasets[0].data.map(Number);
+                          const total = arr.reduce((a, b) => a + b, 0);
+                          const pct = total ? (Number(value) / total) * 100 : 0;
+                          return `${label}\n${pct.toFixed(1)}%`;
+                        },
+                        color: "#2b2b2b",
+                        font: { size: 16, weight: 600 },
+                        display: (ctx) => {
+                          const value = Number(ctx.dataset.data[ctx.dataIndex] || 0);
+                          const arr = ctx.dataset.data.map(Number);
+                          const total = arr.reduce((a, b) => a + b, 0);
+                          return total ? (value / total) >= 0.05 : true;
+                        }
+                      },
 
-          };
-
-          const monthlyTotal = safeTotal;
-          const yearlyTotal = monthlyTotal * 12;
-
-          const config = {
-            type: "doughnut",
-            data,
-            options: {
-              responsive: true,
-              maintainAspectRatio: false,
-              cutout: "62%",
-              plugins: {
-                datalabels: {
-                  anchor: "center",
-                  align: "center",
-                  formatter: (value, ctx) => {
-                    const label = ctx.chart.data.labels?.[ctx.dataIndex] ?? "";
-                    const arr = ctx.chart.data.datasets[0].data.map(Number);
-                    const total = arr.reduce((a, b) => a + b, 0);
-                    const pct = total ? (Number(value) / total) * 100 : 0;
-                    return `${label}\n${pct.toFixed(1)}%`;
-                  },
-
-                  color: "#2b2b2b",
-                  font: { size: 16, weight: 600 }, // 고정 (weight 숫자 권장)
-
-                  // 너무 작은 조각은 글씨 숨김(겹침 방지)
-                  display: (ctx) => {
-                    const value = Number(ctx.dataset.data[ctx.dataIndex] || 0);
-                    const arr = ctx.dataset.data.map(Number);
-                    const total = arr.reduce((a, b) => a + b, 0);
-                    return total ? (value / total) >= 0.05 : true;
-                  }
-                },
-
-                legend: { position: "bottom" },
-                title: {
-                  display: true,
-                  position: "bottom",
-                  text: [
-                    `월간 총합 : ${monthlyTotal.toLocaleString()} 원`,
-                    `연간 총합: ${yearlyTotal.toLocaleString()} 원`,
-                    ``,
-                    `항목을 클릭해 표시 / 숨김 가능 (구독중만 표기)`
-                  ],
-                  font: { size: 16, weight: 600 },
-                  padding: { top: 16, bottom: 0 }
-                },
-                tooltip: {
-                  callbacks: {
-                    label: function (context) {
-                      const v = Number(context.raw || 0);
-                      const pct = safeTotal ? (v / safeTotal) * 100 : 0;
-                      return `${context.label}: ${v.toLocaleString()}원 (${pct.toFixed(1)}%)`;
+                      legend: { position: "bottom" },
+                      title: {
+                        display: true,
+                        position: "bottom",
+                        text: [
+                          `월간 총합 : ${monthlyTotal.toLocaleString()} 원`,
+                          `연간 총합: ${yearlyTotal.toLocaleString()} 원`,
+                          ``,
+                          `항목을 클릭해 표시 / 숨김 가능 (구독중만 표기)`
+                        ],
+                        font: { size: 16, weight: 600 },
+                        padding: { top: 16, bottom: 0 }
+                      },
+                      tooltip: {
+                        callbacks: {
+                          label: function (context) {
+                            const v = Number(context.raw || 0);
+                            const pct = safeTotal ? (v / safeTotal) * 100 : 0;
+                            return `${context.label}: ${v.toLocaleString()}원 (${pct.toFixed(1)}%)`;
+                          }
+                        }
+                      }
                     }
                   }
+                };
+
+                // ✅ ChartDataLabels가 없으면 등록/사용 안 함(에러로 스크립트 중단 방지)
+                if (typeof ChartDataLabels !== "undefined") {
+                  Chart.register(ChartDataLabels);
+                } else {
+                  console.warn("ChartDataLabels 플러그인이 로드되지 않았습니다. datalabels는 비활성화됩니다.");
+                  // datalabels 옵션이 있어도 플러그인 없으면 의미가 없지만, 에러는 안 나게 위에서 가드함
                 }
+
+                new Chart(canvas, config);
               }
             }
-          };
-
-          Chart.register(ChartDataLabels);
-          new Chart(canvas, config);
+          } catch (err) {
+            console.error("차트 렌더 중 오류 (아래 기능은 계속 진행):", err);
+          }
 
 
           /* =========================================================
@@ -541,6 +549,7 @@
               const list = [...items];
 
               if (!sort) {
+                // 결제일 우선, 같으면 가격 낮은 순
                 list.sort((a, b) => {
                   const billA = Number(a.dataset.billing || 0);
                   const billB = Number(b.dataset.billing || 0);
@@ -563,7 +572,6 @@
                   const nb = Number(b.dataset.subsNum || 0);
                   return na - nb;
                 });
-
                 if (dir === "desc") list.reverse();
               }
 
@@ -608,13 +616,17 @@
             });
           }
 
+
           /* =========================================================
            * 2) 추천 구독 추가
            * ========================================================= */
           const saveBtn = document.getElementById("btn-rec-save");
           const recommendModalEl = document.getElementById("subsRecommendModal");
 
+          console.log("saveBtn?", saveBtn, "recommendModalEl?", recommendModalEl);
+
           if (saveBtn && recommendModalEl) {
+            // ✅ 모달 열릴 때 결제일 기본값(오늘 날짜) 세팅
             recommendModalEl.addEventListener("shown.bs.modal", () => {
               const todayDay = new Date().getDate();
               recommendModalEl.querySelectorAll(".rec-bill").forEach(input => {
@@ -622,6 +634,7 @@
               });
             });
 
+            // ✅ 추가하기
             saveBtn.addEventListener("click", async () => {
               const rows = Array.from(recommendModalEl.querySelectorAll("tbody tr"));
               const payload = [];
@@ -666,8 +679,9 @@
                   body: JSON.stringify(payload)
                 });
 
-                if (res.ok) location.reload();
-                else {
+                if (res.ok) {
+                  location.reload();
+                } else {
                   const txt = await res.text().catch(() => "");
                   alert("저장 실패 (서버 응답 오류)\n" + txt);
                 }
@@ -676,6 +690,7 @@
               }
             });
           }
+
 
           /* =========================================================
            * 3) 활성/비활성 스위치
@@ -722,6 +737,7 @@
             });
           });
 
+
           /* =========================================================
            * 4) 수정 모달
            * ========================================================= */
@@ -753,6 +769,7 @@
             });
           }
 
+
           /* =========================================================
            * 5) 삭제
            * ========================================================= */
@@ -777,6 +794,7 @@
 
         });
       </script>
+
     </th:block>
 
   </main>

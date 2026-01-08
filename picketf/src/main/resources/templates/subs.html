@@ -126,10 +126,12 @@
           <!-- 구독 추가 버튼 -->
           <br>
           <div class="d-flex gap-2">
-            <button class="btn btn-outline-dark btn-sm flex-fill" type="button" data-bs-toggle="modal" data-bs-target="#subsManualModal">
+            <button class="btn btn-outline-dark btn-sm flex-fill" type="button" data-bs-toggle="modal"
+              data-bs-target="#subsManualModal">
               직접 추가
             </button>
-            <button class="btn btn-dark btn-sm flex-fill" type="button" data-bs-toggle="modal" data-bs-target="#subsRecommendModal">
+            <button class="btn btn-dark btn-sm flex-fill" type="button" data-bs-toggle="modal"
+              data-bs-target="#subsRecommendModal">
               추천 구독 추가
             </button>
           </div>
@@ -146,6 +148,55 @@
           </div>
         </div>
 
+      </div>
+    </div>
+    <!-- 직접 구독 추가 모달  -->
+    <div class="modal fade" id="subsManualModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+          <div class="modal-header justify-content-center">
+            <h5 class="modal-title">구독 추가</h5>
+            <button type="button" class="btn-close position-absolute end-0 me-3" data-bs-dismiss="modal"></button>
+          </div>
+
+          <div class="modal-body">
+            <div class="table-responsive">
+              <table class="table table-sm align-middle">
+                <thead>
+                  <tr>
+                    <th>&nbsp;항목명</th>
+                    <th>&nbsp;타입</th>
+                    <th>&nbsp;금액</th>
+                    <th>결제일</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <input type="text" class="form-control form-control-sm rec-name" placeholder="항목명 입력">
+                    </td>
+                    <td>
+                      <input type="text" class="form-control form-control-sm rec-type" placeholder="타입 입력">
+                    </td>
+                    <td>
+                      <input type="number" class="form-control form-control-sm rec-price" placeholder="금액">
+                    </td>
+                    <td>
+                      <input type="number" class="form-control form-control-sm rec-bill" min="1" max="31"
+                        placeholder="일">
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button id="btn-rec-save" type="button" class="btn btn-dark">추가하기</button>
+          </div>
+
+        </div>
       </div>
     </div>
 

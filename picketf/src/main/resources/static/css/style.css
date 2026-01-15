@@ -85,7 +85,7 @@ body {
 /* #region sidebar-layout */
 
 .sidebar-section-title{
-  margin: 20px 16px 6px;   /* 위/좌우/아래 */
+  margin: 20px 16px 6px 20px;   /* 상/우/하/왼 */
   font-size: 12px;
   font-weight: 600;
   color: #6b7280;          /* 회색 */
@@ -94,8 +94,7 @@ body {
 
 .sidebar-link {
   font-size: 14px;
-  font-weight: 500;
-  letter-spacing: -0.01em;
+  font-weight: 400;
 }
 
 /* 좌측 메뉴 */
@@ -104,7 +103,7 @@ body {
   position: fixed;
   top: 0;
   bottom: 0;
-  left: 12px;
+  left: 8px;
   border-right: 1px solid #e5e7eb;
   padding-top: 60px;
 }
@@ -112,6 +111,7 @@ body {
 .sidebar-link {
   padding: 8px 12px;
   margin: 4px 8px;
+  gap: 6px; /* 아이콘과 텍스트 사이 간격 */
   border-radius: 8px; /* 둥근 모서리 */
   color: #444;
   text-decoration: none;

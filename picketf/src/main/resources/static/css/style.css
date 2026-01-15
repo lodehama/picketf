@@ -5,12 +5,11 @@
 
 .app-header__inner {
   height: 63px;
-  padding: 0 26px;
+  padding: 0 26px; /* 좌우 여백 */
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-
 
 /* Logo */
 .app-logo {

@@ -1,11 +1,38 @@
 <div th:fragment="header">
   <header class="app-header">
-  <div class="app-header__inner">
-    <div class="app-logo">
-      Pick ETF
+    <div class="app-header__inner">
+
+      <!-- 좌측: 로고 -->
+      <a href="/" class="app-logo">Pick ETF</a>
+
+      <!-- 중앙: 네비게이션 -->
+      <nav class="app-nav">
+        <a href="/snp" class="app-nav__link">S&P 500</a>
+        <a href="/qqq" class="app-nav__link">나스닥 100</a>
+        <a href="/m7" class="app-nav__link">빅테크 M10</a>
+        <a href="/gld" class="app-nav__link">금</a>
+        <!-- 비로그인 -->
+        <a href="/login" class="app-nav__link" sec:authorize="isAnonymous()">
+          로그인
+        </a>
+
+        <a href="/signup" class="app-nav__link" sec:authorize="isAnonymous()">
+          회원가입
+        </a>
+
+        <!-- 로그인 -->
+        <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()" class="app-nav__logout">
+          <button type="submit" class="app-nav__link app-nav__btn">
+            로그아웃
+          </button>
+        </form>
+
+
+      </nav>
+
+      <!-- 우측: 여유 공간 (추후 버튼/아이콘용) -->
+      <div class="app-header__right"></div>
+
     </div>
-
-  </div>
-</header>
-
+  </header>
 </div>

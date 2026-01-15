@@ -8,19 +8,54 @@
   padding: 0 26px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 
 /* Logo */
 .app-logo {
   font-size: 16px;
-  font-weight: 700;
-  letter-spacing: 0.3px;
+  font-weight: 700; /* 굵게 */
+  letter-spacing: 0.3px; /* 약간 벌림 */
 
   color: #111;
   user-select: none; /* 텍스트 선택 방지 */
-  white-space: nowrap;
+  white-space: nowrap; /* 줄바꿈 방지 */
 }
 
+/* 헤더 중앙 컨텐츠 */
+.app-nav {
+  display: flex;
+  align-items: center;
+  gap: 22px; /* 링크들 사이 간격 */
+}
+
+.app-nav__link {
+  font-size: 16px;
+  color: #555;
+  text-decoration: none; /* 밑줄 제거 */
+  white-space: nowrap; /* 줄바꿈 방지 */
+
+}
+
+/* 로그아웃 버튼으로 안 보이게 */
+/* form 자체가 줄바꿈/여백 만들지 않게 */
+.app-nav__logout{
+  margin: 0;
+  display: inline;
+}
+
+/* button 기본 스타일 제거 + a처럼 보이게 */
+.app-nav__btn{
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;      /* 폰트/크기/두께를 부모와 동일 */
+  color: inherit;     /* .app-nav__link 색상 그대로 사용 */
+  cursor: pointer;
+}
+
+
+/* 호버시 어케할지 생각해라 */
 
 /* #endregion header */
 

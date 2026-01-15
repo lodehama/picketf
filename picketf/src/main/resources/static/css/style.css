@@ -1,31 +1,20 @@
 /* #region sidebar-layout */
-html, body {
-  height: 100%;
-}
-
-.app-wrapper {
-  min-height: 100vh;
-}
 
 /* 좌측 메뉴 */
 .app-sidebar {
-  width: 240px;
+  width: 256px;
   position: fixed;
   top: 0;
   bottom: 0;
-  left: 0;
-  background-color: #f8f9fa;
+  left: 12px;
   border-right: 1px solid #e5e7eb;
-  padding-top: 56px; /* 헤더 높이 만큼 */
-}
-
-.sidebar-nav {
-  display: flex;
-  flex-direction: column;
+  padding-top: 60px;
 }
 
 .sidebar-link {
-  padding: 12px 16px;
+  padding: 8px 12px;
+  margin: 4px 8px;
+  border-radius: 8px; /* 둥근 모서리 */
   color: #444;
   text-decoration: none;
   display: flex;
@@ -33,28 +22,7 @@ html, body {
 }
 
 .sidebar-link:hover {
-  background-color: #e5e7eb;
-}
-
-/* 상단 헤더 */
-.app-header {
-  height: 56px;
-  position: fixed;
-  top: 0;
-  left: 240px;
-  right: 0;
-  background-color: white;
-  border-bottom: 1px solid #e5e7eb;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-}
-
-/* 콘텐츠 */
-.app-content {
-  margin-left: 240px;
-  padding-top: 72px;
-  padding: 24px;
+  background-color: #F9FAFB;
 }
 
 /* #endregion sidebar-layout */

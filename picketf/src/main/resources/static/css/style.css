@@ -18,8 +18,14 @@
   letter-spacing: 0.3px; /* 약간 벌림 */
 
   color: #111;
+  text-decoration: none; /* 밑줄 제거 */
   user-select: none; /* 텍스트 선택 방지 */
   white-space: nowrap; /* 줄바꿈 방지 */
+
+  /* 로고 클릭 가능 */
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
 }
 
 /* 헤더 중앙 컨텐츠 */

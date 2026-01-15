@@ -16,7 +16,7 @@
 .app-logo {
   display: inline-flex; /* 안 넣으면 아이콘이 세로줄로 출력 */
   font-size: 16px;
-  font-weight: 700; /* 굵게 */
+  font-weight: 600; /* 굵게 */
   letter-spacing: 0.3px; /* 약간 벌림 */
   
   color: #111;
@@ -39,7 +39,6 @@
   display: block;           /* img 아래 여백 제거 */
 }
 
-
 /* 헤더 중앙 컨텐츠 */
 .app-nav {
   display: flex;
@@ -54,7 +53,7 @@
   white-space: nowrap; /* 줄바꿈 방지 */
   border-radius: 8px; /* 둥근 모서리 */
   padding: 8px 12px; /* 없으면 호버 구역 시각적으로 이상해짐 */
-  font-weight: 800;
+  font-weight: 500;
 }
 
 .app-nav__link:hover {
@@ -65,16 +64,19 @@
 /* form 자체가 줄바꿈/여백 만들지 않게 */
 .app-nav__logout{
   margin: 0;
-  display: inline;
+  display: inline-flex;
 }
 
 /* button 기본 스타일 제거 + a처럼 보이게 */
 .app-nav__btn{
+  appearance: none;
+  -webkit-appearance: none;
+
   background: none;
   border: none;
-  padding: 0;
-  font: inherit;      /* 폰트/크기/두께를 부모와 동일 */
-  color: inherit;     /* .app-nav__link 색상 그대로 사용 */
+
+  font: inherit;
+  color: inherit;
   cursor: pointer;
 }
 

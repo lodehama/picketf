@@ -61,6 +61,17 @@
 
 /* #region sidebar-layout */
 
+body {
+  font-family: Inter, -apple-system, BlinkMacSystemFont,
+               "Segoe UI", Roboto, "Apple SD Gothic Neo",
+               "Noto Sans KR", "Malgun Gothic", sans-serif;
+}
+.sidebar-link {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
 
 .sidebar-section-title{
   margin: 16px 12px 6px;   /* 위/좌우/아래 */

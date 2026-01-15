@@ -84,11 +84,6 @@
   letter-spacing: 0.05em;  /* 살짝 벌림 */
 }
 
-.sidebar-link {
-  font-size: 14px;
-  font-weight: 400;
-}
-
 /* 좌측 메뉴 */
 .app-sidebar {
   width: 244px;
@@ -120,8 +115,10 @@
 }
 
 .sidebar-link {
+  font-size: 14px;
+  font-weight: 400;
   padding: 8px 12px;
-  margin: 4px 8px;
+  margin: 4px 20px 4px 8px; /* 우측을 과도하게 준 이유는 호버시 어색하지 않게 하기 위함 */
   gap: 6px; /* 아이콘과 텍스트 사이 간격 */
   border-radius: 8px; /* 둥근 모서리 */
   color: #444;

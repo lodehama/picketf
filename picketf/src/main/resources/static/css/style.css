@@ -89,7 +89,7 @@ body {
   font-size: 12px;
   font-weight: 600;
   color: #6b7280;          /* 회색 */
-  letter-spacing: 0.06em;  /* 살짝 벌림 */
+  letter-spacing: 0.05em;  /* 살짝 벌림 */
 }
 
 .sidebar-link {

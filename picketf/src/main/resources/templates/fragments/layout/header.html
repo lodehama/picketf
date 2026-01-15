@@ -3,7 +3,11 @@
     <div class="app-header__inner">
 
       <!-- 좌측: 로고 -->
-      <a href="/" class="app-logo">Pick ETF</a>
+      <a href="/" class="app-logo">
+        <img src="/img/favicon.svg" alt="Pick ETF" class="app-logo__icon">
+        <span class="app-logo__text">Pick ETF</span>
+      </a>
+
 
       <!-- 중앙: 네비게이션 -->
       <nav class="app-nav">
@@ -11,6 +15,7 @@
         <a href="/qqq" class="app-nav__link">나스닥 100</a>
         <a href="/m7" class="app-nav__link">빅테크 M10</a>
         <a href="/gld" class="app-nav__link">금</a>
+
         <!-- 비로그인 -->
         <a href="/login" class="app-nav__link" sec:authorize="isAnonymous()">
           로그인

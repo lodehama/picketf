@@ -13,6 +13,7 @@
 
 /* Logo */
 .app-logo {
+  display: inline-flex; /* 안 넣으면 아이콘이 세로줄로 출력 */
   font-size: 16px;
   font-weight: 700; /* 굵게 */
   letter-spacing: 0.3px; /* 약간 벌림 */
@@ -22,11 +23,21 @@
   user-select: none; /* 텍스트 선택 방지 */
   white-space: nowrap; /* 줄바꿈 방지 */
 
+  gap: 8px;  /* 로고 아이콘과 텍스트 사이 간격 */
+
   /* 로고 클릭 가능 */
   position: relative;
   z-index: 10;
   pointer-events: auto;
 }
+
+/* 로고 아이콘 */
+.app-logo__icon{
+  width: 20px;
+  height: 20px;
+  display: block;           /* img 아래 여백 제거 */
+}
+
 
 /* 헤더 중앙 컨텐츠 */
 .app-nav {

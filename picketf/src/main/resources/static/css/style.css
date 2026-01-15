@@ -97,7 +97,6 @@
 /* 위/아래로 쌓기 + 높이 채우기 */
   display: flex;
   flex-direction: column;
-  background: #fff;
 }
 
 /* 위쪽 메뉴는 스크롤 가능 + 남는 공간 채움 */

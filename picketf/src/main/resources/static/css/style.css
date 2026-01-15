@@ -85,7 +85,7 @@ body {
 /* #region sidebar-layout */
 
 .sidebar-section-title{
-  margin: 18px 16px 6px;   /* 위/좌우/아래 */
+  margin: 20px 16px 6px;   /* 위/좌우/아래 */
   font-size: 12px;
   font-weight: 600;
   color: #6b7280;          /* 회색 */

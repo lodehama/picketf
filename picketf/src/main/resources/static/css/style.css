@@ -1,3 +1,30 @@
+/* #region header */
+.app-header {
+  border-bottom: 1px solid #e9ecef;
+}
+
+.app-header__inner {
+  height: 63px;
+  padding: 0 26px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Logo */
+.app-logo {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+
+  color: #111;
+  user-select: none;
+  white-space: nowrap;
+}
+
+
+/* #endregion header */
+
 /* #region sidebar-layout */
 
 
@@ -10,10 +37,9 @@
 }
 
 
-
 /* 좌측 메뉴 */
 .app-sidebar {
-  width: 256px;
+  width: 244px;
   position: fixed;
   top: 0;
   bottom: 0;

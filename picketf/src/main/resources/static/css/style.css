@@ -8,7 +8,6 @@
   padding: 0 26px;
   display: flex;
   align-items: center;
-  gap: 16px;
 }
 
 /* Logo */
@@ -18,7 +17,7 @@
   letter-spacing: 0.3px;
 
   color: #111;
-  user-select: none;
+  user-select: none; /* 텍스트 선택 방지 */
   white-space: nowrap;
 }
 

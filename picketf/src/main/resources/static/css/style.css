@@ -407,14 +407,6 @@ label[for="recSelectAll"] {
   gap: 10px;
 }
 
-.cpi-radio {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: #111827;
-}
-
 .cpi-select {
   height: 34px;
   padding: 0 10px;

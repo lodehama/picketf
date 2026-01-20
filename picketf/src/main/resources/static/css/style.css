@@ -385,7 +385,7 @@ label[for="recSelectAll"] {
 
 .cpi-row {
   display: grid;
-  grid-template-columns: 120px 1fr;
+  grid-template-columns: 140px 1fr;
   align-items: center;
   column-gap: 12px; /* 열 좌우 간격 */
   margin-bottom: 14px;
@@ -403,7 +403,7 @@ label[for="recSelectAll"] {
 }
 
 .cpi-select {
-  height: 34px;
+  height: 40px;
   padding: 0 10px;
   border: 1px solid #d1d5db;
   border-radius: 6px;
@@ -420,7 +420,7 @@ label[for="recSelectAll"] {
 
 .cpi-value-box {
   width: 110px;
-  height: 34px;
+  height: 36px;
   background: #e5e7eb;
   border-radius: 6px;
   display: flex;
@@ -430,25 +430,18 @@ label[for="recSelectAll"] {
   color: #111827;
 }
 
-/* 칠행 버튼 바깥 */
-.cpi-chart-slot {
-  height: 86px;
-  position: relative;
-  border-radius: 2px;
-}
-
-/* 실행 버튼: 차트 슬롯 왼쪽 상단에 살짝 겹치게 */
+/* 실행 버튼 */
 .cpi-run {
-  left: 14px;
-  top: 14px;
+  font-size: 16px;
+  font-weight: 600;
   height: 40px;
   padding: 0 18px;
   border: 0;
-  border-radius: 2px;
-  background: #0b2a55;
+  border-radius: 6px;
+  background: #0ea5a4;
   color: #fff;
-  font-weight: 700;
   cursor: pointer;
+  margin-left: 20px;
 }
 /* #endregion cpi.html */
 

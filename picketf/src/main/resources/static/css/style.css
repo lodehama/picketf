@@ -380,6 +380,9 @@ label[for="recSelectAll"] {
   padding: 24px;
   background: #fff;
   max-width: 600px;
+  border-radius: 8px;
+
+  margin: 0 auto; /* 가운데 정렬 */
 }
 
 /* 왼쪽 폼 */

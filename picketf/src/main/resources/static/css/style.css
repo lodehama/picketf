@@ -385,15 +385,14 @@ label[for="recSelectAll"] {
 
 .cpi-row {
   display: grid;
-  grid-template-columns: 90px 1fr;
+  grid-template-columns: 120px 1fr;
   align-items: center;
-  column-gap: 12px;
+  column-gap: 12px; /* 열 좌우 간격 */
   margin-bottom: 14px;
 }
 
 .cpi-label {
-  font-size: 14px;
-  color: #111827;
+  font-size: 16px;
   font-weight: 600;
 }
 
@@ -408,7 +407,7 @@ label[for="recSelectAll"] {
   padding: 0 10px;
   border: 1px solid #d1d5db;
   border-radius: 6px;
-  font-size: 13px;
+  font-size: 16px;
   background: #fff;
 }
 
@@ -427,11 +426,6 @@ label[for="recSelectAll"] {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  color: #111827;
-}
-
-.cpi-value-unit {
   font-weight: 700;
   color: #111827;
 }

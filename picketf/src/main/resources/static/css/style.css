@@ -378,16 +378,9 @@ label[for="recSelectAll"] {
 .cpi-wrap {
   border: 1px solid #e5e7eb;
   padding: 24px;
-  background: #fff;
-  max-width: 600px;
+  max-width: 400px;
   border-radius: 8px;
-
   margin: 0 auto; /* 가운데 정렬 */
-}
-
-/* 왼쪽 폼 */
-.cpi-form {
-  padding-top: 6px;
 }
 
 .cpi-row {

@@ -467,6 +467,7 @@ label[for="recSelectAll"] {
   background: #fff;
   width: 118px;
   text-align: right;
+  font-weight: 500;
 }
 
 /* 원 텍스트 */

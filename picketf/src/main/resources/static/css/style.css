@@ -378,7 +378,7 @@ label[for="recSelectAll"] {
 .cpi-wrap {
   border: 1px solid #e5e7eb;
   padding: 24px;
-  max-width: 412px;
+  max-width: 420px;
   border-radius: 8px;
   margin: 0 auto; /* 가운데 정렬 */
 }
@@ -387,7 +387,7 @@ label[for="recSelectAll"] {
   display: grid;
   grid-template-columns: 168px 1fr;
   align-items: center;
-  column-gap: 12px; /* 열 좌우 간격 */
+  column-gap: 20px; /* 열 좌우 간격 */
   margin-bottom: 14px;
 }
 

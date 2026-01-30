@@ -14,7 +14,7 @@
 
         <!-- 폼 -->
         <div class="cpi-row">
-          <div class="cpi-label">기준시점</div>
+          <div class="cpi-label">기준년도</div>
           <div class="cpi-controls">
             <select id="baseYear" class="cpi-select">
               <option selected>2025</option>
@@ -47,7 +47,7 @@
         </div>
 
         <div class="cpi-row">
-          <div class="cpi-label">비교시점</div>
+          <div class="cpi-label">비교년도</div>
           <div class="cpi-controls">
             <select id="compareYear" class="cpi-select">
               <option>2024</option>
@@ -82,9 +82,9 @@
         </div>
         <div class="cpi-divider"></div>
 
-        <!-- 기준시점금액 (기본 10,000원 / 입력 가능) -->
+        <!-- 기준년도금액 (기본 10,000원 / 입력 가능) -->
         <div class="cpi-row">
-          <div class="cpi-label">기준시점 금액</div>
+          <div class="cpi-label">기준년도 금액</div>
           <div class="cpi-controls">
             <div class="cpi-input-wrap">
               <input id="baseAmount" class="cpi-input" type="text" min="0" step="100" value="10000" inputmode="numeric"
@@ -93,9 +93,9 @@
           </div>
         </div>
 
-        <!-- 비교시점금액 (초기 비움 / 나중에 mapper로 채울 예정) -->
+        <!-- 비교년도금액 (초기 비움 / 나중에 mapper로 채울 예정) -->
         <div class="cpi-row">
-          <div class="cpi-label">비교시점 금액</div>
+          <div class="cpi-label">비교년도 금액</div>
           <div class="cpi-value">
             <div class="cpi-value-box cpi-value-box--empty"></div>
           </div>
@@ -118,14 +118,14 @@
 
         <!-- 최저 -->
         <div class="cpi-row">
-          <div class="cpi-label">기준시점 최저시급</div>
+          <div class="cpi-label">기준년도 최저시급</div>
           <div class="cpi-value">
             <output id="baseMinWage" class="cpi-value-box cpi-value-box--won form-control"></output>
           </div>
         </div>
 
         <div class="cpi-row">
-          <div class="cpi-label">비교시점 최저시급</div>
+          <div class="cpi-label">비교년도 최저시급</div>
           <div class="cpi-value">
             <output id="compareMinWage" class="cpi-value-box cpi-value-box--won form-control"></output>
           </div>
@@ -150,7 +150,7 @@
           document.addEventListener("DOMContentLoaded", () => {
 
             /* ===============================
-               1. 기준시점 금액 콤마 처리
+               1. 기준년도 금액 콤마 처리
                =============================== */
             const baseAmountInput = document.getElementById("baseAmount");
 
@@ -188,6 +188,12 @@
               btnRun.addEventListener("click", async () => {
                 const baseYear = document.getElementById("baseYear").value;
                 const compareYear = document.getElementById("compareYear").value;
+
+                // 기준년도 > 비교년도 검증
+                if (baseYear <= compareYear) {
+                  alert("기준년도은 비교년도보다 반드시 커야 합니다.");
+                  return;
+                }
 
                 const res = await fetch(
                   `/cpi/minwage?baseYear=${baseYear}&compareYear=${compareYear}`

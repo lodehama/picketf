@@ -26,17 +26,17 @@ public class CpiService {
     int baseMin = baseRow.getCpiMinWage();
     int compareMin = compareRow.getCpiMinWage();
 
-    // 상승률: (비교/기준) - 1
-    double growth = (compareMin / (double) baseMin) - 1.0;
+    // 상승률: (기준/비교) - 1
+    double growth = (baseMin / (double) compareMin) - 1.0;
 
-    // CAGR: (비교/기준)^(1/n) - 1
+    // CAGR: (기준/비교)^(1/n) - 1
     int years = Math.abs(compareYear - baseYear);
     double cagr;
 
     if (years == 0) {
       cagr = 0.0;
     } else {
-      double ratio = compareMin / (double) baseMin;
+      double ratio = baseMin / (double) compareMin;
       cagr = Math.pow(ratio, 1.0 / years) - 1.0;
     }
 

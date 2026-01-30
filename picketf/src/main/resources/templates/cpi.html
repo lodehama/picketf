@@ -97,21 +97,21 @@
         <div class="cpi-row">
           <div class="cpi-label">비교년도 금액</div>
           <div class="cpi-value">
-            <div class="cpi-value-box cpi-value-box--empty"></div>
+            <div class="cpi-value-box cpi-value-box--empty" id="compareAmountBox"></div>
           </div>
         </div>
 
         <div class="cpi-row">
           <div class="cpi-label">물가 상승률</div>
           <div class="cpi-value">
-            <div class="cpi-value-box"></div>
+            <div class="cpi-value-box" id="inflationRateBox"></div>
           </div>
         </div>
 
         <div class="cpi-row">
           <div class="cpi-label">물가 연평균 상승률</div>
           <div class="cpi-value">
-            <div class="cpi-value-box"></div>
+            <div class="cpi-value-box" id="inflationCagrBox"></div>
           </div>
         </div>
         <div class="cpi-divider"></div>
@@ -154,13 +154,18 @@
                =============================== */
             const baseAmountInput = document.getElementById("baseAmount");
 
-            if (baseAmountInput) {
-              const formatNumber = (value) => {
-                return value
-                  .replace(/[^0-9]/g, "")
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-              };
+            const formatNumber = (value) => {
+              return value
+                .replace(/[^0-9]/g, "")
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            };
 
+            const getBaseAmountNumber = () => {
+              if (!baseAmountInput) return 0;
+              return Number(baseAmountInput.value.replace(/,/g, ""));
+            };
+
+            if (baseAmountInput) {
               // 최초 로딩 시 포맷
               baseAmountInput.value = formatNumber(baseAmountInput.value);
 
@@ -169,22 +174,24 @@
                 const raw = baseAmountInput.value.replace(/,/g, "");
                 baseAmountInput.value = formatNumber(raw);
               });
-
-              // 필요하면 숫자값으로 쓰기
-              window.getBaseAmountNumber = () => {
-                return Number(baseAmountInput.value.replace(/,/g, ""));
-              };
             }
 
             /* ===============================
-               2. 실행 버튼 → 최저시급 계산
+               2. 실행 버튼 → 최저시급 + CPI 계산
                =============================== */
             const btnRun = document.getElementById("btnRun");
 
-            if (btnRun) {
-              const fmtMoney = (n) => Number(n).toLocaleString();
-              const fmtPct = (r) => (r * 100).toFixed(2) + "%";
+            const fmtMoney = (n) => Number(n).toLocaleString() + " 원";
+            const fmtMoneyPlain = (n) => Number(n).toLocaleString(); // 최저시급은 기존처럼 원 없이
+            const fmtPct = (r) => (r * 100).toFixed(2) + "%";
 
+            const fillBox = (el, text) => {
+              if (!el) return;
+              el.classList.remove("cpi-value-box--empty");
+              el.textContent = text;
+            };
+
+            if (btnRun) {
               btnRun.addEventListener("click", async () => {
                 const baseYear = document.getElementById("baseYear").value;
                 const compareYear = document.getElementById("compareYear").value;
@@ -195,21 +202,57 @@
                   return;
                 }
 
-                const res = await fetch(
-                  `/cpi/minwage?baseYear=${baseYear}&compareYear=${compareYear}`
-                );
+                // 기준년도 금액 숫자화 (콤마 제거)
+                const baseAmount = getBaseAmountNumber();
 
-                if (!res.ok) {
-                  alert("데이터 조회 실패");
-                  return;
+                try {
+                  /* ===============================
+                     A) 최저시급 계산
+                     =============================== */
+                  const res = await fetch(
+                    `/cpi/minwage?baseYear=${baseYear}&compareYear=${compareYear}`
+                  );
+
+                  if (!res.ok) {
+                    alert("최저시급 데이터 조회 실패");
+                    return;
+                  }
+
+                  const data = await res.json();
+
+                  document.getElementById("baseMinWage").textContent = fmtMoneyPlain(data.baseMinWage);
+                  document.getElementById("compareMinWage").textContent = fmtMoneyPlain(data.compareMinWage);
+                  document.getElementById("minWageGrowth").textContent = fmtPct(data.growthRate);
+                  document.getElementById("minWageCagr").textContent = fmtPct(data.cagrRate);
+
+                  /* ===============================
+                     B) CPI 계산
+                     =============================== */
+                  const cpiRes = await fetch(
+                    `/cpi/value?baseYear=${baseYear}&compareYear=${compareYear}&baseAmount=${baseAmount}`
+                  );
+
+                  if (!cpiRes.ok) {
+                    alert("CPI 계산 실패");
+                    return;
+                  }
+
+                  const cpi = await cpiRes.json();
+
+                  // ✅ HTML에 아래 id 3개가 있어야 함
+                  // compareAmountBox, inflationRateBox, inflationCagrBox
+                  const compareAmountBox = document.getElementById("compareAmountBox");
+                  const inflationRateBox = document.getElementById("inflationRateBox");
+                  const inflationCagrBox = document.getElementById("inflationCagrBox");
+
+                  fillBox(compareAmountBox, fmtMoney(cpi.compareAmount));
+                  fillBox(inflationRateBox, fmtPct(cpi.inflationRate));
+                  fillBox(inflationCagrBox, fmtPct(cpi.cagrRate));
+
+                } catch (e) {
+                  alert("요청 처리 중 오류가 발생했습니다.");
+                  console.error(e);
                 }
-
-                const data = await res.json();
-
-                document.getElementById("baseMinWage").textContent = fmtMoney(data.baseMinWage);
-                document.getElementById("compareMinWage").textContent = fmtMoney(data.compareMinWage);
-                document.getElementById("minWageGrowth").textContent = fmtPct(data.growthRate);
-                document.getElementById("minWageCagr").textContent = fmtPct(data.cagrRate);
               });
             }
 

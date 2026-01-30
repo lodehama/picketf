@@ -439,11 +439,28 @@ label[for="recSelectAll"] {
   color: #111827;
 }
 
+/* 기준시점 금액: input 안에 '원' 표시용 래퍼 */
+.cpi-input-wrap {
+  position: relative;
+  width: 118px; /* input width와 동일 */
+}
+
+.cpi-input-wrap::after {
+  content: "원";
+  position: absolute;
+  right: 10px;
+  top: 50%; /* 수직 중앙 정렬 */
+  transform: translateY(-50%); /* 수직 중앙 정렬 */
+  font-weight: 700;
+  color: #111827;
+  pointer-events: none; /* 클릭 방해 방지 */
+}
 
 /* 기준시점금액 입력 박스 */
 .cpi-input{
   height: 40px;
-  padding: 0 10px;
+  padding: 0 28px 0 10px; /* 오른쪽에 '원' 자리 확보 */
+  width: 100%;            /* wrapper가 폭 담당 */
   border: 1px solid #d1d5db;
   border-radius: 6px;
   font-size: 16px;

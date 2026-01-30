@@ -409,6 +409,7 @@ label[for="recSelectAll"] {
   border-radius: 6px;
   font-size: 16px;
   background: #fff;
+  margin-right: 16px;
 }
 
 /* 물가상승률 */
@@ -459,7 +460,6 @@ label[for="recSelectAll"] {
   background: #0ea5a4;
   color: #fff;
   cursor: pointer;
-  margin-left: 20px;
 }
 
 /* 섹션 구분선 + 여백 */

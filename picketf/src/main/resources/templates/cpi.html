@@ -118,28 +118,28 @@
         <div class="cpi-row">
           <div class="cpi-label">기준시점 최저시급</div>
           <div class="cpi-value">
-            <input id="baseMinWage" class="cpi-value-box form-control" readonly>
+            <output id="baseMinWage" class="cpi-value-box form-control"></output>
           </div>
         </div>
 
         <div class="cpi-row">
           <div class="cpi-label">비교시점 최저시급</div>
           <div class="cpi-value">
-            <input id="compareMinWage" class="cpi-value-box form-control" readonly>
+            <output id="compareMinWage" class="cpi-value-box form-control"></output>
           </div>
         </div>
 
         <div class="cpi-row">
           <div class="cpi-label">최저시급 상승률</div>
           <div class="cpi-value">
-            <input id="minWageGrowth" class="cpi-value-box form-control" readonly>
+            <output id="minWageGrowth" class="cpi-value-box form-control"></output>
           </div>
         </div>
 
         <div class="cpi-row">
           <div class="cpi-label">최저시급 상승률 (평균)</div>
           <div class="cpi-value">
-            <input id="minWageCagr" class="cpi-value-box form-control" readonly>
+            <output id="minWageCagr" class="cpi-value-box form-control"></output>
           </div>
         </div>
       </div>
@@ -198,10 +198,10 @@
 
                 const data = await res.json();
 
-                document.getElementById("baseMinWage").value = fmtMoney(data.baseMinWage);
-                document.getElementById("compareMinWage").value = fmtMoney(data.compareMinWage);
-                document.getElementById("minWageGrowth").value = fmtPct(data.growthRate);
-                document.getElementById("minWageCagr").value = fmtPct(data.cagrRate);
+                document.getElementById("baseMinWage").textContent = fmtMoney(data.baseMinWage);
+                document.getElementById("compareMinWage").textContent = fmtMoney(data.compareMinWage);
+                document.getElementById("minWageGrowth").textContent = fmtPct(data.growthRate);
+                document.getElementById("minWageCagr").textContent = fmtPct(data.cagrRate);
               });
             }
 

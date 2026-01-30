@@ -424,7 +424,6 @@ label[for="recSelectAll"] {
   height: 36px;
   background: #e5e7eb;
   border-radius: 6px;
-  display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;

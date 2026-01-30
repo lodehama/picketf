@@ -97,7 +97,7 @@
         <div class="cpi-row">
           <div class="cpi-label">비교년도 금액</div>
           <div class="cpi-value">
-            <div id="compareAmountBox" class="cpi-value-box form-control cpi-value-box--empty"></div>
+            <div id="compareAmountBox" class="cpi-value-box cpi-value-box--won form-control cpi-value-box--empty"></div>
           </div>
         </div>
 
@@ -181,8 +181,8 @@
                =============================== */
             const btnRun = document.getElementById("btnRun");
 
-            const fmtMoney = (n) => Number(n).toLocaleString() + " 원";
-            const fmtMoneyPlain = (n) => Number(n).toLocaleString(); // 최저시급은 기존처럼 원 없이
+            const fmtMoney = (n) => Number(n).toLocaleString();
+            const fmtMoneyPlain = (n) => Number(n).toLocaleString();
             const fmtPct = (r) => (r * 100).toFixed(2) + "%";
 
             const fillBox = (el, text) => {

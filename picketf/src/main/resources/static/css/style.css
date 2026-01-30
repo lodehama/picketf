@@ -431,6 +431,15 @@ label[for="recSelectAll"] {
   text-align: right;
 }
 
+/* 원 표기 */
+.cpi-value-box--won::after {
+  content: "원";
+  margin-left: 2px;
+  font-weight: 700;
+  color: #111827;
+}
+
+
 /* 기준시점금액 입력 박스 */
 .cpi-input{
   height: 40px;

@@ -16,7 +16,7 @@
         <div class="cpi-row">
           <div class="cpi-label">기준시점</div>
           <div class="cpi-controls">
-            <select class="cpi-select">
+            <select id="baseYear" class="cpi-select">
               <option selected>2025</option>
               <option>2024</option>
               <option>2023</option>
@@ -49,7 +49,7 @@
         <div class="cpi-row">
           <div class="cpi-label">비교시점</div>
           <div class="cpi-controls">
-            <select class="cpi-select">
+            <select id="compareYear" class="cpi-select">
               <option>2024</option>
               <option>2023</option>
               <option>2022</option>
@@ -76,7 +76,9 @@
               <option>2001</option>
               <option>2000</option>
             </select>
-            <button class="cpi-run" type="button">실행</button>
+            <!-- <button class="cpi-run" type="button">실행</button> -->
+            <button type="button" id="btnRun" class="btn btn-success">실행</button>
+
           </div>
         </div>
         <div class="cpi-divider"></div>
@@ -117,57 +119,98 @@
         <div class="cpi-row">
           <div class="cpi-label">기준시점 최저시급</div>
           <div class="cpi-value">
-            <div id="baseMinWage" class="cpi-value-box"></div>
+            <input id="baseMinWage" class="form-control" readonly>
+            <!-- <div id="baseMinWage" class="cpi-value-box"></div> -->
           </div>
         </div>
 
         <div class="cpi-row">
           <div class="cpi-label">비교시점 최저시급</div>
           <div class="cpi-value">
-            <div id="compareMinWage" class="cpi-value-box"></div>
+            <input id="compareMinWage" class="form-control" readonly>
+            <!-- <div id="compareMinWage" class="cpi-value-box"></div> -->
           </div>
         </div>
 
         <div class="cpi-row">
           <div class="cpi-label">최저시급 상승률</div>
           <div class="cpi-value">
-            <div id="minWageRate" class="cpi-value-box"></div>
+            <input id="minWageGrowth" class="form-control" readonly>
+            <!-- <div id="minWageRate" class="cpi-value-box"></div> -->
           </div>
         </div>
 
         <div class="cpi-row">
           <div class="cpi-label">최저시급 상승률 (평균)</div>
           <div class="cpi-value">
-            <div id="avgMinWageRate" class="cpi-value-box"></div>
+            <input id="minWageCagr" class="form-control" readonly>
+            <!-- <div id="avgMinWageRate" class="cpi-value-box"></div> -->
           </div>
         </div>
       </div>
       <th:block layout:fragment="script">
         <script>
-          // 기준시점금액 3자리 콤마
-          const input = document.getElementById("baseAmount");
+          document.addEventListener("DOMContentLoaded", () => {
 
-          // 숫자 → 콤마 포맷
-          function formatNumber(value) {
-            return value
-              .replace(/[^0-9]/g, "")           // 숫자만 남기고 제거
-              .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-          }
+            /* ===============================
+               1. 기준시점 금액 콤마 처리
+               =============================== */
+            const baseAmountInput = document.getElementById("baseAmount");
 
-          // 최초 로딩 시 10,000으로 포맷
-          input.value = formatNumber(input.value);
+            if (baseAmountInput) {
+              const formatNumber = (value) => {
+                return value
+                  .replace(/[^0-9]/g, "")
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+              };
 
-          // 입력할 때마다 콤마 적용
-          input.addEventListener("input", (e) => {
-            const cursorPosition = input.selectionStart;
-            const rawValue = input.value.replace(/,/g, "");
-            input.value = formatNumber(rawValue);
+              // 최초 로딩 시 포맷
+              baseAmountInput.value = formatNumber(baseAmountInput.value);
+
+              // 입력 시마다 콤마 적용
+              baseAmountInput.addEventListener("input", () => {
+                const raw = baseAmountInput.value.replace(/,/g, "");
+                baseAmountInput.value = formatNumber(raw);
+              });
+
+              // 필요하면 숫자값으로 쓰기
+              window.getBaseAmountNumber = () => {
+                return Number(baseAmountInput.value.replace(/,/g, ""));
+              };
+            }
+
+            /* ===============================
+               2. 실행 버튼 → 최저시급 계산
+               =============================== */
+            const btnRun = document.getElementById("btnRun");
+
+            if (btnRun) {
+              const fmtMoney = (n) => Number(n).toLocaleString();
+              const fmtPct = (r) => (r * 100).toFixed(2) + "%";
+
+              btnRun.addEventListener("click", async () => {
+                const baseYear = document.getElementById("baseYear").value;
+                const compareYear = document.getElementById("compareYear").value;
+
+                const res = await fetch(
+                  `/cpi/minwage?baseYear=${baseYear}&compareYear=${compareYear}`
+                );
+
+                if (!res.ok) {
+                  alert("데이터 조회 실패");
+                  return;
+                }
+
+                const data = await res.json();
+
+                document.getElementById("baseMinWage").value = fmtMoney(data.baseMinWage);
+                document.getElementById("compareMinWage").value = fmtMoney(data.compareMinWage);
+                document.getElementById("minWageGrowth").value = fmtPct(data.growthRate);
+                document.getElementById("minWageCagr").value = fmtPct(data.cagrRate);
+              });
+            }
+
           });
-
-          // 계산할 때 숫자로 쓰고 싶으면
-          function getBaseAmountNumber() {
-            return Number(input.value.replace(/,/g, ""));
-          }
         </script>
       </th:block>
   </main>

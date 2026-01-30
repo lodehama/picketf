@@ -23,6 +23,15 @@
           </div>
         </div>
 
+        <!-- 기준시점금액 (기본 10,000원 / 입력 가능) -->
+        <div class="cpi-row">
+          <div class="cpi-label">기준시점금액</div>
+          <div class="cpi-controls">
+            <input class="cpi-input" type="number" min="0" step="100" value="10000" />
+            <span class="cpi-unit">원</span>
+          </div>
+        </div>
+
         <div class="cpi-row">
           <div class="cpi-label">비교시점</div>
           <div class="cpi-controls">
@@ -35,17 +44,25 @@
           </div>
         </div>
 
+        <!-- 비교시점금액 (초기 비움 / 나중에 mapper로 채울 예정) -->
+        <div class="cpi-row">
+          <div class="cpi-label">비교시점금액</div>
+          <div class="cpi-value">
+            <div class="cpi-value-box cpi-value-box--empty"></div>
+          </div>
+        </div>
+
         <div class="cpi-row">
           <div class="cpi-label">물가상승률</div>
           <div class="cpi-value">
-            <div class="cpi-value-box">74.1%</div>
+            <div class="cpi-value-box"></div>
           </div>
         </div>
 
         <div class="cpi-row">
           <div class="cpi-label">평균 물가상승률</div>
           <div class="cpi-value">
-            <div class="cpi-value-box">4.1%</div>
+            <div class="cpi-value-box"></div>
           </div>
         </div>
       </div>

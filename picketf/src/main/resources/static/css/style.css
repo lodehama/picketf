@@ -430,6 +430,23 @@ label[for="recSelectAll"] {
   color: #111827;
 }
 
+/* 기준시점금액 입력 박스 */
+.cpi-input{
+  height: 40px;
+  padding: 0 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 16px;
+  background: #fff;
+  width: 160px;
+}
+
+/* 원 텍스트 */
+.cpi-unit{
+  font-size: 16px;
+  color: #111827;
+}
+
 /* 실행 버튼 */
 .cpi-run {
   font-size: 16px;

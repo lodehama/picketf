@@ -37,32 +37,61 @@
 
         <!-- 기준시점금액 (기본 10,000원 / 입력 가능) -->
         <div class="cpi-row">
-          <div class="cpi-label">기준시점금액</div>
+          <div class="cpi-label">기준시점 금액</div>
           <div class="cpi-controls">
-            <input id="baseAmount"class="cpi-input" type="text" min="0" step="100" value="10000" />
+            <input id="baseAmount" class="cpi-input" type="text" min="0" step="100" value="10000" />
             <span class="cpi-unit">원</span>
           </div>
         </div>
 
         <!-- 비교시점금액 (초기 비움 / 나중에 mapper로 채울 예정) -->
         <div class="cpi-row">
-          <div class="cpi-label">비교시점금액</div>
+          <div class="cpi-label">비교시점 금액</div>
           <div class="cpi-value">
             <div class="cpi-value-box cpi-value-box--empty"></div>
           </div>
         </div>
 
         <div class="cpi-row">
-          <div class="cpi-label">물가상승률</div>
+          <div class="cpi-label">물가 상승률</div>
           <div class="cpi-value">
             <div class="cpi-value-box"></div>
           </div>
         </div>
 
         <div class="cpi-row">
-          <div class="cpi-label">평균 물가상승률</div>
+          <div class="cpi-label">평균 물가 상승률</div>
           <div class="cpi-value">
             <div class="cpi-value-box"></div>
+          </div>
+        </div>
+
+        <!-- 최저 -->
+        <div class="cpi-row">
+          <div class="cpi-label">기준시점 최저시급</div>
+          <div class="cpi-value">
+            <div id="baseMinWage" class="cpi-value-box"></div>
+          </div>
+        </div>
+
+        <div class="cpi-row">
+          <div class="cpi-label">비교시점 최저시급</div>
+          <div class="cpi-value">
+            <div id="compareMinWage" class="cpi-value-box"></div>
+          </div>
+        </div>
+
+        <div class="cpi-row">
+          <div class="cpi-label">최저시급 상승률</div>
+          <div class="cpi-value">
+            <div id="minWageRate" class="cpi-value-box"></div>
+          </div>
+        </div>
+
+        <div class="cpi-row">
+          <div class="cpi-label">평균 최저시급 상승률</div>
+          <div class="cpi-value">
+            <div id="avgMinWageRate" class="cpi-value-box"></div>
           </div>
         </div>
       </div>

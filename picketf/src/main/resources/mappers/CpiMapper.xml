@@ -5,6 +5,7 @@
 
 <mapper namespace="com.hama.picketf.dao.CpiDAO">
 
+  <!-- 최저시급 조회 -->
   <select id="findMinWageByYear" parameterType="int" resultType="com.hama.picketf.dto.CpiMinWageRow">
     SELECT
       cpi_year AS cpiYear,

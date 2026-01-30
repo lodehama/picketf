@@ -20,6 +20,7 @@ public class CpiController {
     return "cpi";
   }
 
+  // 최저시급 조회
   @ResponseBody
   @GetMapping("/cpi/minwage")
   public MinWageResultDTO minwage(

@@ -13,6 +13,7 @@ public class CpiService {
   @Autowired
   private CpiDAO cpiDao;
 
+  // 최저시급 조회 (계산)
   public MinWageResultDTO calcMinWage(int baseYear, int compareYear) {
 
     CpiMinWageRow baseRow = cpiDao.findMinWageByYear(baseYear);

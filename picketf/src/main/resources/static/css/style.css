@@ -490,6 +490,15 @@ label[for="recSelectAll"] {
   cursor: pointer;
 }
 
+/* 실행 버튼 드래그 방지 */
+button.cpi-run,
+button.cpi-run * {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+}
+
 /* 섹션 구분선 + 여백 */
 .cpi-divider{
   grid-column: 1 / -1;     /*  grid 2열 전체 차지 */

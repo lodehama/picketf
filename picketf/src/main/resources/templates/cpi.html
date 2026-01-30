@@ -27,7 +27,7 @@
         <div class="cpi-row">
           <div class="cpi-label">기준시점금액</div>
           <div class="cpi-controls">
-            <input class="cpi-input" type="number" min="0" step="100" value="10000" />
+            <input id="baseAmount"class="cpi-input" type="text" min="0" step="100" value="10000" />
             <span class="cpi-unit">원</span>
           </div>
         </div>
@@ -67,9 +67,33 @@
         </div>
       </div>
       <th:block layout:fragment="script">
+        <script>
+          // 기준시점금액 3자리 콤마
+          const input = document.getElementById("baseAmount");
+
+          // 숫자 → 콤마 포맷
+          function formatNumber(value) {
+            return value
+              .replace(/[^0-9]/g, "")           // 숫자만 남기고 제거
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+          }
+
+          // 최초 로딩 시 10,000으로 포맷
+          input.value = formatNumber(input.value);
+
+          // 입력할 때마다 콤마 적용
+          input.addEventListener("input", (e) => {
+            const cursorPosition = input.selectionStart;
+            const rawValue = input.value.replace(/,/g, "");
+            input.value = formatNumber(rawValue);
+          });
+
+          // 계산할 때 숫자로 쓰고 싶으면
+          function getBaseAmountNumber() {
+            return Number(input.value.replace(/,/g, ""));
+          }
         </script>
       </th:block>
-
   </main>
 </body>
 

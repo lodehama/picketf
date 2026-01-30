@@ -429,6 +429,7 @@ label[for="recSelectAll"] {
   justify-content: center;
   font-weight: 700;
   color: #111827;
+  text-align: right;
 }
 
 /* 기준시점금액 입력 박스 */
@@ -440,6 +441,7 @@ label[for="recSelectAll"] {
   font-size: 16px;
   background: #fff;
   width: 118px;
+  text-align: right;
 }
 
 /* 원 텍스트 */

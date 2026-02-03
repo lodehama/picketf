@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.hama.picketf.model.vo.UserVO;
 import com.hama.picketf.service.UserService;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class HomeController {
@@ -14,17 +15,17 @@ public class HomeController {
   @Autowired
   UserService userService;
 
-  
   @GetMapping("/signup")
   public String signup() {
     return "signup";
   }
-  
+
   @PostMapping("/register")
   public String register(UserVO userVO) {
     userService.register(userVO);
     return "redirect:/login";
   }
+
   @GetMapping("/")
   public String home() {
     return "index";
@@ -48,6 +49,11 @@ public class HomeController {
   @GetMapping("/devlog")
   public String devlog() {
     return "devlog";
+  }
+
+  @GetMapping("/portfolio")
+  public String portfolio() {
+    return "portfolio";
   }
 
 }

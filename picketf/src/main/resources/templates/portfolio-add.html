@@ -5,27 +5,32 @@
 <head>
   <title>내 포트폴리오</title>
 </head>
+
 <main layout:fragment="content">
   <div class="container py-3">
     <h2>ETF 추가</h2>
 
-    <form>
-      <div>
-        <label>종목</label>
-        <input type="text" placeholder="QQQ" />
+    <form method="post" action="/portfolio/add">
+
+      <div class="mb-3">
+        <label class="form-label">종목</label>
+        <input type="text" name="etfName" class="form-control" placeholder="QQQ" />
       </div>
 
-      <div>
-        <label>보유 수량</label>
-        <input type="number" />
+      <div class="mb-3">
+        <label class="form-label">보유 수량</label>
+        <input type="number" name="quantity" class="form-control" />
       </div>
 
-      <div>
-        <label>보유 원가</label>
-        <input type="number" step="0.01" />
+      <div class="mb-3">
+        <label class="form-label">보유 원가</label>
+        <input type="number" name="costBasis" step="0.01" class="form-control" />
       </div>
 
-      <button type="submit">저장</button>
+      <button type="submit" class="btn btn-primary">
+        저장
+      </button>
+
     </form>
 
   </div>

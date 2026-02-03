@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{fragments/layout/layout.html}">
+
+<head>
+  <title>내 포트폴리오</title>
+</head>
+<main layout:fragment="content">
+  <div class="container py-3">
+    <h2>ETF 추가</h2>
+
+    <form>
+      <div>
+        <label>종목</label>
+        <input type="text" placeholder="QQQ" />
+      </div>
+
+      <div>
+        <label>보유 수량</label>
+        <input type="number" />
+      </div>
+
+      <div>
+        <label>보유 원가</label>
+        <input type="number" step="0.01" />
+      </div>
+
+      <button type="submit">저장</button>
+    </form>
+
+  </div>
+</main>
+
+</html>

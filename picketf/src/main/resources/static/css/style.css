@@ -64,6 +64,7 @@
 .app-nav__logout {
   margin: 0;
   display: inline-flex;
+  font-weight: 500;  /* nav 링크들과 동일하게 맞추기 */
 }
 
 /* button 기본 스타일 제거 + a처럼 보이게 */

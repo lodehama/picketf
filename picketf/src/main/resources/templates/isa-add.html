@@ -3,28 +3,41 @@
   layout:decorate="~{fragments/layout/layout.html}">
 
 <head>
-  <title>ISA 계좌 추가</title>
+  <title>ISA 계좌 개설하기</title>
 </head>
 
 <main layout:fragment="content">
   <div class="container py-3">
-    <h2>ETF 추가</h2>
+    <h2>ISA 계좌 개설하기</h2>
 
     <form method="post" action="/isa/add">
 
       <div class="mb-3">
-        <label class="form-label">종목</label>
-        <input type="text" name="etfName" class="form-control" placeholder="QQQ" />
+        <label class="form-label">개설년도</label>
+        <input type="text" name="opened_year" class="form-control" placeholder="2026" />
       </div>
 
       <div class="mb-3">
-        <label class="form-label">보유 수량</label>
-        <input type="number" name="quantity" class="form-control" />
+        <label class="form-label d-block">계좌 유형</label>
+
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="accountType" id="typeNormal" value="NORMAL" checked />
+          <label class="form-check-label" for="typeNormal">
+            일반형
+          </label>
+        </div>
+
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="accountType" id="typeLowIncome" value="LOW_INCOME" />
+          <label class="form-check-label" for="typeLowIncome">
+            서민형
+          </label>
+        </div>
       </div>
 
       <div class="mb-3">
-        <label class="form-label">보유 원가</label>
-        <input type="number" name="costBasis" step="0.01" class="form-control" />
+        <label class="form-label">초기 납입금액</label>
+        <input type="number" name="initialDeposit" class="form-control" placeholder="20,000,000" />
       </div>
 
       <button type="submit" class="btn btn-primary">

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{fragments/layout/layout.html}">
+
+<head>
+  <title>ISA 계좌 추가</title>
+</head>
+
+<main layout:fragment="content">
+  <div class="container py-3">
+    <h2>ETF 추가</h2>
+
+    <form method="post" action="/isa/add">
+
+      <div class="mb-3">
+        <label class="form-label">종목</label>
+        <input type="text" name="etfName" class="form-control" placeholder="QQQ" />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">보유 수량</label>
+        <input type="number" name="quantity" class="form-control" />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">보유 원가</label>
+        <input type="number" name="costBasis" step="0.01" class="form-control" />
+      </div>
+
+      <button type="submit" class="btn btn-primary">
+        저장
+      </button>
+
+    </form>
+
+  </div>
+</main>
+
+</html>

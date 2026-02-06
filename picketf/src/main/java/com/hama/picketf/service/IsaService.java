@@ -15,7 +15,7 @@ public class IsaService {
   public void createIsa(int usNum, int year, String type, long initialDeposit) {
 
     // 1) 간단 검증
-    if (year < 2000 || year > 2027) {
+    if (year < 2000 || year > 2026) {
       throw new IllegalArgumentException("개설 연도 범위가 이상함");
     }
 

@@ -29,10 +29,10 @@ public class KrxApiService {
   private String apiKey;
 
   @Value("${krx.api.auth.header-name}")
-  private String authHeaderName; // 예: Authorization
+  private String authHeaderName; // 예: AUTH_KEY 또는 Authorization
 
   @Value("${krx.api.auth.header-format}")
-  private String authHeaderFmt; // 예: Bearer %s
+  private String authHeaderFmt; // 예: %s 또는 Bearer %s
 
   /** dev 테스트용(선택). 비워두면 미사용 */
   @Value("${krx.api.test.basDd:}")
@@ -42,9 +42,13 @@ public class KrxApiService {
   @Value("${krx.api.latest.fallback-days:7}")
   private int fallbackDays;
 
+  /** 디버그 로그 on/off (선택) */
+  @Value("${krx.api.debug:false}")
+  private boolean debug;
+
   private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("yyyyMMdd");
 
-  /** 실제로 사용된 기준일(화면 표기를 위해 공개) */
+  /** 실제로 사용된 기준일 (화면 표기를 위해) */
   private volatile String lastResolvedBasDd;
 
   private String today() {
@@ -55,10 +59,14 @@ public class KrxApiService {
   private String resolveStartDate(String basDd) {
     if (basDd != null && !basDd.isBlank())
       return basDd;
-    // dev 환경에서 특정 날짜를 강제로 시작점으로 쓰고 싶다면 testBasDd 우선
     if (testBasDd != null && !testBasDd.isBlank())
       return testBasDd;
     return today();
+  }
+
+  private void log(String msg) {
+    if (debug)
+      System.out.println(msg);
   }
 
   /** 실제 호출 + 파싱 (주어진 날짜 1회 시도) */
@@ -79,7 +87,7 @@ public class KrxApiService {
       if (!arr.isArray() || arr.isEmpty())
         return Map.of();
 
-      // 트러블 슈팅 : 비영업일/미확정 데이터 걸러내기
+      // 오류 원인: 비영업일/미확정 데이터("-")면 실패로 간주 → 상위에서 fallback 타게 함
       String close = arr.get(0).path("TDD_CLSPRC").asText("");
       if (close.isBlank() || "-".equals(close))
         return Map.of();
@@ -94,7 +102,6 @@ public class KrxApiService {
       return map;
 
     } catch (Exception e) {
-      // 필요 시 로깅
       return Map.of();
     }
   }
@@ -104,20 +111,35 @@ public class KrxApiService {
    * basDd 없으면: 오늘부터 fallbackDays 만큼 과거로 내려가며 첫 성공 날짜를 사용.
    */
   private Map<String, KrxEtfDTO> fetchAllEtfsByDate(String basDd) {
+    long totalStart = System.currentTimeMillis();
+
     String start = resolveStartDate(basDd);
     LocalDate cursor = LocalDate.parse(start, FMT);
 
-    for (int i = 0; i < Math.max(1, fallbackDays); i++) {
+    int maxTry = Math.max(1, fallbackDays);
+    log("[KRX] start basDd=" + start + ", fallbackDays=" + maxTry);
+
+    for (int i = 0; i < maxTry; i++) {
       String tryDate = cursor.minusDays(i).format(FMT);
+
+      long t1 = System.currentTimeMillis();
       Map<String, KrxEtfDTO> result = fetchOnce(tryDate);
+      long t2 = System.currentTimeMillis();
+
+      log("[KRX] try=" + (i + 1) + ", date=" + tryDate
+          + ", result=" + (result.isEmpty() ? "EMPTY" : "OK")
+          + ", elapsed=" + (t2 - t1) + "ms");
+
       if (!result.isEmpty()) {
-        // 성공: 실제 사용 기준일 저장
         this.lastResolvedBasDd = tryDate;
+        log("[KRX] RESOLVED basDd=" + tryDate + ", attempts=" + (i + 1)
+            + ", totalElapsed=" + (System.currentTimeMillis() - totalStart) + "ms");
         return result;
       }
     }
-    // 실패: 기준일 정보 초기화
+
     this.lastResolvedBasDd = null;
+    log("[KRX] FAILED attempts=" + maxTry + ", totalElapsed=" + (System.currentTimeMillis() - totalStart) + "ms");
     return Map.of();
   }
 

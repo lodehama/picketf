@@ -17,15 +17,8 @@
 
       <div class="mb-3">
         <label class="form-label">개설 연도</label>
-        <input type="text"
-               name="opened_year"
-               class="form-control"
-               placeholder="2026"
-               required
-               inputmode="numeric"
-               maxlength="4"
-               pattern="[0-9]{4}" />
-        <div class="form-text">예: 2026</div>
+        <input type="text" name="opened_year" class="form-control" placeholder="2026" required inputmode="numeric"
+          maxlength="4" pattern="[0-9]{4}" />
       </div>
 
       <div class="mb-3">
@@ -46,15 +39,8 @@
 
       <div class="mb-3">
         <label class="form-label">초기 납입금액</label>
-        <input type="number"
-               name="initialDeposit"
-               class="form-control"
-               placeholder="0 ~ 20,000,000"
-               required
-               min="0"
-               max="20000000"
-               step="1000" />
-        <div class="form-text">0 ~ 20,000,000 (원)</div>
+        <input type="number" name="initialDeposit" class="form-control" placeholder="0 ~ 20,000,000" required min="0"
+          max="20000000" step="1000" />
       </div>
 
       <!-- 증권사 선택 -->
@@ -64,13 +50,13 @@
         <div class="row g-2">
           <!-- 미래에셋 -->
           <div class="col-3">
-            <input type="radio" class="btn-check" name="broker" id="brokerMirae" value="MIRAE" autocomplete="off" required>
+            <input type="radio" class="btn-check" name="broker" id="brokerMirae" value="MIRAE" autocomplete="off"
+              required>
             <label class="border rounded-3 text-center p-3 w-100 d-block" for="brokerMirae" style="cursor:pointer;">
               미래에셋증권
               <br>평생 0.0036396% (이벤트)
               <a href="https://securities.miraeasset.com/hki/hki7000/v05.do?cs_ecis_id=202601005&strEnd=S"
-                 class="ms-1 text-muted" target="_blank" aria-label="수수료 링크"
-                 onclick="event.stopPropagation()">
+                class="ms-1 text-muted" target="_blank" aria-label="수수료 링크" onclick="event.stopPropagation()">
                 <i class="bi bi-exclamation-circle"></i>
               </a>
             </label>
@@ -78,13 +64,13 @@
 
           <!-- 삼성증권 -->
           <div class="col-3">
-            <input type="radio" class="btn-check" name="broker" id="brokerSamsung" value="SAMSUNG" autocomplete="off" required>
+            <input type="radio" class="btn-check" name="broker" id="brokerSamsung" value="SAMSUNG" autocomplete="off"
+              required>
             <label class="border rounded-3 text-center p-3 w-100 d-block" for="brokerSamsung" style="cursor:pointer;">
               삼성증권
               <br>평생 0.0042087%
-              <a href="https://www.samsungpop.com/mbw/finance/isa.do?cmd=guide"
-                 class="ms-1 text-muted" target="_blank" aria-label="수수료 링크"
-                 onclick="event.stopPropagation()">
+              <a href="https://www.samsungpop.com/mbw/finance/isa.do?cmd=guide" class="ms-1 text-muted" target="_blank"
+                aria-label="수수료 링크" onclick="event.stopPropagation()">
                 <i class="bi bi-exclamation-circle"></i>
               </a>
             </label>
@@ -92,13 +78,13 @@
 
           <!-- 한국투자 -->
           <div class="col-3">
-            <input type="radio" class="btn-check" name="broker" id="brokerKorea" value="KOREA_INVEST" autocomplete="off" required>
+            <input type="radio" class="btn-check" name="broker" id="brokerKorea" value="KOREA_INVEST" autocomplete="off"
+              required>
             <label class="border rounded-3 text-center p-3 w-100 d-block" for="brokerKorea" style="cursor:pointer;">
               한국투자증권
               <br>평생 0.0042087% (이벤트)
               <a href="https://www.truefriend.com/main/customer/notice/Event.jsp?gubun=i&cmd=TF04gb010002&num=6544&from=&currentPage=1&CUSTGUBUN=00&focusYN=btn_focus&userRowsPerPage=10&searchColumn=all&searchValue=isa"
-                 class="ms-1 text-muted" target="_blank" aria-label="수수료 링크"
-                 onclick="event.stopPropagation()">
+                class="ms-1 text-muted" target="_blank" aria-label="수수료 링크" onclick="event.stopPropagation()">
                 <i class="bi bi-exclamation-circle"></i>
               </a>
               <br>이벤트 기간 ~ 26.02.28
@@ -112,8 +98,7 @@
               KB증권
               <br>평생 0.0050483% (이벤트)
               <a href="https://www.kbsec.com/go.able?linkcd=s060902030000&seq=10009423&idt=20260121"
-                 class="ms-1 text-muted" target="_blank" aria-label="수수료 링크"
-                 onclick="event.stopPropagation()">
+                class="ms-1 text-muted" target="_blank" aria-label="수수료 링크" onclick="event.stopPropagation()">
                 <i class="bi bi-exclamation-circle"></i>
               </a>
             </label>
@@ -125,15 +110,13 @@
             <label class="border rounded-3 text-center p-3 w-100 d-block" for="brokerNH" style="cursor:pointer;">
               NH투자증권
               <br>0.01%
-              <a href="https://mynamuhbegin.com/stock?tab=ko"
-                 class="ms-1 text-muted" target="_blank" aria-label="수수료 링크"
-                 onclick="event.stopPropagation()">
+              <a href="https://mynamuhbegin.com/stock?tab=ko" class="ms-1 text-muted" target="_blank"
+                aria-label="수수료 링크" onclick="event.stopPropagation()">
                 <i class="bi bi-exclamation-circle"></i>
               </a>
               <br>12개월간 0.004901% (이벤트)
-              <a href="https://mynamuhbegin.com/isa"
-                 class="ms-1 text-muted" target="_blank" aria-label="수수료 링크"
-                 onclick="event.stopPropagation()">
+              <a href="https://mynamuhbegin.com/isa" class="ms-1 text-muted" target="_blank" aria-label="수수료 링크"
+                onclick="event.stopPropagation()">
                 <i class="bi bi-exclamation-circle"></i>
               </a>
               <br>이벤트 기간 ~ 26.06.30
@@ -142,13 +125,13 @@
 
           <!-- 메리츠 -->
           <div class="col-3">
-            <input type="radio" class="btn-check" name="broker" id="brokerMeritz" value="MERITZ" autocomplete="off" required>
+            <input type="radio" class="btn-check" name="broker" id="brokerMeritz" value="MERITZ" autocomplete="off"
+              required>
             <label class="border rounded-3 text-center p-3 w-100 d-block" for="brokerMeritz" style="cursor:pointer;">
               메리츠증권
               <br>0.009%
-              <a href="https://home.imeritz.com/svcinfo/DealFeeTax.do"
-                 class="ms-1 text-muted" target="_blank" aria-label="수수료 링크"
-                 onclick="event.stopPropagation()">
+              <a href="https://home.imeritz.com/svcinfo/DealFeeTax.do" class="ms-1 text-muted" target="_blank"
+                aria-label="수수료 링크" onclick="event.stopPropagation()">
                 <i class="bi bi-exclamation-circle"></i>
               </a>
             </label>
@@ -156,13 +139,13 @@
 
           <!-- 하나 -->
           <div class="col-3">
-            <input type="radio" class="btn-check" name="broker" id="brokerHana" value="HANA" autocomplete="off" required>
+            <input type="radio" class="btn-check" name="broker" id="brokerHana" value="HANA" autocomplete="off"
+              required>
             <label class="border rounded-3 text-center p-3 w-100 d-block" for="brokerHana" style="cursor:pointer;">
               하나증권
               <br><span style="color: red;">0.01416390%</span>
-              <a href="https://www.hanaw.com/main/customer/cm/CS_060200_T2.jsp"
-                 class="ms-1 text-muted" target="_blank" aria-label="수수료 링크"
-                 onclick="event.stopPropagation()">
+              <a href="https://www.hanaw.com/main/customer/cm/CS_060200_T2.jsp" class="ms-1 text-muted" target="_blank"
+                aria-label="수수료 링크" onclick="event.stopPropagation()">
                 <i class="bi bi-exclamation-circle"></i>
               </a>
               <br>3개월간 0.0042087% (이벤트)
@@ -171,13 +154,13 @@
 
           <!-- 키움 -->
           <div class="col-3">
-            <input type="radio" class="btn-check" name="broker" id="brokerKiwoom" value="KIWOOM" autocomplete="off" required>
+            <input type="radio" class="btn-check" name="broker" id="brokerKiwoom" value="KIWOOM" autocomplete="off"
+              required>
             <label class="border rounded-3 text-center p-3 w-100 d-block" for="brokerKiwoom" style="cursor:pointer;">
               키움증권
               <br><span style="color: red;">0.015%</span>
-              <a href="https://www.kiwoom.com/h/help/fee/VHelpStockFeeView"
-                 class="ms-1 text-muted" target="_blank" aria-label="수수료 링크"
-                 onclick="event.stopPropagation()">
+              <a href="https://www.kiwoom.com/h/help/fee/VHelpStockFeeView" class="ms-1 text-muted" target="_blank"
+                aria-label="수수료 링크" onclick="event.stopPropagation()">
                 <i class="bi bi-exclamation-circle"></i>
               </a>
             </label>
@@ -185,13 +168,13 @@
 
           <!-- 카카오페이 -->
           <div class="col-3">
-            <input type="radio" class="btn-check" name="broker" id="brokerKakao" value="KAKAO" autocomplete="off" required>
+            <input type="radio" class="btn-check" name="broker" id="brokerKakao" value="KAKAO" autocomplete="off"
+              required>
             <label class="border rounded-3 text-center p-3 w-100 d-block" for="brokerKakao" style="cursor:pointer;">
               카카오페이증권
               <br><span style="color: red;">0.015%</span>
-              <a href="https://www.kakaopaysec.com/guide/feeGuide/dynamicPage.do"
-                 class="ms-1 text-muted" target="_blank" aria-label="수수료 링크"
-                 onclick="event.stopPropagation()">
+              <a href="https://www.kakaopaysec.com/guide/feeGuide/dynamicPage.do" class="ms-1 text-muted"
+                target="_blank" aria-label="수수료 링크" onclick="event.stopPropagation()">
                 <i class="bi bi-exclamation-circle"></i>
               </a>
             </label>
@@ -199,13 +182,13 @@
 
           <!-- 신한 -->
           <div class="col-3">
-            <input type="radio" class="btn-check" name="broker" id="brokerShinhan" value="SHINHAN" autocomplete="off" required>
+            <input type="radio" class="btn-check" name="broker" id="brokerShinhan" value="SHINHAN" autocomplete="off"
+              required>
             <label class="border rounded-3 text-center p-3 w-100 d-block" for="brokerShinhan" style="cursor:pointer;">
               신한증권
               <br><span style="color: red;">0.189733%</span>
               <a href="https://www.shinhansec.com/siw/customer-center/guide/business_guide_charge_tab1/contents.do"
-                 class="ms-1 text-muted" target="_blank" aria-label="수수료 링크"
-                 onclick="event.stopPropagation()">
+                class="ms-1 text-muted" target="_blank" aria-label="수수료 링크" onclick="event.stopPropagation()">
                 <i class="bi bi-exclamation-circle"></i>
               </a>
               <br>2026년 0.0042087% (이벤트)
@@ -214,7 +197,8 @@
 
           <!-- 기타 -->
           <div class="col-3">
-            <input type="radio" class="btn-check" name="broker" id="brokerOther" value="OTHER" autocomplete="off" required>
+            <input type="radio" class="btn-check" name="broker" id="brokerOther" value="OTHER" autocomplete="off"
+              required>
             <label class="border rounded-3 text-center p-3 w-100 d-block" for="brokerOther" style="cursor:pointer;">
               기타 증권사
             </label>

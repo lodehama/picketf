@@ -4,6 +4,8 @@
 
 <head>
   <title>ISA 계좌 관리</title>
+  <!-- <meta name="_csrf" th:content="${_csrf.token}" />
+  <meta name="_csrf_header" th:content="${_csrf.headerName}" /> -->
 </head>
 <main layout:fragment="content">
   <div class="container py-3">
@@ -13,9 +15,10 @@
       + 계좌 만들기
     </a>
 
-    <a href="/isa/cash" class="btn btn-sm btn-dark mb-3">
+    <button type="button" class="btn btn-sm btn-dark mb-3" data-bs-toggle="modal" data-bs-target="#depositModal">
       + 예수금 추가
-    </a>
+    </button>
+
 
     <div th:if="${isa == null}" class="alert alert-secondary">
       아직 ISA 계좌가 없습니다. “+ 계좌 만들기”로 생성하세요.
@@ -38,18 +41,19 @@
             <tr>
               <th>현재 납입 가능한 금액</th>
               <td>
-                <span th:if="${currentRemain > 0}" th:text="${#numbers.formatInteger(currentRemain, 0, 'COMMA')} + '원'">
-                </span>
+                <span id="currentRemainText" th:if="${currentRemain > 0}"
+                  th:text="${#numbers.formatInteger(currentRemain, 0, 'COMMA')} + '원'"></span>
 
-                <span th:if="${currentRemain == 0}" class="text-muted">
-                  현재 납입 가능 금액이 없습니다
-                </span>
-
+                <span id="currentRemainZeroText" th:if="${currentRemain == 0}" class="text-muted">현재 납입 가능 금액이
+                  없습니다</span>
               </td>
             </tr>
             <tr>
               <th>총 납입 가능한 금액</th>
-              <td th:text="${#numbers.formatInteger(lifetimeRemain, 0, 'COMMA')} + '원'">0원</td>
+              <td>
+                <span id="lifetimeRemainText"
+                  th:text="${#numbers.formatInteger(lifetimeRemain, 0, 'COMMA')} + '원'">0원</span>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -87,6 +91,122 @@
     </table> -->
 
   </div>
+  <div class="modal fade" id="depositModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">예수금 추가</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <form id="depositForm">
+            <div class="mb-3">
+              <label class="form-label">추가할 금액</label>
+              <input type="text" class="form-control text-end" id="depositAmount" placeholder="예: 1,000,000">
+            </div>
+          </form>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            취소
+          </button>
+          <button type="button" class="btn btn-primary" id="btnDepositSubmit">
+            추가
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+      const modalEl = document.getElementById("depositModal");
+      const input = document.getElementById("depositAmount");
+      const btn = document.getElementById("btnDepositSubmit");
+
+      // 모달 열리면 입력창 포커스
+      modalEl?.addEventListener("shown.bs.modal", () => {
+        input?.focus();
+      });
+
+      const csrfToken = document.querySelector('meta[name="_csrf"]')?.getAttribute("content");
+      const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.getAttribute("content");
+
+      const formatNumber = (value) => {
+        return value
+          .replace(/[^0-9]/g, "")
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      };
+
+      const fmtWon = (n) => Number(n).toLocaleString() + "원";
+
+      input.addEventListener("input", () => {
+        const raw = input.value.replace(/,/g, "");
+        input.value = formatNumber(raw);
+      });
+
+      btn.addEventListener("click", async () => {
+        const amount = Number(input.value.replace(/,/g, ""));
+
+        if (!Number.isFinite(amount) || amount <= 0) {
+          alert("금액을 입력하세요");
+          return;
+        }
+
+        btn.disabled = true;
+
+        try {
+          const headers = { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" };
+          if (csrfToken && csrfHeader) {
+            headers[csrfHeader] = csrfToken;
+          }
+
+          const res = await fetch("/isa/cash", {
+            method: "POST",
+            headers,
+            body: "amount=" + encodeURIComponent(amount)
+          });
+
+          const data = await res.json().catch(() => ({}));
+
+          if (!res.ok) {
+            alert(data.message || "예수금 추가 실패");
+            return;
+          }
+
+          const currentEl = document.getElementById("currentRemainText");
+          const currentZeroEl = document.getElementById("currentRemainZeroText");
+          if (data.currentRemain != null) {
+            if (data.currentRemain > 0) {
+              if (currentEl) currentEl.textContent = fmtWon(data.currentRemain);
+              if (currentEl) currentEl.style.display = "";
+              if (currentZeroEl) currentZeroEl.style.display = "none";
+            } else {
+              if (currentEl) currentEl.style.display = "none";
+              if (currentZeroEl) currentZeroEl.style.display = "";
+            }
+          }
+
+          const lifetimeEl = document.getElementById("lifetimeRemainText");
+          if (lifetimeEl && data.lifetimeRemain != null) {
+            lifetimeEl.textContent = fmtWon(data.lifetimeRemain);
+          }
+
+          // 모달 닫기 + 입력 초기화
+          bootstrap.Modal.getInstance(modalEl).hide();
+          input.value = "";
+
+        } finally {
+          btn.disabled = false;
+        }
+      });
+    });
+  </script>
+
 </main>
 
 </html>

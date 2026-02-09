@@ -1,6 +1,10 @@
 package com.hama.picketf.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -18,15 +22,13 @@ public class IsaController {
   @Autowired
   private IsaService isaService;
 
-  // ✅ 인증 유저 usNum 뽑는 중복 제거
+  // 인증 유저 usNum 뽑는 중복 제거
   private Integer getLoginUsNumOrNull() {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    if (auth == null)
-      return null;
+    if (auth == null) return null;
 
     Object principal = auth.getPrincipal();
-    if (!(principal instanceof CustomUser))
-      return null;
+    if (!(principal instanceof CustomUser)) return null;
 
     CustomUser user = (CustomUser) principal;
     return user.getUsNum().intValue();
@@ -35,19 +37,17 @@ public class IsaController {
   @GetMapping
   public String isa(Model model) {
     Integer usNum = getLoginUsNumOrNull();
-    if (usNum == null)
-      return "redirect:/login";
+    if (usNum == null) return "redirect:/login";
 
     IsaDTO isa = isaService.getIsaByUser(usNum);
     model.addAttribute("isa", isa);
 
     if (isa != null) {
-      long lifetimeRemain = isaService.calcTotalRemain(isa); // 평생 납입 한도 남은 금액 계산
+      long lifetimeRemain = isaService.calcTotalRemain(isa);
       model.addAttribute("lifetimeRemain", lifetimeRemain);
 
-      long currentRemain = isaService.calcTotalRemainByRule(isa); // 누적 규칙(이월 포함)
+      long currentRemain = isaService.calcTotalRemainByRule(isa);
       model.addAttribute("currentRemain", currentRemain);
-
     }
     return "isa";
   }
@@ -64,43 +64,54 @@ public class IsaController {
       @RequestParam("initialDeposit") long initialDeposit) {
 
     Integer usNum = getLoginUsNumOrNull();
-    if (usNum == null)
-      return "redirect:/login";
+    if (usNum == null) return "redirect:/login";
 
     isaService.createIsa(usNum, openedYear, accountType, initialDeposit);
     return "redirect:/isa";
   }
 
-  // 예수금 추가: 화면
+  // (선택) 예수금 추가 전용 페이지: 이제 모달로 할 거면 거의 안 씀
   @GetMapping("/cash")
   public String cashAddPage(Model model) {
     Integer usNum = getLoginUsNumOrNull();
-    if (usNum == null)
-      return "redirect:/login";
+    if (usNum == null) return "redirect:/login";
 
     IsaDTO isa = isaService.getIsaByUser(usNum);
-    if (isa == null) {
-      // ISA 계좌 없으면 예수금 추가 불가 -> 계좌 만들기로 유도
-      return "redirect:/isa";
-    }
+    if (isa == null) return "redirect:/isa";
 
     model.addAttribute("isa", isa);
-    return "isa-cash"; // ← 너가 만들 예수금 추가 페이지
+    return "isa-cash";
   }
 
-  // 예수금 추가: 처리
+  // B방식: 예수금 추가 AJAX 처리(JSON 응답)
   @PostMapping("/cash")
-  public String cashAddSubmit(@RequestParam("amount") long amount) {
+  @ResponseBody
+  public ResponseEntity<?> cashAddAjax(@RequestParam("amount") long amount) {
     Integer usNum = getLoginUsNumOrNull();
-    if (usNum == null)
-      return "redirect:/login";
-
-    // 간단 검증 (원하면 서비스로 내려도 됨)
-    if (amount <= 0) {
-      return "redirect:/isa/cash";
+    if (usNum == null) {
+      return ResponseEntity.status(401).body(Map.of("message", "로그인이 필요합니다"));
     }
 
-    isaService.addCash(usNum, amount); // 서비스에 구현 필요
-    return "redirect:/isa";
+    try {
+      isaService.addCash(usNum, amount);
+
+      // 업데이트된 값 다시 조회
+      IsaDTO isa = isaService.getIsaByUser(usNum);
+
+      long lifetimeRemain = isaService.calcTotalRemain(isa);
+      long currentRemain = isaService.calcTotalRemainByRule(isa);
+
+      Map<String, Object> res = new HashMap<>();
+      res.put("isaTotalAmount", isa.getIsaTotalAmount());
+      res.put("lifetimeRemain", lifetimeRemain);
+      res.put("currentRemain", currentRemain);
+
+      return ResponseEntity.ok(res);
+
+    } catch (IllegalArgumentException e) {
+      return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+    } catch (IllegalStateException e) {
+      return ResponseEntity.status(409).body(Map.of("message", e.getMessage()));
+    }
   }
 }

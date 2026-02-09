@@ -70,7 +70,7 @@ public class IsaService {
     return isa;
   }
 
-  // 총 납입 가능한 금액 = 1억 - 누적납입
+  // 평생 납입 한도 (법적 최대치)
   public long calcTotalRemain(IsaDTO isa) {
     if (isa == null)
       return 0L;
@@ -130,7 +130,7 @@ public class IsaService {
     return Math.min(TOTAL_LIMIT, cap);
   }
 
-  // 화면에 보여줄 남은 납입 가능 금액을 계산하는 전용 메서드
+  // 현재 누적 납입 가능 금액 (이월 포함)
   public long calcTotalRemainByRule(IsaDTO isa) {
     if (isa == null)
       return 0L;
@@ -138,6 +138,7 @@ public class IsaService {
     return Math.max(0, cap - isa.getIsaTotalAmount());
   }
 
+  // 올해 기준 납입 가능 금액 계산
   public long calcYearRemainByRule(IsaDTO isa) {
     if (isa == null)
       return 0L;

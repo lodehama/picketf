@@ -113,7 +113,7 @@
       modalEl.addEventListener("shown.bs.modal", () => input.focus());
       modalEl.addEventListener("hidden.bs.modal", () => { input.value = ""; });
 
-      // ✅ 쿠키에서 XSRF-TOKEN 읽기 (CookieCsrfTokenRepository 방식)
+      // 쿠키에서 XSRF-TOKEN 읽기 (CookieCsrfTokenRepository 방식)
       const getCookie = (name) => {
         const v = document.cookie.split("; ").find(row => row.startsWith(name + "="));
         return v ? decodeURIComponent(v.split("=")[1]) : null;
@@ -145,7 +145,7 @@
         try {
           const headers = { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" };
 
-          // ✅ CSRF는 '쿠키 방식' 하나로만 보낸다 (meta 방식 제거!)
+          // CSRF는 쿠키 방식으로만 보낸다 (meta 방식 제거)
           const xsrf = getCookie("XSRF-TOKEN");
           if (xsrf) {
             headers["X-XSRF-TOKEN"] = xsrf;
@@ -153,7 +153,7 @@
 
           const res = await fetch("/isa/cash", {
             method: "POST",
-            credentials: "same-origin", // ✅ 쿠키(세션/XSFR) 확실히 포함
+            credentials: "same-origin", // 쿠키(세션/XSFR) 확실히 포함
             headers,
             body: "amount=" + encodeURIComponent(amount)
           });

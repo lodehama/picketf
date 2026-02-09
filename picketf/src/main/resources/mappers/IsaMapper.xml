@@ -21,4 +21,16 @@
     )
   </insert>
 
+  <select id="findByUsNum" parameterType="int" resultType="com.hama.picketf.dto.IsaDTO">
+    SELECT
+      isa_num          AS isaNum,
+      isa_us_num       AS isaUsNum,
+      isa_year         AS isaYear,
+      isa_type         AS isaType,
+      isa_total_amount AS isaTotalAmount,
+      isa_created      AS isaCreated
+    FROM isa
+    WHERE isa_us_num = #{usNum}
+  </select>
+
 </mapper>

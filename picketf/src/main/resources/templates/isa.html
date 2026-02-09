@@ -13,6 +13,37 @@
       + 계좌 만들기
     </a>
 
+    <div th:if="${isa == null}" class="alert alert-secondary">
+    아직 ISA 계좌가 없습니다. “+ 계좌 만들기”로 생성하세요.
+  </div>
+
+  <div th:if="${isa != null}" class="card">
+    <div class="card-body">
+      <h5 class="card-title mb-3">내 계좌 요약</h5>
+
+      <table class="table table-sm">
+        <tbody>
+          <tr>
+            <th style="width: 220px;">계좌 개설연도</th>
+            <td th:text="${isa.isaYear}">2026</td>
+          </tr>
+          <tr>
+            <th>계좌 타입</th>
+            <td th:text="${isa.isaType}">NORMAL</td>
+          </tr>
+          <tr>
+            <th>이번 년도에 납입 가능한 금액</th>
+            <td th:text="${#numbers.formatInteger(yearRemain, 0, 'COMMA')} + '원'">20,000,000원</td>
+          </tr>
+          <tr>
+            <th>총 납입 가능한 금액</th>
+            <td th:text="${#numbers.formatInteger(totalRemain, 0, 'COMMA')} + '원'">100,000,000원</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
     <!--     
     <a href="/isa/add" class="btn btn-sm btn-dark mb-3">
       + ETF 추가

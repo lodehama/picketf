@@ -108,24 +108,12 @@
       const input = document.getElementById("depositAmount");
       const btn = document.getElementById("btnDepositSubmit");
 
-      // ISA가 없으면 모달 자체가 없을 수 있으니 가드
       if (!modalEl || !input || !btn) return;
 
-      // 모달 열리면 입력창 포커스
-      modalEl.addEventListener("shown.bs.modal", () => {
-        input.focus();
-      });
+      modalEl.addEventListener("shown.bs.modal", () => input.focus());
+      modalEl.addEventListener("hidden.bs.modal", () => { input.value = ""; });
 
-      // 모달 닫힐 때 입력 초기화(취소 눌러도 깔끔)
-      modalEl.addEventListener("hidden.bs.modal", () => {
-        input.value = "";
-      });
-
-      // (메타 방식) CSRF: 있을 때만 사용
-      const csrfToken = document.querySelector('meta[name="_csrf"]')?.getAttribute("content");
-      const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.getAttribute("content");
-
-      // (쿠키 방식) CSRF: XSRF-TOKEN 쿠키 읽기
+      // ✅ 쿠키에서 XSRF-TOKEN 읽기 (CookieCsrfTokenRepository 방식)
       const getCookie = (name) => {
         const v = document.cookie.split("; ").find(row => row.startsWith(name + "="));
         return v ? decodeURIComponent(v.split("=")[1]) : null;
@@ -157,12 +145,7 @@
         try {
           const headers = { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" };
 
-          // 1) 메타 기반 CSRF(Thymeleaf _csrf가 있을 때)
-          if (csrfToken && csrfHeader) {
-            headers[csrfHeader] = csrfToken;
-          }
-
-          // 2) 쿠키 기반 CSRF(CookieCsrfTokenRepository 쓸 때)
+          // ✅ CSRF는 '쿠키 방식' 하나로만 보낸다 (meta 방식 제거!)
           const xsrf = getCookie("XSRF-TOKEN");
           if (xsrf) {
             headers["X-XSRF-TOKEN"] = xsrf;
@@ -170,14 +153,16 @@
 
           const res = await fetch("/isa/cash", {
             method: "POST",
+            credentials: "same-origin", // ✅ 쿠키(세션/XSFR) 확실히 포함
             headers,
             body: "amount=" + encodeURIComponent(amount)
           });
 
+          // 403/500 때 HTML이 올 수 있으니 text도 안전하게 처리
           const data = await res.json().catch(() => ({}));
 
           if (!res.ok) {
-            alert(data.message || "예수금 추가 실패");
+            alert(data.message || ("예수금 추가 실패 (" + res.status + ")"));
             return;
           }
 
@@ -203,7 +188,6 @@
             lifetimeEl.textContent = fmtWon(data.lifetimeRemain);
           }
 
-          // 모달 닫기
           bootstrap.Modal.getInstance(modalEl).hide();
 
         } finally {

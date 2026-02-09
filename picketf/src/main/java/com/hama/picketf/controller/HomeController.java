@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.hama.picketf.model.vo.UserVO;
 import com.hama.picketf.service.UserService;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Controller
 public class HomeController {
@@ -49,5 +51,11 @@ public class HomeController {
   public String devlog() {
     return "devlog";
   }
+
+  @GetMapping("/fees")
+  public String fees() {
+      return "fees";
+  }
+  
 
 }

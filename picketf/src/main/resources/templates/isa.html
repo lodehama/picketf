@@ -38,12 +38,13 @@
             <tr>
               <th>현재 납입 가능한 금액</th>
               <td>
-                <span th:if="${yearRemain > 0}" th:text="${#numbers.formatInteger(yearRemain, 0, 'COMMA')} + '원'">
+                <span th:if="${currentRemain > 0}" th:text="${#numbers.formatInteger(currentRemain, 0, 'COMMA')} + '원'">
                 </span>
 
-                <span th:if="${yearRemain == 0}" class="text-muted">
-                  올해 한도를 모두 사용했습니다
+                <span th:if="${currentRemain == 0}" class="text-muted">
+                  현재 납입 가능 금액이 없습니다
                 </span>
+
               </td>
             </tr>
             <tr>

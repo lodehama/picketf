@@ -45,8 +45,9 @@ public class IsaController {
       long lifetimeRemain = isaService.calcTotalRemain(isa); // 평생 납입 한도 남은 금액 계산
       model.addAttribute("lifetimeRemain", lifetimeRemain);
 
-      long yearRemain = isaService.calcYearRemainByRule(isa); // 올해 남은 한도
-      model.addAttribute("yearRemain", yearRemain);
+      long currentRemain = isaService.calcTotalRemainByRule(isa); // 누적 규칙(이월 포함)
+      model.addAttribute("currentRemain", currentRemain);
+
     }
     return "isa";
   }

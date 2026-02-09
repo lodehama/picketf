@@ -5,10 +5,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import com.hama.picketf.dto.IsaDTO;
 import com.hama.picketf.security.CustomUser;
@@ -21,26 +18,36 @@ public class IsaController {
   @Autowired
   private IsaService isaService;
 
+  // ✅ 인증 유저 usNum 뽑는 중복 제거
+  private Integer getLoginUsNumOrNull() {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    if (auth == null)
+      return null;
+
+    Object principal = auth.getPrincipal();
+    if (!(principal instanceof CustomUser))
+      return null;
+
+    CustomUser user = (CustomUser) principal;
+    return user.getUsNum().intValue();
+  }
+
   @GetMapping
   public String isa(Model model) {
+    Integer usNum = getLoginUsNumOrNull();
+    if (usNum == null)
+      return "redirect:/login";
 
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    CustomUser user = (CustomUser) auth.getPrincipal();
-    int usNum = user.getUsNum().intValue();
+    IsaDTO isa = isaService.getIsaByUser(usNum);
+    model.addAttribute("isa", isa);
 
-    IsaDTO isa = isaService.getIsaByUser(usNum); // DB 조회
-
-    model.addAttribute("isa", isa); // thymeleaf에서 ${isa...}로 사용
-
-    // 총 납입 가능한 금액(1억 - 누적납입)
     if (isa != null) {
-      long totalRemain = Math.max(0, 100_000_000L - isa.getIsaTotalAmount());
-      model.addAttribute("totalRemain", totalRemain);
+      long lifetimeRemain = isaService.calcTotalRemain(isa); // 평생 납입 한도 남은 금액 계산
+      model.addAttribute("lifetimeRemain", lifetimeRemain);
+
+      long yearRemain = isaService.calcYearRemainByRule(isa); // 올해 남은 한도
+      model.addAttribute("yearRemain", yearRemain);
     }
-
-    // 올해 납입 가능 금액은 현재 DB에 "올해 납입액"이 없으니 임시로 2천만 풀로 표시
-    model.addAttribute("yearRemain", 20_000_000L);
-
     return "isa";
   }
 
@@ -55,18 +62,44 @@ public class IsaController {
       @RequestParam("accountType") String accountType,
       @RequestParam("initialDeposit") long initialDeposit) {
 
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-    Object principal = auth.getPrincipal();
-    if (!(principal instanceof CustomUser)) {
+    Integer usNum = getLoginUsNumOrNull();
+    if (usNum == null)
       return "redirect:/login";
-    }
-
-    CustomUser user = (CustomUser) principal;
-    int usNum = user.getUsNum().intValue();
 
     isaService.createIsa(usNum, openedYear, accountType, initialDeposit);
+    return "redirect:/isa";
+  }
 
+  // 예수금 추가: 화면
+  @GetMapping("/cash")
+  public String cashAddPage(Model model) {
+    Integer usNum = getLoginUsNumOrNull();
+    if (usNum == null)
+      return "redirect:/login";
+
+    IsaDTO isa = isaService.getIsaByUser(usNum);
+    if (isa == null) {
+      // ISA 계좌 없으면 예수금 추가 불가 -> 계좌 만들기로 유도
+      return "redirect:/isa";
+    }
+
+    model.addAttribute("isa", isa);
+    return "isa-cash"; // ← 너가 만들 예수금 추가 페이지
+  }
+
+  // 예수금 추가: 처리
+  @PostMapping("/cash")
+  public String cashAddSubmit(@RequestParam("amount") long amount) {
+    Integer usNum = getLoginUsNumOrNull();
+    if (usNum == null)
+      return "redirect:/login";
+
+    // 간단 검증 (원하면 서비스로 내려도 됨)
+    if (amount <= 0) {
+      return "redirect:/isa/cash";
+    }
+
+    isaService.addCash(usNum, amount); // 서비스에 구현 필요
     return "redirect:/isa";
   }
 }

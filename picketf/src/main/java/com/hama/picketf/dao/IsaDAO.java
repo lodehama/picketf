@@ -9,4 +9,6 @@ public interface IsaDAO {
 
   IsaDTO findByUsNum(@Param("usNum") int usNum); // 해당 유저의 ISA 계좌 조회
 
+  int increaseTotalAmount(int usNum, long amount); // 예수금 추가: isa_total_amount 증가
+
 }

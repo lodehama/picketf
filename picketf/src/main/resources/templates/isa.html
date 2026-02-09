@@ -13,6 +13,10 @@
       + 계좌 만들기
     </a>
 
+    <a href="/isa/cash" class="btn btn-sm btn-dark mb-3">
+      + 예수금 추가
+    </a>
+
     <div th:if="${isa == null}" class="alert alert-secondary">
       아직 ISA 계좌가 없습니다. “+ 계좌 만들기”로 생성하세요.
     </div>
@@ -32,8 +36,19 @@
               <td th:text="${isa.isaType}">NORMAL</td>
             </tr>
             <tr>
+              <th>올해 납입 가능한 금액</th>
+              <td>
+                <span th:if="${yearRemain > 0}" th:text="${#numbers.formatInteger(yearRemain, 0, 'COMMA')} + '원'">
+                </span>
+
+                <span th:if="${yearRemain == 0}" class="text-muted">
+                  올해 한도를 모두 사용했습니다
+                </span>
+              </td>
+            </tr>
+            <tr>
               <th>총 납입 가능한 금액</th>
-              <td th:text="${#numbers.formatInteger(totalRemain, 0, 'COMMA')} + '원'">100,000,000원</td>
+              <td th:text="${#numbers.formatInteger(lifetimeRemain, 0, 'COMMA')} + '원'">0원</td>
             </tr>
           </tbody>
         </table>

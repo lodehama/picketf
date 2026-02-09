@@ -33,4 +33,11 @@
     WHERE isa_us_num = #{usNum}
   </select>
 
+  <!-- isa_total_amount 증가 -->
+  <update id="increaseTotalAmount">
+    UPDATE isa
+    SET isa_total_amount = isa_total_amount + #{amount}
+    WHERE isa_us_num = #{usNum}
+  </update>
+
 </mapper>

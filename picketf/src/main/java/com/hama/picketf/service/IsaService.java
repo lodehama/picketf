@@ -63,8 +63,4 @@ public class IsaService {
     return Math.max(0, TOTAL_LIMIT - isa.getIsaTotalAmount());
   }
 
-  // 올해 납입 가능한 금액 (임시)
-  public long calcYearRemainTemp() {
-    return YEAR_LIMIT;
-  }
 }

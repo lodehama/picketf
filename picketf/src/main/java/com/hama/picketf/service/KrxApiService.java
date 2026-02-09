@@ -79,6 +79,11 @@ public class KrxApiService {
       if (!arr.isArray() || arr.isEmpty())
         return Map.of();
 
+      // 트러블 슈팅: 비영업일/미확정 데이터 걸러내기
+      String close = arr.get(0).path("TDD_CLSPRC").asText("");
+      if (close.isBlank() || "-".equals(close))
+        return Map.of();
+
       Map<String, KrxEtfDTO> map = new LinkedHashMap<>();
       for (JsonNode node : arr) {
         KrxEtfDTO dto = om.treeToValue(node, KrxEtfDTO.class);

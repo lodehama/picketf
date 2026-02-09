@@ -4,9 +4,14 @@
 
 <head>
   <title>ISA 계좌 관리</title>
-  <!-- <meta name="_csrf" th:content="${_csrf.token}" />
-  <meta name="_csrf_header" th:content="${_csrf.headerName}" /> -->
+
+  <!-- _csrf가 없을 수도 있으니(설정/필터에 따라) 있을 때만 출력 -->
+  <th:block th:if="${_csrf != null}">
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+  </th:block>
 </head>
+
 <main layout:fragment="content">
   <div class="container py-3">
     <h1>ISA 계좌 관리 페이지</h1>
@@ -15,10 +20,11 @@
       + 계좌 만들기
     </a>
 
-    <button type="button" class="btn btn-sm btn-dark mb-3" data-bs-toggle="modal" data-bs-target="#depositModal">
+    <!-- ISA 없으면 모달 띄워도 의미 없으니 버튼 숨김(UX) -->
+    <button th:if="${isa != null}" type="button" class="btn btn-sm btn-dark mb-3" data-bs-toggle="modal"
+      data-bs-target="#depositModal">
       + 예수금 추가
     </button>
-
 
     <div th:if="${isa == null}" class="alert alert-secondary">
       아직 ISA 계좌가 없습니다. “+ 계좌 만들기”로 생성하세요.
@@ -44,8 +50,9 @@
                 <span id="currentRemainText" th:if="${currentRemain > 0}"
                   th:text="${#numbers.formatInteger(currentRemain, 0, 'COMMA')} + '원'"></span>
 
-                <span id="currentRemainZeroText" th:if="${currentRemain == 0}" class="text-muted">현재 납입 가능 금액이
-                  없습니다</span>
+                <span id="currentRemainZeroText" th:if="${currentRemain == 0}" class="text-muted">
+                  현재 납입 가능 금액이 없습니다
+                </span>
               </td>
             </tr>
             <tr>
@@ -60,38 +67,10 @@
       </div>
     </div>
 
-    <!--     
-    <a href="/isa/add" class="btn btn-sm btn-dark mb-3">
-      + ETF 추가
-    </a>
-
-    <table class="table mt-4">
-      <thead>
-        <tr>
-          <th>종목 etf_name</th>
-          <th>보유수량 pos_quantity</th>
-          <th>평균단가 pos_avg_price</th>
-          <th>보유원가 pos_cost_basis</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>QQQ</td>
-          <td>10</td>
-          <td>410.00</td>
-          <td>4,100.00</td>
-        </tr>
-        <tr>
-          <td>SPY</td>
-          <td>5</td>
-          <td>450.00</td>
-          <td>2,250.00</td>
-        </tr>
-      </tbody>
-    </table> -->
-
   </div>
-  <div class="modal fade" id="depositModal" tabindex="-1">
+
+  <!-- ISA 있을 때만 모달 렌더(UX + null 방지) -->
+  <div th:if="${isa != null}" class="modal fade" id="depositModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
 
@@ -101,7 +80,7 @@
         </div>
 
         <div class="modal-body">
-          <form id="depositForm">
+          <form id="depositForm" onsubmit="return false;">
             <div class="mb-3">
               <label class="form-label">추가할 금액</label>
               <input type="text" class="form-control text-end" id="depositAmount" placeholder="예: 1,000,000">
@@ -121,6 +100,7 @@
       </div>
     </div>
   </div>
+
   <script>
     document.addEventListener("DOMContentLoaded", () => {
 
@@ -128,13 +108,28 @@
       const input = document.getElementById("depositAmount");
       const btn = document.getElementById("btnDepositSubmit");
 
+      // ISA가 없으면 모달 자체가 없을 수 있으니 가드
+      if (!modalEl || !input || !btn) return;
+
       // 모달 열리면 입력창 포커스
-      modalEl?.addEventListener("shown.bs.modal", () => {
-        input?.focus();
+      modalEl.addEventListener("shown.bs.modal", () => {
+        input.focus();
       });
 
+      // 모달 닫힐 때 입력 초기화(취소 눌러도 깔끔)
+      modalEl.addEventListener("hidden.bs.modal", () => {
+        input.value = "";
+      });
+
+      // (메타 방식) CSRF: 있을 때만 사용
       const csrfToken = document.querySelector('meta[name="_csrf"]')?.getAttribute("content");
       const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.getAttribute("content");
+
+      // (쿠키 방식) CSRF: XSRF-TOKEN 쿠키 읽기
+      const getCookie = (name) => {
+        const v = document.cookie.split("; ").find(row => row.startsWith(name + "="));
+        return v ? decodeURIComponent(v.split("=")[1]) : null;
+      };
 
       const formatNumber = (value) => {
         return value
@@ -161,8 +156,16 @@
 
         try {
           const headers = { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" };
+
+          // 1) 메타 기반 CSRF(Thymeleaf _csrf가 있을 때)
           if (csrfToken && csrfHeader) {
             headers[csrfHeader] = csrfToken;
+          }
+
+          // 2) 쿠키 기반 CSRF(CookieCsrfTokenRepository 쓸 때)
+          const xsrf = getCookie("XSRF-TOKEN");
+          if (xsrf) {
+            headers["X-XSRF-TOKEN"] = xsrf;
           }
 
           const res = await fetch("/isa/cash", {
@@ -178,12 +181,16 @@
             return;
           }
 
+          // 화면 즉시 갱신
           const currentEl = document.getElementById("currentRemainText");
           const currentZeroEl = document.getElementById("currentRemainZeroText");
+
           if (data.currentRemain != null) {
             if (data.currentRemain > 0) {
-              if (currentEl) currentEl.textContent = fmtWon(data.currentRemain);
-              if (currentEl) currentEl.style.display = "";
+              if (currentEl) {
+                currentEl.textContent = fmtWon(data.currentRemain);
+                currentEl.style.display = "";
+              }
               if (currentZeroEl) currentZeroEl.style.display = "none";
             } else {
               if (currentEl) currentEl.style.display = "none";
@@ -196,9 +203,8 @@
             lifetimeEl.textContent = fmtWon(data.lifetimeRemain);
           }
 
-          // 모달 닫기 + 입력 초기화
+          // 모달 닫기
           bootstrap.Modal.getInstance(modalEl).hide();
-          input.value = "";
 
         } finally {
           btn.disabled = false;

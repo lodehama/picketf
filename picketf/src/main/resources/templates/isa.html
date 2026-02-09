@@ -36,7 +36,7 @@
               <td th:text="${isa.isaType}">NORMAL</td>
             </tr>
             <tr>
-              <th>올해 납입 가능한 금액</th>
+              <th>현재 납입 가능한 금액</th>
               <td>
                 <span th:if="${yearRemain > 0}" th:text="${#numbers.formatInteger(yearRemain, 0, 'COMMA')} + '원'">
                 </span>

@@ -39,8 +39,8 @@
 
       <div class="mb-3">
         <label class="form-label">초기 납입금액</label>
-        <input type="number" name="initialDeposit" class="form-control" placeholder="0 ~ 20,000,000" required min="0"
-          max="20000000" step="1000" />
+        <input type="number" name="initialDeposit" class="form-control" placeholder="0 ~ 20,000,000" required min="0" />
+        <small id="limitHelp" class="text-muted"></small>
       </div>
 
       <button type="submit" class="btn btn-primary">추가</button>
@@ -48,5 +48,57 @@
     </form>
   </div>
 </main>
+<th:block layout:fragment="script">
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const yearInput = document.querySelector("input[name='opened_year']");
+      const amountInput = document.querySelector("input[name='initialDeposit']");
+
+      // 기준값
+      const CURRENT_YEAR = new Date().getFullYear();
+      const YEARLY_LIMIT = 20_000_000;   // 연 2천만
+      const MAX_TOTAL = 100_000_000;     // 최대 1억
+
+      // 개설 연도 기준 최대 납입 가능 금액 계산
+      function calcMaxAmount(openedYear) {
+        if (!openedYear || openedYear > CURRENT_YEAR) {
+          return YEARLY_LIMIT;
+        }
+
+        const years = CURRENT_YEAR - openedYear + 1;
+        return Math.min(years * YEARLY_LIMIT, MAX_TOTAL);
+      }
+
+      // 입력값 검증 + 제한 적용
+      function applyLimit() {
+        const openedYear = parseInt(yearInput.value, 10);
+
+        // 연도 미입력 / 숫자 아님 → 기본 2천
+        if (isNaN(openedYear)) {
+          amountInput.max = YEARLY_LIMIT;
+          amountInput.placeholder = "0 ~ 20,000,000";
+          return;
+        }
+
+        const maxAmount = calcMaxAmount(openedYear);
+
+        // max / placeholder 동기화
+        amountInput.max = maxAmount;
+        amountInput.placeholder = `0 ~ ${maxAmount.toLocaleString()}`;
+
+        // 초과 입력 시 자동 보정
+        if (amountInput.value && Number(amountInput.value) > maxAmount) {
+          amountInput.value = maxAmount;
+        }
+      }
+
+      // 이벤트 바인딩
+      yearInput.addEventListener("input", applyLimit);
+
+      // 최초 1회 실행 (뒤로가기 / 자동완성 대응)
+      applyLimit();
+    });
+  </script>
+</th:block>
 
 </html>

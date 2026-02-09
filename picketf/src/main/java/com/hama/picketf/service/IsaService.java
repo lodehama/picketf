@@ -23,8 +23,9 @@ public class IsaService {
       throw new IllegalArgumentException("계좌 유형이 이상함");
     }
 
-    if (initialDeposit < 0 || initialDeposit > 20000000L) {
-      throw new IllegalArgumentException("초기 납입금액 범위가 이상함");
+    // 금액 음수 입력 방지
+    if (initialDeposit < 0) {
+      throw new IllegalArgumentException("금액이 음수일 수 없음");
     }
 
     // 2) DTO 구성

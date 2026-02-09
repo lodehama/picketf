@@ -52,7 +52,7 @@ public class KrxClient {
     }
 
     WebClient.RequestHeadersSpec<?> spec = webClient.post()
-        .uri(url) // ★ uriBuilder 사용 안 함
+        .uri(url) // uriBuilder 사용 안 함
         .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON)
         .bodyValue(bodyParams == null ? Map.of() : bodyParams);

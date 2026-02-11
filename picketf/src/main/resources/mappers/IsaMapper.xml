@@ -40,4 +40,11 @@
     WHERE isa_us_num = #{usNum}
   </update>
 
+  <!-- 해당 유저의 ISA 계좌 삭제 -->
+  <delete id="deleteByUsNum" parameterType="int">
+    DELETE FROM isa
+    WHERE isa_us_num = #{usNum}
+  </delete>
+
+
 </mapper>

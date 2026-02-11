@@ -176,4 +176,23 @@ public class IsaService {
     return Math.max(0L, Math.min(yearRemain, totalRemain));
   }
 
+  // ISA 삭제 (유저 기준으로 1개 삭제)
+  @Transactional
+  public boolean deleteIsaByUser(int usNum) {
+
+    IsaDTO isa = isaDAO.findByUsNum(usNum);
+    if (isa == null) {
+      return false; // 삭제할 게 없음
+    }
+
+    int deleted = isaDAO.deleteByUsNum(usNum);
+
+    // usNum이 UNIQUE라면 0 또는 1이 정상
+    if (deleted != 1) {
+      throw new IllegalStateException("ISA 삭제 실패(삭제 행 수 이상)");
+    }
+
+    return true;
+  }
+
 }

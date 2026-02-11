@@ -11,4 +11,6 @@ public interface IsaDAO {
 
   int increaseTotalAmount(@Param("usNum") int usNum, @Param("amount") long amount); // 예수금 추가: isa_total_amount 증가
 
+  int deleteByUsNum(@Param("usNum") int usNum); // 해당 유저 ISA 삭제
+
 }

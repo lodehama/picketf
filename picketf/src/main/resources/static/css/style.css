@@ -524,7 +524,7 @@ body {
 }
 /* #endregion 모든 페이지 폰트 */
 
-/* #region isa */
+/* #region fees */
 /* 라디오 숨김(btn-check) + 라벨 카드 선택 표시 */
 .btn-check:checked + label {
   border-color: #0d6efd !important;       /* 부트스트랩 primary */
@@ -539,4 +539,4 @@ body {
   transform: scale(0.99);
 }
 
-/* #endregion isa */
+/* #endregion fees */

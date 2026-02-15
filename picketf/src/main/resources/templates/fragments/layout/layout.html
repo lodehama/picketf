@@ -17,6 +17,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+  <!-- 페이지 제목을 "기능명 | Pick ETF" 형식으로 통일 -->
+  <title layout:title-pattern="$CONTENT_TITLE | Pick ETF">
+
 </head>
 
 <body>
@@ -36,17 +39,17 @@
         <a th:href="@{/isa}" class="sidebar-link">
           <i class="bi bi-wallet2 me-2"></i> ISA 계좌 관리
         </a>
-        
+
         <div class="sidebar-section-title">FINANCE</div>
 
         <a th:href="@{/subs}" class="sidebar-link">
           <i class="bi bi-bar-chart-line me-2"></i> 구독 관리
         </a>
-        
+
         <a th:href="@{/cpi}" class="sidebar-link">
           <i class="bi bi-wallet2 me-2"></i> 화폐가치 계산기
         </a>
-        
+
         <div class="sidebar-section-title">ETC</div>
         <a th:href="@{/portfolio}" class="sidebar-link">
           <i class="bi bi-wallet2 me-2"></i> 자료 출처

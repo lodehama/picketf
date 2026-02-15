@@ -16,7 +16,7 @@
   <div class="container py-3">
     <h1>ISA 계좌 관리 페이지</h1>
 
-    <a href="/isa/add" class="btn btn-sm btn-dark mb-3">
+    <a th:if="${isa == null}" class="btn btn-sm btn-dark mb-3">
       + 계좌 만들기
     </a>
 

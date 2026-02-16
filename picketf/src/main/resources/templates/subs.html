@@ -4,6 +4,10 @@
 
 <head>
   <title>구독 서비스 관리</title>
+
+  <!-- CSRF 토큰 메타 (AJAX에서 사용) -->
+  <meta name="_csrf" th:content="${_csrf.token}">
+  <meta name="_csrf_header" th:content="${_csrf.headerName}">
 </head>
 
 <body>
@@ -196,7 +200,6 @@
             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
               닫기
             </button>
-            <!-- id 충돌 방지: 직접추가는 별도 id -->
             <button id="btn-manual-save" type="button" class="btn btn-dark">추가하기</button>
           </div>
 
@@ -391,6 +394,9 @@
         <div class="modal-content">
 
           <form th:action="@{/subs/edit}" method="post">
+            <!-- ✅ CSRF hidden (폼 submit용) -->
+            <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
             <div class="modal-header">
               <h5 class="modal-title">구독 정보 수정</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -456,6 +462,9 @@
 
           <!-- 삭제용 폼 -->
           <form th:action="@{/subs/delete}" method="post" id="subs-delete-form" style="display:none;">
+            <!-- CSRF hidden (폼 submit용) -->
+            <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
             <input type="hidden" name="subsNum" id="delete-subs-num">
           </form>
 
@@ -466,6 +475,16 @@
     <th:block layout:fragment="script">
       <script th:inline="javascript">
         document.addEventListener("DOMContentLoaded", () => {
+
+          /* =========================================================
+           * CSRF 공통 헤더 (AJAX용)
+           * ========================================================= */
+          const CSRF_HEADER = /*[[${_csrf.headerName}]]*/ "X-XSRF-TOKEN";
+          const CSRF_TOKEN = /*[[${_csrf.token}]]*/ "";
+
+          function csrfHeaders() {
+            return CSRF_TOKEN ? { [CSRF_HEADER]: CSRF_TOKEN } : {};
+          }
 
           /* =========================================================
            * 0) 차트 데이터(Thymeleaf) 선언
@@ -702,7 +721,7 @@
 
           if (manualModalEl && manualSaveBtn) {
 
-            // 모달 열릴 때 결제일 기본값(오늘 날짜) 세팅
+            // 결제일 기본값 세팅 (오늘 날짜)
             manualModalEl.addEventListener("shown.bs.modal", () => {
               const todayDay = new Date().getDate();
               const billInput = manualModalEl.querySelector(".rec-bill");
@@ -736,7 +755,6 @@
                 return;
               }
 
-              // 컨트롤러가 List<SubsDTO>를 받으므로 배열로 보낸다
               const payload = [{
                 subsName: name,
                 subsType: type,
@@ -749,7 +767,8 @@
                   method: "POST",
                   headers: {
                     "Content-Type": "application/json",
-                    "X-Requested-With": "XMLHttpRequest"
+                    "X-Requested-With": "XMLHttpRequest",
+                    ...csrfHeaders()
                   },
                   body: JSON.stringify(payload)
                 });
@@ -768,7 +787,7 @@
           }
 
           /* =========================================================
-          * 3) 추천 구독 추가 (+ 모두 선택) (안전하게 버튼 탐색 수정)
+          * 3) 추천 구독 추가 (+ 모두 선택)
           * ========================================================= */
           const recommendModalEl = document.getElementById("subsRecommendModal");
           const recSelectAll = document.getElementById("recSelectAll");
@@ -778,7 +797,6 @@
 
           if (recSaveBtn && recommendModalEl) {
 
-            // 모두 선택 기능
             if (recSelectAll) {
               const getRecChecks = () =>
                 Array.from(recommendModalEl.querySelectorAll(".rec-check"));
@@ -819,7 +837,6 @@
               });
             }
 
-            // 모달 열릴 때 결제일 기본값 세팅
             recommendModalEl.addEventListener("shown.bs.modal", () => {
               const todayDay = new Date().getDate();
               recommendModalEl.querySelectorAll(".rec-bill").forEach(input => {
@@ -827,7 +844,6 @@
               });
             });
 
-            // 추가하기
             recSaveBtn.addEventListener("click", async () => {
               const rows = Array.from(recommendModalEl.querySelectorAll("tbody tr"));
               const payload = [];
@@ -867,7 +883,8 @@
                   method: "POST",
                   headers: {
                     "Content-Type": "application/json",
-                    "X-Requested-With": "XMLHttpRequest"
+                    "X-Requested-With": "XMLHttpRequest",
+                    ...csrfHeaders()
                   },
                   body: JSON.stringify(payload)
                 });
@@ -898,7 +915,8 @@
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
-                  "X-Requested-With": "XMLHttpRequest"
+                  "X-Requested-With": "XMLHttpRequest",
+                  ...csrfHeaders()
                 },
                 body: JSON.stringify({ active })
               })

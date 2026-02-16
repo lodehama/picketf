@@ -45,6 +45,24 @@
     DELETE FROM isa
     WHERE isa_us_num = #{usNum}
   </delete>
+  
+  <!-- 예수금 추가 로그 기록 -->
+  <insert id="insertDepositLog"
+          parameterType="com.hama.picketf.dto.IsaDepositLogDTO"
+          useGeneratedKeys="true"
+          keyProperty="isaDepositLogNum">
+    INSERT INTO isa_deposit_log (
+      isa_deposit_log_isa_num,
+      isa_deposit_log_amount,
+      isa_deposit_log_memo,
+      isa_deposit_log_created
+    ) VALUES (
+      #{isaDepositLogIsaNum},
+      #{isaDepositLogAmount},
+      #{isaDepositLogMemo},
+      NOW()
+    )
+  </insert>
 
 
 </mapper>

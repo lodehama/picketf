@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.hama.picketf.dao.IsaDAO;
 import com.hama.picketf.dto.IsaDTO;
+import com.hama.picketf.dto.IsaDepositLogDTO;
 
 @Service
 public class IsaService {
@@ -106,6 +107,17 @@ public class IsaService {
     if (updated != 1) {
       throw new IllegalStateException("예수금 추가 실패(업데이트 행 수 이상)");
     }
+
+    // 2) 납입 로그 기록
+    IsaDepositLogDTO log = new IsaDepositLogDTO();
+    log.setIsaDepositLogIsaNum(isa.getIsaNum());
+    log.setIsaDepositLogAmount(amount);
+
+    int inserted = isaDAO.insertDepositLog(log);
+    if (inserted != 1) {
+      throw new IllegalStateException("납입 로그 기록 실패");
+    }
+
   }
 
   private int getNowYear() {

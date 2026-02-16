@@ -563,11 +563,33 @@ body {
   overflow: hidden;
 }
 
-.progress-fill {
-  height: 100%;
-  background: #212529;
-  border-radius: 999px;
-  transition: width 0.35s ease;
+.progress-track{
+  position: relative;            /* ✅ 레이어 겹치기 핵심 */
+  width:100%;
+  height:12px;
+  background:#e9ecef;
+  border-radius:999px;
+  overflow:hidden;
 }
+
+/* ✅ 올해 가능한 범위(중간 회색 밴드) */
+.progress-band{
+  position:absolute;
+  top:0; bottom:0;
+  background:#adb5bd;            /* 중간 회색 */
+  border-radius:999px;
+  opacity:.9;
+}
+
+/* ✅ 총 누적(검정 채움) */
+.progress-fill{
+  position:absolute;
+  top:0; bottom:0;
+  left:0;
+  background:#212529;
+  border-radius:999px;
+  transition: width .35s ease;
+}
+
 
 /* #endregion isa */

@@ -68,6 +68,20 @@
                   th:text="${#numbers.formatInteger(lifetimeRemain, 0, 'COMMA')} + '원'">0원</span>
               </td>
             </tr>
+            <tr>
+              <th>비과세 한도</th>
+              <td th:switch="${isa.isaType}">
+                <span th:case="'일반형'">200만원</span>
+                <span th:case="'서민형'">400만원</span>
+                <span th:case="*">-</span>
+              </td>
+            </tr>
+
+            <tr>
+              <th>과세 방식</th>
+              <td>9.9% 분리과세</td>
+            </tr>
+
           </tbody>
         </table>
       </div>

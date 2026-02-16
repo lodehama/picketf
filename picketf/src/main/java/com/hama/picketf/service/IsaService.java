@@ -1,6 +1,7 @@
 package com.hama.picketf.service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -232,6 +233,21 @@ public class IsaService {
     }
 
     return true;
+  }
+
+  // 최근 납입 로그 조회 (최대 n개)
+  public List<IsaDepositLogDTO> getRecentDepositLogs(int usNum, int limit) {
+
+    IsaDTO isa = isaDAO.findByUsNum(usNum);
+    if (isa == null) {
+      return java.util.Collections.emptyList();
+    }
+
+    int safeLimit = Math.min(Math.max(limit, 1), 20);
+
+    return isaDAO.selectRecentDepositLogs(
+        isa.getIsaNum(),
+        safeLimit);
   }
 
 }

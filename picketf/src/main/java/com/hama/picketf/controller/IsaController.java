@@ -1,6 +1,8 @@
 package com.hama.picketf.controller;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import com.hama.picketf.dto.IsaDTO;
+import com.hama.picketf.dto.IsaDepositLogDTO;
 import com.hama.picketf.security.CustomUser;
 import com.hama.picketf.service.IsaService;
 
@@ -56,6 +59,9 @@ public class IsaController {
     long currentRemain = 0L; // 현재 규칙 기준 누적 한도 남은 금액
     int progressPct = 0; // 프로그래스 바 진행률 (0~100)
 
+    // 최근 납입 로그(최대 5개) 기본값: 빈 리스트
+    List<IsaDepositLogDTO> recentDepositLogs = Collections.emptyList();
+
     // ISA가 존재할 경우에만 실제 계산 수행
     if (isa != null) {
 
@@ -67,11 +73,17 @@ public class IsaController {
 
       // 총 납입 진행률 계산 (1억 기준 0~100%)
       progressPct = isaService.calcProgressPct(isa);
+
+      // 최근 납입 내역 n개 조회(메모 포함)
+      recentDepositLogs = isaService.getRecentDepositLogs(usNum, 10);
     }
 
     model.addAttribute("lifetimeRemain", lifetimeRemain);
     model.addAttribute("currentRemain", currentRemain);
     model.addAttribute("progressPct", progressPct);
+
+    // 뷰로 내려주기
+    model.addAttribute("recentDepositLogs", recentDepositLogs);
 
     return "isa";
   }
@@ -102,9 +114,9 @@ public class IsaController {
       @RequestParam("amount") long amount,
       @RequestParam(value = "memo", required = false) String memo) {
 
-          System.out.println("amount = [" + amount + "]");
+    System.out.println("amount = [" + amount + "]");
 
-        System.out.println("memo=[" + memo + "]");
+    System.out.println("memo=[" + memo + "]");
 
     Integer usNum = getLoginUsNumOrNull();
     if (usNum == null) {

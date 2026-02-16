@@ -1,5 +1,7 @@
 package com.hama.picketf.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.hama.picketf.dto.IsaDTO;
@@ -15,5 +17,10 @@ public interface IsaDAO {
   int deleteByUsNum(@Param("usNum") int usNum); // 해당 유저 ISA 삭제
 
   int insertDepositLog(IsaDepositLogDTO dto); // 예수금 추가 로그 기록
+
+  // 최근 납입 로그
+  List<IsaDepositLogDTO> selectRecentDepositLogs(
+      @Param("isaNum") int isaNum,
+      @Param("limit") int limit);
 
 }

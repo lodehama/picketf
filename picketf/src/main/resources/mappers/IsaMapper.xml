@@ -63,6 +63,19 @@
       NOW()
     )
   </insert>
-
+  <select id="selectRecentDepositLogs"
+        resultType="com.hama.picketf.dto.IsaDepositLogDTO">
+    SELECT
+      isa_deposit_log_num       AS isaDepositLogNum,
+      isa_deposit_log_isa_num   AS isaDepositLogIsaNum,
+      isa_deposit_log_amount    AS isaDepositLogAmount,
+      isa_deposit_log_memo      AS isaDepositLogMemo,
+      isa_deposit_log_created   AS isaDepositLogCreated
+    FROM isa_deposit_log
+    WHERE isa_deposit_log_isa_num = #{isaNum}
+    ORDER BY isa_deposit_log_created DESC,
+            isa_deposit_log_num DESC
+    LIMIT #{limit}
+  </select>
 
 </mapper>

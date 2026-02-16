@@ -103,6 +103,58 @@
       </div>
     </div>
 
+    <!-- 최근 납입 내역 카드 -->
+    <div class="row justify-content-center mt-4">
+      <div class="col-md-10 col-lg-8 col-xl-6">
+        <div th:if="${isa != null}" class="card shadow-sm">
+          <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="card-title mb-0 text-center flex-grow-1">최근 납입 내역</h5>
+
+              <!-- 추후 전체보기 만들면 살리기 -->
+              <!-- <a href="/isa/deposits" class="small text-decoration-none">전체보기</a> -->
+            </div>
+
+            <!-- 납입 기록이 없을 때 -->
+            <div th:if="${#lists.isEmpty(recentDepositLogs)}" class="text-muted small">
+              아직 납입 기록이 없습니다.
+            </div>
+
+            <!-- 납입 기록이 있을 때 -->
+            <ul th:if="${!#lists.isEmpty(recentDepositLogs)}" class="list-group list-group-flush">
+
+              <li class="list-group-item px-0" th:each="log : ${recentDepositLogs}">
+
+                <!-- 날짜 + 금액 -->
+                <div class="d-flex justify-content-between">
+
+                  <!-- 날짜 -->
+                  <div class="fw-semibold" th:text="${#temporals.format(log.isaDepositLogCreated, 'yyyy.MM.dd')}">
+                    2026.02.01
+                  </div>
+
+                  <!-- 금액 -->
+                  <div class="text-end fw-semibold"
+                    th:text="${'+ ' + #numbers.formatInteger(log.isaDepositLogAmount, 0, 'COMMA') + '원'}">
+                    + 2,000,000원
+                  </div>
+
+                </div>
+
+                <!-- 메모 -->
+                <div class="small text-muted mt-1"
+                  th:text="${#strings.isEmpty(log.isaDepositLogMemo) ? '메모 없음' : log.isaDepositLogMemo}">
+                  메모
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     <!-- 예수금 추가 모달 -->
     <div th:if="${isa != null}" class="modal fade" id="depositModal" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">

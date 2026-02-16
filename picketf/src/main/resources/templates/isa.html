@@ -191,7 +191,6 @@
           if (ct.includes("application/json")) {
             return await res.json().catch(() => ({}));
           }
-          // 에러 페이지(HTML) 등 JSON이 아닐 수 있으니 빈 객체로 처리
           return {};
         };
 
@@ -200,6 +199,7 @@
         // =========================
         const depositModalEl = document.getElementById("depositModal");
         const depositInput = document.getElementById("depositAmount");
+        const depositMemo = document.getElementById("depositMemo");
         const depositBtn = document.getElementById("btnDepositSubmit");
 
         if (depositModalEl && depositInput && depositBtn) {
@@ -211,7 +211,12 @@
           };
 
           depositModalEl.addEventListener("shown.bs.modal", () => depositInput.focus());
-          depositModalEl.addEventListener("hidden.bs.modal", () => { depositInput.value = ""; });
+
+          // 모달 닫히면 금액/메모 초기화
+          depositModalEl.addEventListener("hidden.bs.modal", () => {
+            depositInput.value = "";
+            if (depositMemo) depositMemo.value = "";
+          });
 
           depositInput.addEventListener("input", () => {
             const raw = depositInput.value.replace(/,/g, "");
@@ -220,6 +225,8 @@
 
           depositBtn.addEventListener("click", async () => {
             const amount = Number(depositInput.value.replace(/,/g, ""));
+            const memoRaw = depositMemo ? depositMemo.value.trim() : "";
+            const memo = memoRaw.length > 0 ? memoRaw : ""; // 비어도 허용
 
             if (!Number.isFinite(amount) || amount <= 0) {
               alert("금액을 입력하세요");
@@ -229,11 +236,15 @@
             depositBtn.disabled = true;
 
             try {
+              const body =
+                "amount=" + encodeURIComponent(amount) +
+                "&memo=" + encodeURIComponent(memo);
+
               const res = await fetch("/isa/cash", {
                 method: "POST",
                 credentials: "same-origin",
                 headers: buildHeaders(),
-                body: "amount=" + encodeURIComponent(amount)
+                body
               });
 
               const data = await safeJson(res);

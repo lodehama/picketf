@@ -78,12 +78,14 @@ public class IsaService {
     return Math.max(0, TOTAL_LIMIT - isa.getIsaTotalAmount());
   }
 
-  /**
-   * 예수금 추가 = isa_total_amount 증가
-   * - 추천: UPDATE로 바로 +amount (원자적)
-   */
   @Transactional
   public void addCash(int usNum, long amount) {
+    addCash(usNum, amount, null);
+  }
+
+  // 예수금 추가 = isa_total_amount 증가
+  @Transactional
+  public void addCash(int usNum, long amount, String memo) {
 
     if (amount <= 0) {
       throw new IllegalArgumentException("추가 금액이 0 이하임");
@@ -112,6 +114,12 @@ public class IsaService {
     IsaDepositLogDTO log = new IsaDepositLogDTO();
     log.setIsaDepositLogIsaNum(isa.getIsaNum());
     log.setIsaDepositLogAmount(amount);
+
+    // 메모는 선택: 공백이면 null로 저장(원하면 ""로 저장해도 됨)
+    if (memo != null) {
+      String m = memo.trim();
+      log.setIsaDepositLogMemo(m.isEmpty() ? null : m);
+    }
 
     int inserted = isaDAO.insertDepositLog(log);
     if (inserted != 1) {

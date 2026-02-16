@@ -98,14 +98,22 @@ public class IsaController {
   // 예수금 추가 AJAX 처리(JSON 응답)
   @PostMapping("/cash")
   @ResponseBody
-  public ResponseEntity<?> cashAddAjax(@RequestParam("amount") long amount) {
+  public ResponseEntity<?> cashAddAjax(
+      @RequestParam("amount") long amount,
+      @RequestParam(value = "memo", required = false) String memo) {
+
+          System.out.println("amount = [" + amount + "]");
+
+        System.out.println("memo=[" + memo + "]");
+
     Integer usNum = getLoginUsNumOrNull();
     if (usNum == null) {
       return ResponseEntity.status(401).body(Map.of("message", "로그인이 필요합니다"));
     }
 
     try {
-      isaService.addCash(usNum, amount);
+      // 메모 포함 버전 호출 (서비스에 addCash(usNum, amount, memo) 만들어둔 상태 전제)
+      isaService.addCash(usNum, amount, memo);
 
       // 업데이트된 값 다시 조회
       IsaDTO isa = isaService.getIsaByUser(usNum);

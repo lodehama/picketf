@@ -16,7 +16,7 @@
   <div class="container py-3">
     <h1>ISA 계좌 관리 페이지</h1>
 
-    <a th:if="${isa == null}" class="btn btn-sm btn-dark mb-3">
+    <a th:if="${isa == null}" th:href="@{/isa/add}" class="btn btn-sm btn-dark mb-3">
       + 계좌 만들기
     </a>
 
@@ -117,8 +117,20 @@
             <form id="depositForm" onsubmit="return false;">
               <div class="mb-3">
                 <label class="form-label">추가할 금액</label>
-                <input type="text" class="form-control text-end" id="depositAmount" placeholder="예: 1,000,000">
+
+                <div class="d-flex align-items-center gap-2">
+                  <input type="text" class="form-control text-end" id="depositAmount" style="flex: 0 0 160px;"
+                    placeholder="예: 1,000,000">
+
+                  <button type="button" id="depositPlusBtn" class="btn btn-outline-secondary btn-sm ms-2">+
+                    100만원</button>
+                  <button type="button" id="depositMinusBtn" class="btn btn-outline-secondary btn-sm ms-2">-
+                    100만원</button>
+                </div>
+
+                <small id="depositLimitHelp" class="text-muted"></small>
               </div>
+
               <div class="mb-3">
                 <label class="form-label">메모 (선택)</label>
                 <input type="text" class="form-control" id="depositMemo" placeholder="예: 월급, 추가납입, 보너스">
@@ -180,7 +192,7 @@
         const buildHeaders = () => {
           const headers = { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" };
           const xsrf = getCookie("XSRF-TOKEN");
-          if (xsrf) headers["X-XSRF-TOKEN"] = xsrf; // CookieCsrfTokenRepository + 커스텀 헤더명
+          if (xsrf) headers["X-XSRF-TOKEN"] = xsrf;
           return headers;
         };
 
@@ -194,42 +206,124 @@
           return {};
         };
 
+        // 숫자 유틸
+        const onlyDigits = (str) => (str ?? "").toString().replace(/[^\d]/g, "");
+        const toNumber = (str) => {
+          const raw = onlyDigits(str);
+          return raw ? Number(raw) : 0;
+        };
+        const formatComma = (num) => Number(num).toLocaleString("ko-KR");
+
         // =========================
-        // 1) 예수금 추가 모달
+        // 1) 예수금 추가 모달 (+/- 버튼 버전)
         // =========================
         const depositModalEl = document.getElementById("depositModal");
         const depositInput = document.getElementById("depositAmount");
         const depositMemo = document.getElementById("depositMemo");
         const depositBtn = document.getElementById("btnDepositSubmit");
 
+        const plusBtn = document.getElementById("depositPlusBtn");
+        const minusBtn = document.getElementById("depositMinusBtn");
+        const limitHelp = document.getElementById("depositLimitHelp");
+
+        const STEP = 1_000_000; // 100만원 단위
+
+        // “추가 가능한 최대 금액”을 화면 값 기반으로 계산
+        // 원칙: 이번년도 남은 한도(currentRemain)와 총 남은 한도(lifetimeRemain) 중 더 작은 값이 max
+        const getMaxAddAmount = () => {
+          const currentText = document.getElementById("currentRemainText")?.textContent || "";
+          const lifetimeText = document.getElementById("lifetimeRemainText")?.textContent || "";
+
+          const currentRemain = toNumber(currentText);   // "1,234원" -> 1234
+          const lifetimeRemain = toNumber(lifetimeText);
+
+          // currentRemainText가 없고(=0 안내문 표시), lifetime만 남아있을 수도 있음
+          const currentZeroShown = !!document.getElementById("currentRemainZeroText") &&
+            (document.getElementById("currentRemainZeroText").style.display !== "none");
+
+          if (currentZeroShown) return 0;
+
+          // 둘 다 있으면 min, 하나만 있으면 그 값 사용
+          if (currentRemain > 0 && lifetimeRemain > 0) return Math.min(currentRemain, lifetimeRemain);
+          if (currentRemain > 0) return currentRemain;
+          if (lifetimeRemain > 0) return lifetimeRemain;
+          return 0;
+        };
+
+        const syncPlaceholderAndClamp = () => {
+          const max = getMaxAddAmount();
+
+          if (depositInput) {
+            depositInput.placeholder = max > 0 ? `0 ~ ${formatComma(max)}` : "추가 가능한 한도가 없습니다";
+            const val = toNumber(depositInput.value);
+            if (val > max) depositInput.value = formatComma(max);
+          }
+
+          if (limitHelp) {
+            limitHelp.textContent = max > 0 ? `최대 ${formatComma(max)}원까지 추가 가능` : `추가 가능한 한도가 없습니다`;
+          }
+
+          // 버튼 활성/비활성
+          if (plusBtn) plusBtn.disabled = (max <= 0);
+          if (minusBtn) minusBtn.disabled = (max <= 0);
+          if (depositBtn) depositBtn.disabled = (max <= 0);
+        };
+
         if (depositModalEl && depositInput && depositBtn) {
 
-          const formatNumber = (value) => {
-            return value
-              .replace(/[^0-9]/g, "")
-              .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-          };
+          depositModalEl.addEventListener("shown.bs.modal", () => {
+            syncPlaceholderAndClamp();
+            depositInput.focus();
+          });
 
-          depositModalEl.addEventListener("shown.bs.modal", () => depositInput.focus());
-
-          // 모달 닫히면 금액/메모 초기화
+          // 모달 닫히면 초기화
           depositModalEl.addEventListener("hidden.bs.modal", () => {
             depositInput.value = "";
             if (depositMemo) depositMemo.value = "";
           });
 
+          // 입력: 숫자만 + 콤마 + max 클램프
           depositInput.addEventListener("input", () => {
-            const raw = depositInput.value.replace(/,/g, "");
-            depositInput.value = formatNumber(raw);
+            const max = getMaxAddAmount();
+            let val = toNumber(depositInput.value);
+            if (val > max) val = max;
+            depositInput.value = (val === 0 && onlyDigits(depositInput.value) === "") ? "" : formatComma(val);
           });
 
+          // +100만
+          if (plusBtn) {
+            plusBtn.addEventListener("click", () => {
+              const max = getMaxAddAmount();
+              let val = toNumber(depositInput.value);
+              val += STEP;
+              if (val > max) val = max;
+              depositInput.value = formatComma(val);
+            });
+          }
+
+          // -100만
+          if (minusBtn) {
+            minusBtn.addEventListener("click", () => {
+              let val = toNumber(depositInput.value);
+              val -= STEP;
+              if (val < 0) val = 0;
+              depositInput.value = (val === 0 ? "" : formatComma(val));
+            });
+          }
+
           depositBtn.addEventListener("click", async () => {
-            const amount = Number(depositInput.value.replace(/,/g, ""));
+            const max = getMaxAddAmount();
+            const amount = toNumber(depositInput.value);
             const memoRaw = depositMemo ? depositMemo.value.trim() : "";
-            const memo = memoRaw.length > 0 ? memoRaw : ""; // 비어도 허용
+            const memo = memoRaw.length > 0 ? memoRaw : "";
 
             if (!Number.isFinite(amount) || amount <= 0) {
               alert("금액을 입력하세요");
+              return;
+            }
+            if (amount > max) {
+              alert("추가 가능한 한도를 초과했습니다");
+              depositInput.value = formatComma(max);
               return;
             }
 
@@ -276,6 +370,9 @@
                 lifetimeEl.textContent = fmtWon(data.lifetimeRemain);
               }
 
+              // max/placeholder도 갱신
+              syncPlaceholderAndClamp();
+
               bootstrap.Modal.getInstance(depositModalEl).hide();
 
             } finally {
@@ -285,7 +382,7 @@
         }
 
         // =========================
-        // 2) ISA 계좌 삭제 모달
+        // 2) ISA 계좌 삭제 모달 (기존 그대로)
         // =========================
         const deleteModalEl = document.getElementById("deleteIsaModal");
         const deleteBtn = document.getElementById("btnIsaDelete");
@@ -319,7 +416,6 @@
 
       });
     </script>
-
 </main>
 
 </html>

@@ -36,52 +36,55 @@
       아직 ISA 계좌가 없습니다. “+ 계좌 만들기”로 생성하세요.
     </div>
 
-    <div th:if="${isa != null}" class="card">
-      <div class="card-body">
-        <h5 class="card-title mb-3">내 계좌 요약</h5>
+    <div class="row justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-6">
+        <div th:if="${isa != null}" class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title mb-3 text-center">내 계좌 요약</h5>
+            <table class="table table-sm">
+              <tbody>
+                <tr>
+                  <th style="width: 220px;">계좌 개설연도</th>
+                  <td th:text="${isa.isaYear}">2026</td>
+                </tr>
+                <tr>
+                  <th>계좌 타입</th>
+                  <td th:text="${isa.isaType}">NORMAL</td>
+                </tr>
+                <tr>
+                  <th>현재 납입 가능한 금액</th>
+                  <td>
+                    <span id="currentRemainText" th:if="${currentRemain > 0}"
+                      th:text="${#numbers.formatInteger(currentRemain, 0, 'COMMA')} + '원'"></span>
 
-        <table class="table table-sm">
-          <tbody>
-            <tr>
-              <th style="width: 220px;">계좌 개설연도</th>
-              <td th:text="${isa.isaYear}">2026</td>
-            </tr>
-            <tr>
-              <th>계좌 타입</th>
-              <td th:text="${isa.isaType}">NORMAL</td>
-            </tr>
-            <tr>
-              <th>현재 납입 가능한 금액</th>
-              <td>
-                <span id="currentRemainText" th:if="${currentRemain > 0}"
-                  th:text="${#numbers.formatInteger(currentRemain, 0, 'COMMA')} + '원'"></span>
+                    <span id="currentRemainZeroText" th:if="${currentRemain == 0}" class="text-muted">
+                      현재 납입 가능 금액이 없습니다
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <th>총 납입 가능한 금액</th>
+                  <td>
+                    <span id="lifetimeRemainText"
+                      th:text="${#numbers.formatInteger(lifetimeRemain, 0, 'COMMA')} + '원'">0원</span>
+                  </td>
+                </tr>
+                <tr>
+                  <th>비과세 한도</th>
+                  <td th:switch="${isa.isaType}">
+                    <span th:case="'일반형'">200만원</span>
+                    <span th:case="'서민형'">400만원</span>
+                    <span th:case="*">-</span>
+                  </td>
+                </tr>
 
-                <span id="currentRemainZeroText" th:if="${currentRemain == 0}" class="text-muted">
-                  현재 납입 가능 금액이 없습니다
-                </span>
-              </td>
-            </tr>
-            <tr>
-              <th>총 납입 가능한 금액</th>
-              <td>
-                <span id="lifetimeRemainText"
-                  th:text="${#numbers.formatInteger(lifetimeRemain, 0, 'COMMA')} + '원'">0원</span>
-              </td>
-            </tr>
-            <tr>
-              <th>비과세 한도</th>
-              <td th:switch="${isa.isaType}">
-                <span th:case="'일반형'">200만원</span>
-                <span th:case="'서민형'">400만원</span>
-                <span th:case="*">-</span>
-              </td>
-            </tr>
+                <tr>
+                  <th>과세 방식</th>
+                  <td>9.9% 분리과세</td>
+                </tr>
 
-            <tr>
-              <th>과세 방식</th>
-              <td>9.9% 분리과세</td>
-            </tr>
-
+              </tbody>
+            </table>
             <!-- 프로그래스 바 -->
             <div class="progress-wrapper">
               <div class="progress-header">
@@ -94,214 +97,213 @@
                 <div class="progress-fill" th:style="'width:' + ${progressPct} + '%'">
                 </div>
               </div>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- 예수금 추가 모달 -->
-  <div th:if="${isa != null}" class="modal fade" id="depositModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-
-        <div class="modal-header">
-          <h5 class="modal-title">예수금 추가</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-
-        <div class="modal-body">
-          <form id="depositForm" onsubmit="return false;">
-            <div class="mb-3">
-              <label class="form-label">추가할 금액</label>
-              <input type="text" class="form-control text-end" id="depositAmount" placeholder="예: 1,000,000">
             </div>
-          </form>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-            취소
-          </button>
-          <button type="button" class="btn btn-primary" id="btnDepositSubmit">
-            추가
-          </button>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <!-- 삭제 확인 모달 -->
-  <div th:if="${isa != null}" class="modal fade" id="deleteIsaModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-
-        <div class="modal-header">
-          <h5 class="modal-title">ISA 계좌 삭제</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-
-        <div class="modal-body">
-          <p class="mb-2">
-            정말로 ISA 계좌를 삭제할까요?
-          </p>
-          <p class="text-danger mb-0">
-            삭제하면 계좌 정보와 관련 데이터가 함께 제거됩니다.
-          </p>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-          <button type="button" class="btn btn-danger" id="btnIsaDelete">삭제</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
+    <!-- 예수금 추가 모달 -->
+    <div th:if="${isa != null}" class="modal fade" id="depositModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
 
-      // =========================
-      // 공통 유틸
-      // =========================
-      const getCookie = (name) => {
-        const v = document.cookie.split("; ").find(row => row.startsWith(name + "="));
-        return v ? decodeURIComponent(v.split("=")[1]) : null;
-      };
+          <div class="modal-header">
+            <h5 class="modal-title">예수금 추가</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
 
-      const buildHeaders = () => {
-        const headers = { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" };
-        const xsrf = getCookie("XSRF-TOKEN");
-        if (xsrf) headers["X-XSRF-TOKEN"] = xsrf; // CookieCsrfTokenRepository + 커스텀 헤더명
-        return headers;
-      };
+          <div class="modal-body">
+            <form id="depositForm" onsubmit="return false;">
+              <div class="mb-3">
+                <label class="form-label">추가할 금액</label>
+                <input type="text" class="form-control text-end" id="depositAmount" placeholder="예: 1,000,000">
+              </div>
+            </form>
+          </div>
 
-      const fmtWon = (n) => Number(n).toLocaleString() + "원";
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              취소
+            </button>
+            <button type="button" class="btn btn-primary" id="btnDepositSubmit">
+              추가
+            </button>
+          </div>
 
-      const safeJson = async (res) => {
-        const ct = (res.headers.get("content-type") || "").toLowerCase();
-        if (ct.includes("application/json")) {
-          return await res.json().catch(() => ({}));
-        }
-        // 에러 페이지(HTML) 등 JSON이 아닐 수 있으니 빈 객체로 처리
-        return {};
-      };
+        </div>
+      </div>
+    </div>
 
-      // =========================
-      // 1) 예수금 추가 모달
-      // =========================
-      const depositModalEl = document.getElementById("depositModal");
-      const depositInput = document.getElementById("depositAmount");
-      const depositBtn = document.getElementById("btnDepositSubmit");
+    <!-- 삭제 확인 모달 -->
+    <div th:if="${isa != null}" class="modal fade" id="deleteIsaModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
 
-      if (depositModalEl && depositInput && depositBtn) {
+          <div class="modal-header">
+            <h5 class="modal-title">ISA 계좌 삭제</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
 
-        const formatNumber = (value) => {
-          return value
-            .replace(/[^0-9]/g, "")
-            .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+          <div class="modal-body">
+            <p class="mb-2">
+              정말로 ISA 계좌를 삭제할까요?
+            </p>
+            <p class="text-danger mb-0">
+              삭제하면 계좌 정보와 관련 데이터가 함께 제거됩니다.
+            </p>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+            <button type="button" class="btn btn-danger" id="btnIsaDelete">삭제</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+
+        // =========================
+        // 공통 유틸
+        // =========================
+        const getCookie = (name) => {
+          const v = document.cookie.split("; ").find(row => row.startsWith(name + "="));
+          return v ? decodeURIComponent(v.split("=")[1]) : null;
         };
 
-        depositModalEl.addEventListener("shown.bs.modal", () => depositInput.focus());
-        depositModalEl.addEventListener("hidden.bs.modal", () => { depositInput.value = ""; });
+        const buildHeaders = () => {
+          const headers = { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" };
+          const xsrf = getCookie("XSRF-TOKEN");
+          if (xsrf) headers["X-XSRF-TOKEN"] = xsrf; // CookieCsrfTokenRepository + 커스텀 헤더명
+          return headers;
+        };
 
-        depositInput.addEventListener("input", () => {
-          const raw = depositInput.value.replace(/,/g, "");
-          depositInput.value = formatNumber(raw);
-        });
+        const fmtWon = (n) => Number(n).toLocaleString() + "원";
 
-        depositBtn.addEventListener("click", async () => {
-          const amount = Number(depositInput.value.replace(/,/g, ""));
-
-          if (!Number.isFinite(amount) || amount <= 0) {
-            alert("금액을 입력하세요");
-            return;
+        const safeJson = async (res) => {
+          const ct = (res.headers.get("content-type") || "").toLowerCase();
+          if (ct.includes("application/json")) {
+            return await res.json().catch(() => ({}));
           }
+          // 에러 페이지(HTML) 등 JSON이 아닐 수 있으니 빈 객체로 처리
+          return {};
+        };
 
-          depositBtn.disabled = true;
+        // =========================
+        // 1) 예수금 추가 모달
+        // =========================
+        const depositModalEl = document.getElementById("depositModal");
+        const depositInput = document.getElementById("depositAmount");
+        const depositBtn = document.getElementById("btnDepositSubmit");
 
-          try {
-            const res = await fetch("/isa/cash", {
-              method: "POST",
-              credentials: "same-origin",
-              headers: buildHeaders(),
-              body: "amount=" + encodeURIComponent(amount)
-            });
+        if (depositModalEl && depositInput && depositBtn) {
 
-            const data = await safeJson(res);
+          const formatNumber = (value) => {
+            return value
+              .replace(/[^0-9]/g, "")
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+          };
 
-            if (!res.ok) {
-              alert(data.message || ("예수금 추가 실패 (" + res.status + ")"));
+          depositModalEl.addEventListener("shown.bs.modal", () => depositInput.focus());
+          depositModalEl.addEventListener("hidden.bs.modal", () => { depositInput.value = ""; });
+
+          depositInput.addEventListener("input", () => {
+            const raw = depositInput.value.replace(/,/g, "");
+            depositInput.value = formatNumber(raw);
+          });
+
+          depositBtn.addEventListener("click", async () => {
+            const amount = Number(depositInput.value.replace(/,/g, ""));
+
+            if (!Number.isFinite(amount) || amount <= 0) {
+              alert("금액을 입력하세요");
               return;
             }
 
-            // 화면 즉시 갱신
-            const currentEl = document.getElementById("currentRemainText");
-            const currentZeroEl = document.getElementById("currentRemainZeroText");
-            const lifetimeEl = document.getElementById("lifetimeRemainText");
+            depositBtn.disabled = true;
 
-            if (data.currentRemain != null) {
-              if (data.currentRemain > 0) {
-                if (currentEl) {
-                  currentEl.textContent = fmtWon(data.currentRemain);
-                  currentEl.style.display = "";
-                }
-                if (currentZeroEl) currentZeroEl.style.display = "none";
-              } else {
-                if (currentEl) currentEl.style.display = "none";
-                if (currentZeroEl) currentZeroEl.style.display = "";
+            try {
+              const res = await fetch("/isa/cash", {
+                method: "POST",
+                credentials: "same-origin",
+                headers: buildHeaders(),
+                body: "amount=" + encodeURIComponent(amount)
+              });
+
+              const data = await safeJson(res);
+
+              if (!res.ok) {
+                alert(data.message || ("예수금 추가 실패 (" + res.status + ")"));
+                return;
               }
+
+              // 화면 즉시 갱신
+              const currentEl = document.getElementById("currentRemainText");
+              const currentZeroEl = document.getElementById("currentRemainZeroText");
+              const lifetimeEl = document.getElementById("lifetimeRemainText");
+
+              if (data.currentRemain != null) {
+                if (data.currentRemain > 0) {
+                  if (currentEl) {
+                    currentEl.textContent = fmtWon(data.currentRemain);
+                    currentEl.style.display = "";
+                  }
+                  if (currentZeroEl) currentZeroEl.style.display = "none";
+                } else {
+                  if (currentEl) currentEl.style.display = "none";
+                  if (currentZeroEl) currentZeroEl.style.display = "";
+                }
+              }
+
+              if (lifetimeEl && data.lifetimeRemain != null) {
+                lifetimeEl.textContent = fmtWon(data.lifetimeRemain);
+              }
+
+              bootstrap.Modal.getInstance(depositModalEl).hide();
+
+            } finally {
+              depositBtn.disabled = false;
             }
+          });
+        }
 
-            if (lifetimeEl && data.lifetimeRemain != null) {
-              lifetimeEl.textContent = fmtWon(data.lifetimeRemain);
+        // =========================
+        // 2) ISA 계좌 삭제 모달
+        // =========================
+        const deleteModalEl = document.getElementById("deleteIsaModal");
+        const deleteBtn = document.getElementById("btnIsaDelete");
+
+        if (deleteModalEl && deleteBtn) {
+          deleteBtn.addEventListener("click", async () => {
+            deleteBtn.disabled = true;
+
+            try {
+              const res = await fetch("/isa/delete", {
+                method: "POST",
+                credentials: "same-origin",
+                headers: buildHeaders()
+              });
+
+              const data = await safeJson(res);
+
+              if (!res.ok) {
+                alert(data.message || ("계좌 삭제 실패 (" + res.status + ")"));
+                return;
+              }
+
+              bootstrap.Modal.getInstance(deleteModalEl).hide();
+              window.location.href = "/isa";
+
+            } finally {
+              deleteBtn.disabled = false;
             }
+          });
+        }
 
-            bootstrap.Modal.getInstance(depositModalEl).hide();
-
-          } finally {
-            depositBtn.disabled = false;
-          }
-        });
-      }
-
-      // =========================
-      // 2) ISA 계좌 삭제 모달
-      // =========================
-      const deleteModalEl = document.getElementById("deleteIsaModal");
-      const deleteBtn = document.getElementById("btnIsaDelete");
-
-      if (deleteModalEl && deleteBtn) {
-        deleteBtn.addEventListener("click", async () => {
-          deleteBtn.disabled = true;
-
-          try {
-            const res = await fetch("/isa/delete", {
-              method: "POST",
-              credentials: "same-origin",
-              headers: buildHeaders()
-            });
-
-            const data = await safeJson(res);
-
-            if (!res.ok) {
-              alert(data.message || ("계좌 삭제 실패 (" + res.status + ")"));
-              return;
-            }
-
-            bootstrap.Modal.getInstance(deleteModalEl).hide();
-            window.location.href = "/isa";
-
-          } finally {
-            deleteBtn.disabled = false;
-          }
-        });
-      }
-
-    });
-  </script>
+      });
+    </script>
 
 </main>
 

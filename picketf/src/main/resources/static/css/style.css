@@ -564,7 +564,7 @@ body {
 }
 
 .progress-track{
-  position: relative;            /* ✅ 레이어 겹치기 핵심 */
+  position: relative;            /* 레이어 겹치기 */
   width:100%;
   height:12px;
   background:#e9ecef;
@@ -572,7 +572,7 @@ body {
   overflow:hidden;
 }
 
-/* ✅ 올해 가능한 범위(중간 회색 밴드) */
+/* 올해 가능한 범위(중간 회색 밴드) */
 .progress-band{
   position:absolute;
   top:0; bottom:0;
@@ -581,7 +581,7 @@ body {
   opacity:.9;
 }
 
-/* ✅ 총 누적(검정 채움) */
+/* 총 누적(검정 채움) */
 .progress-fill{
   position:absolute;
   top:0; bottom:0;

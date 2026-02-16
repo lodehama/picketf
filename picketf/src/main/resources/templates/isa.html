@@ -52,18 +52,18 @@
                   <td th:text="${isa.isaType}">NORMAL</td>
                 </tr>
                 <tr>
-                  <th>현재 납입 가능한 금액</th>
+                  <th>올해 남은 납입 한도</th>
                   <td>
                     <span id="currentRemainText" th:if="${currentRemain > 0}"
                       th:text="${#numbers.formatInteger(currentRemain, 0, 'COMMA')} + '원'"></span>
 
                     <span id="currentRemainZeroText" th:if="${currentRemain == 0}" class="text-muted">
-                      현재 납입 가능 금액이 없습니다
+                      올해 납입 한도를 모두 사용했습니다
                     </span>
                   </td>
                 </tr>
                 <tr>
-                  <th>총 납입 가능한 금액</th>
+                  <th>총 남은 납입 한도</th>
                   <td>
                     <span id="lifetimeRemainText"
                       th:text="${#numbers.formatInteger(lifetimeRemain, 0, 'COMMA')} + '원'">0원</span>

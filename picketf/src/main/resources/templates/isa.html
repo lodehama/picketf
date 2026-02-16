@@ -227,6 +227,7 @@
         const limitHelp = document.getElementById("depositLimitHelp");
 
         const STEP = 1_000_000; // 100만원 단위
+        const MIN = 1; // 최소 1원부터 추가 가능 (0원 입력 방지)
 
         // “추가 가능한 최대 금액”을 화면 값 기반으로 계산
         // 원칙: 이번년도 남은 한도(currentRemain)와 총 남은 한도(lifetimeRemain) 중 더 작은 값이 max
@@ -254,20 +255,39 @@
           const max = getMaxAddAmount();
 
           if (depositInput) {
-            depositInput.placeholder = max > 0 ? `0 ~ ${formatComma(max)}` : "추가 가능한 한도가 없습니다";
-            const val = toNumber(depositInput.value);
-            if (val > max) depositInput.value = formatComma(max);
+            depositInput.placeholder = max >= MIN ? `1 ~ ${formatComma(max)}` : "추가 가능한 한도가 없습니다";
+
+            const rawDigits = onlyDigits(depositInput.value);
+            let val = toNumber(depositInput.value);
+
+            // 값이 있는데(입력 시도) 0이면 1로 끌어올림
+            if (rawDigits !== "" && val < MIN) val = MIN;
+
+            // 최대 초과 클램프
+            if (val > max) val = max;
+
+            // max가 0이면 입력값도 비우기
+            if (max < MIN) {
+              depositInput.value = "";
+            } else {
+              depositInput.value = (rawDigits === "" ? "" : formatComma(val));
+            }
           }
 
           if (limitHelp) {
-            limitHelp.textContent = max > 0 ? `최대 ${formatComma(max)}원까지 추가 가능` : `추가 가능한 한도가 없습니다`;
+            limitHelp.textContent =
+              max >= MIN
+                ? `최소 1원 ~ 최대 ${formatComma(max)}원까지 추가 가능`
+                : `추가 가능한 한도가 없습니다`;
           }
 
           // 버튼 활성/비활성
-          if (plusBtn) plusBtn.disabled = (max <= 0);
-          if (minusBtn) minusBtn.disabled = (max <= 0);
-          if (depositBtn) depositBtn.disabled = (max <= 0);
+          const disabled = (max < MIN);
+          if (plusBtn) plusBtn.disabled = disabled;
+          if (minusBtn) minusBtn.disabled = disabled;
+          if (depositBtn) depositBtn.disabled = disabled;
         };
+
 
         if (depositModalEl && depositInput && depositBtn) {
 

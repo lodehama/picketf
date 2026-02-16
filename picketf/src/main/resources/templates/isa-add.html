@@ -51,8 +51,8 @@
                 <input type="text" name="initialDeposit" id="initialDeposit" class="form-control"
                   style="max-width: 148px;" placeholder="0 ~ 20,000,000" inputmode="numeric" required />
 
-                <button type="button" id="plusBtn" class="btn btn-outline-secondary btn-sm">+ 100만원</button>
-                <button type="button" id="minusBtn" class="btn btn-outline-secondary btn-sm">- 100만원</button>
+                <button type="button" id="plusBtn" class="btn btn-outline-secondary btn-sm ms-2">+ 100만원</button>
+                <button type="button" id="minusBtn" class="btn btn-outline-secondary btn-sm ms-1">- 100만원</button>
               </div>
 
               <small id="limitHelp" class="text-muted"></small>
@@ -75,7 +75,7 @@
       const plusBtn = document.getElementById("plusBtn");
       const minusBtn = document.getElementById("minusBtn");
       const form = amountInput.closest("form");
-      
+
       // 기본값: 비어있을 때만 현재 연도 세팅
       if (!yearInput.value) {
         yearInput.value = new Date().getFullYear();

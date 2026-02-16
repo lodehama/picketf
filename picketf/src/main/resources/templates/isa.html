@@ -20,16 +20,16 @@
       + 계좌 만들기
     </a>
 
-    <!-- ISA 없으면 모달 띄워도 의미 없으니 버튼 숨김(UX) -->
-    <button th:if="${isa != null}" type="button" class="btn btn-sm btn-dark mb-3" data-bs-toggle="modal"
-      data-bs-target="#depositModal">
-      + 예수금 추가
-    </button>
-
     <!-- ISA 있을 때만 삭제 버튼 노출 -->
-    <button th:if="${isa != null}" type="button" class="btn btn-sm btn-danger mb-3 ms-2" data-bs-toggle="modal"
+    <button th:if="${isa != null}" type="button" class="btn btn-sm btn-danger mb-3" data-bs-toggle="modal"
       data-bs-target="#deleteIsaModal">
       계좌 삭제
+    </button>
+
+    <!-- ISA 없으면 모달 띄워도 의미 없으니 버튼 숨김(UX) -->
+    <button th:if="${isa != null}" type="button" class="btn btn-sm btn-dark mb-3 ms-2" data-bs-toggle="modal"
+      data-bs-target="#depositModal">
+      + 예수금 추가
     </button>
 
     <div th:if="${isa == null}" class="alert alert-secondary" style="max-width: 452px;">

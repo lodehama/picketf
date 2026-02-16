@@ -7,98 +7,172 @@
 </head>
 
 <main layout:fragment="content">
-  <div class="container py-3">
-    <h2>ISA 계좌 개설하기</h2>
+  <div class="container py-5">
+    <div class="d-flex justify-content-center">
 
-    <form method="post" th:action="@{/isa/add}">
-      <!-- Spring Security CSRF 대응 -->
-      <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+      <div class="card shadow-sm w-100" style="max-width: 680px;">
+        <div class="card-body p-4">
 
+          <h2 class="mb-4 text-center">ISA 계좌 개설하기</h2>
 
-      <div class="mb-3">
-        <label class="form-label">개설 연도</label>
-        <input type="text" name="opened_year" class="form-control" placeholder="2026" required inputmode="numeric"
-          maxlength="4" pattern="[0-9]{4}" />
-      </div>
+          <form method="post" th:action="@{/isa/add}">
+            <!-- Spring Security CSRF 대응 -->
+            <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
-      <div class="mb-3">
-        <label class="form-label d-block">계좌 유형</label>
+            <div class="mb-3">
+              <label class="form-label">개설 연도</label>
+              <input type="text" name="opened_year" class="form-control" style="max-width: 68px;"
+                th:value="${#dates.format(#dates.createNow(), 'yyyy')}" required inputmode="numeric" maxlength="4"
+                pattern="[0-9]{4}" />
+            </div>
 
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="accountType" id="typeNormal" value="NORMAL" checked />
-          <label class="form-check-label" for="typeNormal">일반형</label>
+            <div class="mb-3">
+              <label class="form-label d-block">계좌 유형</label>
+
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="accountType" id="typeNormal" value="NORMAL"
+                  checked />
+                <label class="form-check-label" for="typeNormal">일반형</label>
+              </div>
+
+              <div class="form-check mt-1">
+                <input class="form-check-input" type="radio" name="accountType" id="typeLowIncome" value="LOW_INCOME" />
+                <label class="form-check-label" for="typeLowIncome">
+                  서민형 (직년연도 총급여 5000만원 이하 또는 종합소득금액 3800만원 이하인 자)
+                </label>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">초기 납입금액</label>
+
+              <div class="d-flex align-items-center gap-2">
+
+                <input type="text" name="initialDeposit" id="initialDeposit" class="form-control"
+                  style="max-width: 148px;" placeholder="0 ~ 20,000,000" inputmode="numeric" required />
+
+                <button type="button" id="plusBtn" class="btn btn-outline-secondary btn-sm">+ 100만원</button>
+                <button type="button" id="minusBtn" class="btn btn-outline-secondary btn-sm">- 100만원</button>
+              </div>
+
+              <small id="limitHelp" class="text-muted"></small>
+            </div>
+
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-primary">추가</button>
+              <a th:href="@{/isa}" class="btn btn-outline-secondary">취소</a>
+            </div>
+          </form>
         </div>
-
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="accountType" id="typeLowIncome" value="LOW_INCOME" />
-          <label class="form-check-label" for="typeLowIncome">
-            서민형 (직년연도 총급여 5000만원 이하 또는 종합소득금액 3800만원 이하인 자)
-          </label>
-        </div>
       </div>
-
-      <div class="mb-3">
-        <label class="form-label">초기 납입금액</label>
-        <input type="number" name="initialDeposit" class="form-control" placeholder="0 ~ 20,000,000" required min="0" />
-        <small id="limitHelp" class="text-muted"></small>
-      </div>
-
-      <button type="submit" class="btn btn-primary">추가</button>
-
-    </form>
-  </div>
+    </div>
 </main>
 <th:block layout:fragment="script">
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const yearInput = document.querySelector("input[name='opened_year']");
-      const amountInput = document.querySelector("input[name='initialDeposit']");
+      const amountInput = document.getElementById("initialDeposit");
+      const plusBtn = document.getElementById("plusBtn");
+      const minusBtn = document.getElementById("minusBtn");
+      const form = amountInput.closest("form");
+      
+      // 기본값: 비어있을 때만 현재 연도 세팅
+      if (!yearInput.value) {
+        yearInput.value = new Date().getFullYear();
+      }
 
       // 기준값
       const CURRENT_YEAR = new Date().getFullYear();
       const YEARLY_LIMIT = 20_000_000;   // 연 2천만
       const MAX_TOTAL = 100_000_000;     // 최대 1억
+      const STEP = 1_000_000;            // 버튼 증감 단위: 100만
+
+      function onlyDigits(str) {
+        return (str ?? "").toString().replace(/[^\d]/g, "");
+      }
+
+      function toNumber(str) {
+        const raw = onlyDigits(str);
+        return raw ? Number(raw) : 0;
+      }
+
+      function formatComma(num) {
+        if (!Number.isFinite(num)) return "";
+        return num.toLocaleString("ko-KR");
+      }
 
       // 개설 연도 기준 최대 납입 가능 금액 계산
       function calcMaxAmount(openedYear) {
-        if (!openedYear || openedYear > CURRENT_YEAR) {
-          return YEARLY_LIMIT;
-        }
-
+        if (!openedYear || openedYear > CURRENT_YEAR) return YEARLY_LIMIT;
         const years = CURRENT_YEAR - openedYear + 1;
         return Math.min(years * YEARLY_LIMIT, MAX_TOTAL);
       }
 
-      // 입력값 검증 + 제한 적용
-      function applyLimit() {
-        const openedYear = parseInt(yearInput.value, 10);
+      function getCurrentMax() {
+        const y = parseInt(onlyDigits(yearInput.value), 10);
+        if (Number.isNaN(y)) return YEARLY_LIMIT;
+        return calcMaxAmount(y);
+      }
 
-        // 연도 미입력 / 숫자 아님 → 기본 2천
-        if (isNaN(openedYear)) {
-          amountInput.max = YEARLY_LIMIT;
-          amountInput.placeholder = "0 ~ 20,000,000";
-          return;
-        }
+      function syncPlaceholderAndClamp() {
+        const maxAmount = getCurrentMax();
+        amountInput.placeholder = `0 ~ ${maxAmount.toLocaleString("ko-KR")}`;
 
-        const maxAmount = calcMaxAmount(openedYear);
-
-        // max / placeholder 동기화
-        amountInput.max = maxAmount;
-        amountInput.placeholder = `0 ~ ${maxAmount.toLocaleString()}`;
-
-        // 초과 입력 시 자동 보정
-        if (amountInput.value && Number(amountInput.value) > maxAmount) {
-          amountInput.value = maxAmount;
+        // 현재 값이 max 초과면 보정
+        const val = toNumber(amountInput.value);
+        if (val > maxAmount) {
+          amountInput.value = formatComma(maxAmount);
         }
       }
 
-      // 이벤트 바인딩
-      yearInput.addEventListener("input", applyLimit);
+      // 금액 입력: 숫자만 + 콤마 + max 보정
+      amountInput.addEventListener("input", () => {
+        const maxAmount = getCurrentMax();
 
-      // 최초 1회 실행 (뒤로가기 / 자동완성 대응)
-      applyLimit();
+        let val = toNumber(amountInput.value);
+
+        // max 초과 방지
+        if (val > maxAmount) val = maxAmount;
+
+        // 입력값 표시(콤마)
+        amountInput.value = val === 0 && onlyDigits(amountInput.value) === "" ? "" : formatComma(val);
+      });
+
+      // +100만
+      plusBtn.addEventListener("click", () => {
+        const maxAmount = getCurrentMax();
+        let val = toNumber(amountInput.value);
+        val += STEP;
+        if (val > maxAmount) val = maxAmount;
+        amountInput.value = formatComma(val);
+      });
+
+      // -100만
+      minusBtn.addEventListener("click", () => {
+        let val = toNumber(amountInput.value);
+        val -= STEP;
+        if (val < 0) val = 0;
+        amountInput.value = formatComma(val);
+      });
+
+      // 연도 입력: 숫자만(4자리) + 최대값 갱신
+      yearInput.addEventListener("input", () => {
+        const digits = onlyDigits(yearInput.value).slice(0, 4);
+        if (yearInput.value !== digits) yearInput.value = digits;
+        syncPlaceholderAndClamp();
+      });
+
+      // 제출 시: 콤마 제거해서 서버로 숫자만 전송
+      form.addEventListener("submit", () => {
+        yearInput.value = onlyDigits(yearInput.value).slice(0, 4);
+        amountInput.value = String(toNumber(amountInput.value));
+      });
+
+      // 최초 1회 실행
+      syncPlaceholderAndClamp();
     });
   </script>
 </th:block>
+
 
 </html>

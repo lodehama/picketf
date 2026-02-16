@@ -64,7 +64,7 @@
 .app-nav__logout {
   margin: 0;
   display: inline-flex;
-  font-weight: 500;  /* nav 링크들과 동일하게 맞추기 */
+  font-weight: 500; /* nav 링크들과 동일하게 맞추기 */
 }
 
 /* button 기본 스타일 제거 + a처럼 보이게 */
@@ -458,10 +458,10 @@ label[for="recSelectAll"] {
 }
 
 /* 기준시점금액 입력 박스 */
-.cpi-input{
+.cpi-input {
   height: 40px;
   padding: 0 28px 0 10px; /* 오른쪽에 '원' 자리 확보 */
-  width: 100%;            /* wrapper가 폭 담당 */
+  width: 100%; /* wrapper가 폭 담당 */
   border: 1px solid #d1d5db;
   border-radius: 6px;
   font-size: 16px;
@@ -472,7 +472,7 @@ label[for="recSelectAll"] {
 }
 
 /* 원 텍스트 */
-.cpi-unit{
+.cpi-unit {
   font-size: 16px;
   color: #111827;
   font-weight: 700;
@@ -501,10 +501,10 @@ button.cpi-run * {
 }
 
 /* 섹션 구분선 + 여백 */
-.cpi-divider{
-  grid-column: 1 / -1;     /*  grid 2열 전체 차지 */
+.cpi-divider {
+  grid-column: 1 / -1; /*  grid 2열 전체 차지 */
   border-top: 1px solid #e5e7eb;
-  margin: 24px 0 24px;      /* 위/아래 여백  */
+  margin: 24px 0 24px; /* 위/아래 여백  */
 }
 
 /* #endregion cpi.html */
@@ -527,16 +527,47 @@ body {
 /* #region fees */
 /* 라디오 숨김(btn-check) + 라벨 카드 선택 표시 */
 .btn-check:checked + label {
-  border-color: #0d6efd !important;       /* 부트스트랩 primary */
-  background-color: rgba(13,110,253,.08); /* 아주 연한 파랑 */
+  border-color: #0d6efd !important; /* 부트스트랩 primary */
+  background-color: rgba(13, 110, 253, 0.08); /* 아주 연한 파랑 */
 }
 
 .btn-check + label {
-  transition: transform .05s ease, border-color .15s ease, background-color .15s ease;
+  transition:
+    transform 0.05s ease,
+    border-color 0.15s ease,
+    background-color 0.15s ease;
 }
 
 .btn-check:active + label {
   transform: scale(0.99);
 }
 
-/* #endregion fees */
+/* #endregion isa */
+
+/* #region isa */
+/* 프로그래스 바 */
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  color: #6c757d; /* 부트스트랩 text-muted 톤 */
+  margin-bottom: 6px;
+}
+
+.progress-track {
+  width: 100%;
+  height: 12px;
+  background: #e9ecef;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #212529;
+  border-radius: 999px;
+  transition: width 0.35s ease;
+}
+
+/* #endregion isa */

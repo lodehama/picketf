@@ -138,6 +138,25 @@ public class IsaService {
     return Math.max(0, cap - isa.getIsaTotalAmount());
   }
 
+  // 프로그래스 바 진행률 - 총 납입 진행률 (1억 기준) 0 ~ 100
+  public int calcProgressPct(IsaDTO isa) {
+    if (isa == null)
+      return 0;
+
+    long total = isa.getIsaTotalAmount();
+    if (total <= 0)
+      return 0;
+
+    long pct = (total * 100) / TOTAL_LIMIT;
+
+    if (pct < 0)
+      pct = 0;
+    if (pct > 100)
+      pct = 100;
+
+    return (int) pct;
+  }
+
   // 올해 기준 납입 가능 금액 계산
   public long calcYearRemainByRule(IsaDTO isa) {
     if (isa == null)

@@ -82,6 +82,18 @@
               <td>9.9% 분리과세</td>
             </tr>
 
+            <!-- 프로그래스 바 -->
+            <div class="progress-wrapper">
+              <div class="progress-header">
+                <div>총 납입 진행률</div>
+                <div th:text="${progressPct} + '%'">0%</div>
+              </div>
+
+              <div class="progress-track" role="progressbar"
+                th:attr="aria-valuenow=${progressPct}, aria-valuemin=0, aria-valuemax=100">
+                <div class="progress-fill" th:style="'width:' + ${progressPct} + '%'">
+                </div>
+              </div>
           </tbody>
         </table>
       </div>

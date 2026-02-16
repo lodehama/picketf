@@ -38,20 +38,41 @@ public class IsaController {
 
   @GetMapping
   public String isa(Model model) {
-    Integer usNum = getLoginUsNumOrNull();
-    if (usNum == null)
-      return "redirect:/login";
 
+    // 로그인 유저 번호 추출 => 인증 안 된 상태면 ISA 페이지 접근 차단
+    Integer usNum = getLoginUsNumOrNull();
+    if (usNum == null) {
+      return "redirect:/login";
+    }
+
+    // 현재 로그인 유저의 ISA 계좌 조회
     IsaDTO isa = isaService.getIsaByUser(usNum);
+
+    // 화면에서 ISA 정보 출력하기 위해 모델에 담기
     model.addAttribute("isa", isa);
 
-    if (isa != null) {
-      long lifetimeRemain = isaService.calcTotalRemain(isa);
-      model.addAttribute("lifetimeRemain", lifetimeRemain);
+    // 기본값 세팅 (ISA가 없어도 화면이 깨지지 않도록) null 방지용 안전 장치
+    long lifetimeRemain = 0L; // 평생 납입 한도 남은 금액
+    long currentRemain = 0L; // 현재 규칙 기준 누적 한도 남은 금액
+    int progressPct = 0; // 프로그래스 바 진행률 (0~100)
 
-      long currentRemain = isaService.calcTotalRemainByRule(isa);
-      model.addAttribute("currentRemain", currentRemain);
+    // ISA가 존재할 경우에만 실제 계산 수행
+    if (isa != null) {
+
+      // 평생 최대 한도(1억) 기준 남은 금액 계산
+      lifetimeRemain = isaService.calcTotalRemain(isa);
+
+      // 개설년도 기준 누적 가능 한도(cap) 기준 남은 금액 계산
+      currentRemain = isaService.calcTotalRemainByRule(isa);
+
+      // 총 납입 진행률 계산 (1억 기준 0~100%)
+      progressPct = isaService.calcProgressPct(isa);
     }
+
+    model.addAttribute("lifetimeRemain", lifetimeRemain);
+    model.addAttribute("currentRemain", currentRemain);
+    model.addAttribute("progressPct", progressPct);
+
     return "isa";
   }
 

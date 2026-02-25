@@ -107,15 +107,13 @@ main {
 .app-sidebar {
   position: fixed;
   left: 10px;
-  top: 0px;
+  top: 63px;
   bottom: 0;
 
   width: 244px;
   height: calc(100vh - 63px);
 
   border-right: 1px solid #e5e7eb;
-
-  padding-top: 63px;
 
   /* 위/아래로 쌓기 + 높이 채우기 */
   display: flex;

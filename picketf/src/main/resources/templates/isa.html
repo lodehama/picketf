@@ -99,6 +99,10 @@
                 <!-- 총 누적 진행(검정 채움) -->
                 <div class="progress-fill" id="totalFill" th:style="'width:' + ${progressPct} + '%'"></div>
               </div>
+              <!-- 납입 금액 표기 -->
+              <div class="text-muted small mt-2 text-end" id="totalAmountText">
+                0원 / 100,000,000원
+              </div>
             </div>
           </div>
         </div>
@@ -317,6 +321,14 @@
 
           if (fillEl) fillEl.style.width = totalPct + "%";
           if (pctTextEl) pctTextEl.textContent = totalPct + "%";
+
+          // 납입 금액 텍스트 업데이트
+          const amountTextEl = document.getElementById("totalAmountText");
+          if (amountTextEl) {
+            amountTextEl.textContent =
+              formatComma(totalDeposited) + "원 / " +
+              formatComma(TOTAL_LIMIT) + "원";
+          }
         }
 
         // =========================

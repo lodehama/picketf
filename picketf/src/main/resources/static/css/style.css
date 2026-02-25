@@ -336,12 +336,12 @@
 
 /* 추천 구독금액 */
 .rec-price {
-  width: 90px;
+  width: 96px;
 }
 
 /* 추천 구독 결제일 */
 .rec-bill {
-  width: 48px;
+  width: 60px;
 }
 
 /* 추천 구독 모달 */

@@ -106,9 +106,9 @@ main {
 /* 좌측 메뉴 - 사이드바는 헤더 아래부터 시작 */
 .app-sidebar {
   position: fixed;
-  left: 10px;
   top: 63px;
   bottom: 0;
+  left: 0px;
 
   width: 244px;
   height: calc(100vh - 63px);
@@ -122,6 +122,7 @@ main {
 
 /* 위쪽 메뉴는 스크롤 가능 + 남는 공간 채움 */
 .sidebar-nav {
+  padding-left: 10px;
   flex: 1;
   overflow-y: auto;
   padding-bottom: 12px; /* footer와 살짝 거리 */
@@ -130,7 +131,7 @@ main {
 /* 맨 아래 고정 영역 + 위에 경계선 */
 .sidebar-footer {
   border-top: 1px solid #e5e7eb;
-  padding: 10px 0 12px; /* 위아래 여백 */
+  padding: 10px 0 12px 10px; /* 위아래 여백 */
   background: #fff;
 }
 

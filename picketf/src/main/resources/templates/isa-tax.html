@@ -7,17 +7,16 @@
 </head>
 
 <main layout:fragment="content">
-  <div class="container py-5 text-center">
+  <div class="container pt-5 text-center">
     <h2>ISA 절세 계산기</h2>
   </div>
 
   <body class="bg-white">
-    <main class="container py-2" style="max-width: 920px;">
+    <main class="container pt-5" style="max-width: 920px;">
       <div class="d-flex align-items-end justify-content-between mb-3">
         <div>
           <div class="text-muted">ISA 계좌 vs 직투를 (해외주식 양도세) 비교합니다.</div>
         </div>
-
       </div>
 
       <div class="row g-3">
@@ -97,12 +96,12 @@
         <div class="col-lg-5">
           <div class="card shadow-sm result-card">
             <div class="card-body p-4">
-              <div class="d-flex justify-content-between align-items-end mb-2">
+              <div class="d-flex justify-content-between align-items-end mb-3">
                 <div class="fw-semibold">결과</div>
                 <div class="text-muted small" id="profitText">수익: -</div>
               </div>
 
-              <div class="border rounded-3 p-3 mb-2">
+              <div class="border rounded-3 p-3 mb-3">
                 <div class="d-flex justify-content-between">
                   <div class="text-muted">ISA 사용 시 세금</div>
                   <div class="value fw-semibold" id="isaTaxText">-</div>
@@ -110,7 +109,7 @@
                 <div class="text-muted small mt-1" id="isaTaxNote">-</div>
               </div>
 
-              <div class="border rounded-3 p-3 mb-2">
+              <div class="border rounded-3 p-3 mb-3">
                 <div class="d-flex justify-content-between">
                   <div class="text-muted">직투 시 세금</div>
                   <div class="value fw-semibold" id="directTaxText">-</div>

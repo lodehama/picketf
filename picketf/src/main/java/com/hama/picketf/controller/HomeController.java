@@ -28,7 +28,7 @@ public class HomeController {
 
   @GetMapping("/")
   public String home() {
-    return "redirect:/isa";
+    return "index";
   }
 
   @GetMapping("/snp")

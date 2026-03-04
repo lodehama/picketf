@@ -11,6 +11,265 @@
     <h1>ISA 절세 계산기</h1>
     <p>ISA 계좌의 절세 계산과 관련된 정보를 확인할 수 있습니다.</p>
   </div>
+
+  <style>
+    /* 숫자 입력 우측정렬 */
+    input[type="text"].money,
+    input[type="number"].money {
+      text-align: right;
+    }
+
+    .result-card .value {
+      font-variant-numeric: tabular-nums;
+    }
+
+    .hint {
+      font-size: 0.9rem;
+    }
+  </style>
+  </head>
+
+  <body class="bg-white">
+    <main class="container py-4" style="max-width: 920px;">
+      <div class="d-flex align-items-end justify-content-between mb-3">
+        <div>
+          <div class="text-muted hint">입력값으로 “ISA 사용 vs 직투(해외주식 양도세)”를 비교합니다.</div>
+        </div>
+        <button class="btn btn-outline-secondary btn-sm" type="button" id="resetBtn">초기화</button>
+      </div>
+
+      <div class="row g-3">
+        <!-- FORM -->
+        <div class="col-lg-7">
+          <div class="card shadow-sm">
+            <div class="card-body p-4">
+              <form id="isaTaxForm" novalidate>
+                <!-- ISA 유형 -->
+                <div class="mb-3">
+                  <label class="form-label fw-semibold">ISA 유형</label>
+                  <div class="d-flex gap-2 flex-wrap">
+                    <input class="btn-check" type="radio" name="isaType" id="typeNormal" value="NORMAL" checked />
+                    <label class="btn btn-outline-dark" for="typeNormal">
+                      일반형 <span class="text-muted">(비과세 200만원)</span>
+                    </label>
+
+                    <input class="btn-check" type="radio" name="isaType" id="typeLow" value="LOW_INCOME" />
+                    <label class="btn btn-outline-dark" for="typeLow">
+                      서민형 <span class="text-muted">(비과세 400만원)</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- 투자원금 / 평가금액 -->
+                <div class="row g-2">
+                  <div class="col-12 col-md-6">
+                    <label for="principal" class="form-label fw-semibold">총 투자원금</label>
+                    <div class="input-group">
+                      <input type="text" class="form-control money" id="principal" inputmode="numeric"
+                        placeholder="예: 10,000,000" />
+                      <span class="input-group-text">원</span>
+                    </div>
+                    <div class="form-text">원금은 총 납입(투입) 금액 기준.</div>
+                  </div>
+
+                  <div class="col-12 col-md-6">
+                    <label for="currentValue" class="form-label fw-semibold">현재 평가금액</label>
+                    <div class="input-group">
+                      <input type="text" class="form-control money" id="currentValue" inputmode="numeric"
+                        placeholder="예: 12,500,000" />
+                      <span class="input-group-text">원</span>
+                    </div>
+                    <div class="form-text">현재 자산의 평가 금액.</div>
+                  </div>
+                </div>
+
+                <!-- 중도해지 -->
+                <div class="mt-3">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="earlyClose" />
+                    <label class="form-check-label fw-semibold" for="earlyClose">
+                      중도해지로 계산하기 <span class="text-muted">(비과세 혜택 미적용 + 15.4% 과세)</span>
+                    </label>
+                  </div>
+                  <div class="form-text">
+                    체크 시 ISA는 “수익 전체에 15.4%”로 계산됩니다(간단 비교용).
+                  </div>
+                </div>
+
+                <hr class="my-4" />
+
+                <div class="d-flex gap-2">
+                  <button class="btn btn-dark" type="button" id="calcBtn">계산</button>
+                  <button class="btn btn-outline-dark" type="button" id="exampleBtn">예시값</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- OUTPUT -->
+        <div class="col-lg-5">
+          <div class="card shadow-sm result-card">
+            <div class="card-body p-4">
+              <div class="d-flex justify-content-between align-items-end mb-2">
+                <div class="fw-semibold">결과</div>
+                <div class="text-muted small" id="profitText">수익: -</div>
+              </div>
+
+              <div class="border rounded-3 p-3 mb-2">
+                <div class="d-flex justify-content-between">
+                  <div class="text-muted">ISA 사용 시 세금</div>
+                  <div class="value fw-semibold" id="isaTaxText">-</div>
+                </div>
+                <div class="text-muted small mt-1" id="isaTaxNote">-</div>
+              </div>
+
+              <div class="border rounded-3 p-3 mb-2">
+                <div class="d-flex justify-content-between">
+                  <div class="text-muted">직투 시 세금</div>
+                  <div class="value fw-semibold" id="directTaxText">-</div>
+                </div>
+                <div class="text-muted small mt-1" id="directTaxNote">-</div>
+              </div>
+
+              <div class="border rounded-3 p-3">
+                <div class="d-flex justify-content-between">
+                  <div class="text-muted">절세액 (직투 - ISA)</div>
+                  <div class="value fw-semibold" id="saveText">-</div>
+                </div>
+                <div class="text-muted small mt-1" id="saveNote">-</div>
+              </div>
+
+              <div class="alert alert-secondary mt-3 mb-0 small">
+                <div class="fw-semibold mb-1">계산 규칙(현재 설정)</div>
+                <ul class="mb-0 ps-3">
+                  <li>수익 = 평가금액 - 원금</li>
+                  <li>ISA(정상) : (수익 - 비과세한도) × 9.9% (최소 0)</li>
+                  <li>ISA(중도해지) : 수익 × 15.4% (최소 0)</li>
+                  <li>직투 : (수익 - 250만원) × 22% (최소 0)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      // ===== 숫자 유틸 =====
+      const toNumber = (v) => {
+        if (v == null) return 0;
+        const n = String(v).replace(/[^\d.-]/g, "");
+        const parsed = Number(n);
+        return Number.isFinite(parsed) ? parsed : 0;
+      };
+
+      const formatWon = (n) => {
+        const x = Math.round(Number(n) || 0);
+        return x.toLocaleString("ko-KR") + "원";
+      };
+
+      const clampMin0 = (n) => Math.max(0, Number(n) || 0);
+
+      // 입력창에 천단위 콤마
+      const attachCommaInput = (el) => {
+        el.addEventListener("input", () => {
+          const raw = el.value.replace(/[^\d]/g, "");
+          el.value = raw ? Number(raw).toLocaleString("ko-KR") : "";
+        });
+      };
+
+      // ===== 엘리먼트 =====
+      const principalEl = document.getElementById("principal");
+      const currentValueEl = document.getElementById("currentValue");
+      const earlyCloseEl = document.getElementById("earlyClose");
+
+      const profitText = document.getElementById("profitText");
+      const isaTaxText = document.getElementById("isaTaxText");
+      const directTaxText = document.getElementById("directTaxText");
+      const saveText = document.getElementById("saveText");
+
+      const isaTaxNote = document.getElementById("isaTaxNote");
+      const directTaxNote = document.getElementById("directTaxNote");
+      const saveNote = document.getElementById("saveNote");
+
+      attachCommaInput(principalEl);
+      attachCommaInput(currentValueEl);
+
+      // ===== 계산 로직 =====
+      const getIsaExempt = () => {
+        const type = document.querySelector("input[name='isaType']:checked")?.value || "NORMAL";
+        return type === "LOW_INCOME" ? 4_000_000 : 2_000_000;
+      };
+
+      const calc = () => {
+        const principal = toNumber(principalEl.value);
+        const currentValue = toNumber(currentValueEl.value);
+        const profit = currentValue - principal;
+
+        const profitPos = clampMin0(profit);
+
+        // ISA
+        const isaExempt = getIsaExempt();
+        let isaTax = 0;
+        let isaNote = "";
+
+        if (earlyCloseEl.checked) {
+          isaTax = profitPos * 0.154;
+          isaNote = `중도해지: 수익 ${formatWon(profitPos)} × 15.4%`;
+        } else {
+          const taxable = clampMin0(profitPos - isaExempt);
+          isaTax = taxable * 0.099;
+          isaNote = `정상: (수익 ${formatWon(profitPos)} - 비과세 ${formatWon(isaExempt)}) × 9.9%`;
+        }
+
+        // 직투(해외주식 양도세 가정)
+        const directExempt = 2_500_000;
+        const directTaxable = clampMin0(profitPos - directExempt);
+        const directTax = directTaxable * 0.22;
+        const directNote = `(수익 ${formatWon(profitPos)} - 비과세 ${formatWon(directExempt)}) × 22%`;
+
+        const saved = directTax - isaTax;
+
+        // 출력
+        profitText.textContent = `수익: ${formatWon(profit)}`;
+        isaTaxText.textContent = formatWon(isaTax);
+        directTaxText.textContent = formatWon(directTax);
+        saveText.textContent = formatWon(saved);
+
+        isaTaxNote.textContent = isaNote;
+        directTaxNote.textContent = directNote;
+        saveNote.textContent = saved >= 0
+          ? "ISA가 더 유리한 가정입니다."
+          : "직투가 더 유리한 가정입니다.";
+      };
+
+      // ===== 버튼 =====
+      document.getElementById("calcBtn").addEventListener("click", calc);
+
+      document.getElementById("exampleBtn").addEventListener("click", () => {
+        principalEl.value = (10_000_000).toLocaleString("ko-KR");
+        currentValueEl.value = (13_500_000).toLocaleString("ko-KR");
+        earlyCloseEl.checked = false;
+        document.getElementById("typeNormal").checked = true;
+        calc();
+      });
+
+      document.getElementById("resetBtn").addEventListener("click", () => {
+        principalEl.value = "";
+        currentValueEl.value = "";
+        earlyCloseEl.checked = false;
+        document.getElementById("typeNormal").checked = true;
+
+        profitText.textContent = "수익: -";
+        isaTaxText.textContent = "-";
+        directTaxText.textContent = "-";
+        saveText.textContent = "-";
+        isaTaxNote.textContent = "-";
+        directTaxNote.textContent = "-";
+        saveNote.textContent = "-";
+      });
+    </script>
 </main>
 
 </html>

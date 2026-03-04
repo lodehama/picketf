@@ -66,7 +66,7 @@
                     <label for="principal" class="form-label fw-semibold">총 투자원금</label>
                     <div class="input-group">
                       <input type="text" class="form-control money" id="principal" inputmode="numeric"
-                        placeholder="예: 10,000,000" />
+                        placeholder="예: 20,000,000" />
                       <span class="input-group-text">원</span>
                     </div>
                     <div class="form-text">원금은 총 납입(투입) 금액 기준.</div>
@@ -76,7 +76,7 @@
                     <label for="currentValue" class="form-label fw-semibold">현재 평가금액</label>
                     <div class="input-group">
                       <input type="text" class="form-control money" id="currentValue" inputmode="numeric"
-                        placeholder="예: 12,500,000" />
+                        placeholder="예: 30,000,000" />
                       <span class="input-group-text">원</span>
                     </div>
                     <div class="form-text">현재 자산의 평가 금액.</div>
@@ -141,10 +141,10 @@
               </div>
 
               <div class="alert alert-secondary mt-3 mb-0 small">
-                <div class="fw-semibold mb-1">계산 규칙 (현재 설정)</div>
+                <div class="fw-semibold mb-1">계산 규칙</div>
                 <ul class="mb-0 ps-3">
                   <li>수익 = 평가금액 - 원금</li>
-                  <li>ISA (정상) : (수익 - 비과세한도) × 9.9%</li>
+                  <li>ISA (3년 이상 유지) : <br>(수익 - 비과세 한도) × 9.9%</li>
                   <li>ISA (중도해지) : 수익 × 15.4%</li>
                   <li>직투 : (수익 - 250만원) × 22%</li>
                 </ul>
@@ -220,7 +220,7 @@
         } else {
           const taxable = clampMin0(profitPos - isaExempt);
           isaTax = taxable * 0.099;
-          isaNote = `정상: (수익 ${formatWon(profitPos)} - 비과세 ${formatWon(isaExempt)}) × 9.9%`;
+          isaNote = `(수익 ${formatWon(profitPos)} - 비과세 ${formatWon(isaExempt)}) × 9.9%`;
         }
 
         // 직투(해외주식 양도세 가정)
@@ -240,16 +240,16 @@
         isaTaxNote.textContent = isaNote;
         directTaxNote.textContent = directNote;
         saveNote.textContent = saved >= 0
-          ? "ISA가 더 유리한 가정입니다."
-          : "직투가 더 유리한 가정입니다.";
+          ? "ISA가 더 유리합니다."
+          : "직투가 더 유리합니다.";
       };
 
       // ===== 버튼 =====
       document.getElementById("calcBtn").addEventListener("click", calc);
 
       document.getElementById("exampleBtn").addEventListener("click", () => {
-        principalEl.value = (10_000_000).toLocaleString("ko-KR");
-        currentValueEl.value = (13_500_000).toLocaleString("ko-KR");
+        principalEl.value = (20_000_000).toLocaleString("ko-KR");
+        currentValueEl.value = (30_000_000).toLocaleString("ko-KR");
         earlyCloseEl.checked = false;
         document.getElementById("typeNormal").checked = true;
         calc();

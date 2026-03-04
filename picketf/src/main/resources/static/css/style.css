@@ -608,3 +608,15 @@ body {
 }
 
 /* #endregion isa */
+
+/* #region isa-tax */
+input[type="text"].money,
+input[type="number"].money {
+  text-align: right;
+}
+
+.result-card .value {
+  font-variant-numeric: tabular-nums;
+}
+
+/* #endregion isa-tax */

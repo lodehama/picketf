@@ -19,6 +19,8 @@
 
   <!-- 페이지 제목을 "기능명 | Pick ETF" 형식으로 통일 -->
   <title layout:title-pattern="$CONTENT_TITLE | Pick ETF">
+  <title th:if="${#strings.isEmpty(title)}">Pick ETF</title>
+  <title th:unless="${#strings.isEmpty(title)}" th:text="${title + ' | Pick ETF'}"></title>
 
 </head>
 

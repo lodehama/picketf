@@ -19,8 +19,8 @@
 
   <!-- 페이지 제목을 "기능명 | Pick ETF" 형식으로 통일 -->
   <title layout:title-pattern="$CONTENT_TITLE | Pick ETF">
-  <title th:if="${#strings.isEmpty(title)}">Pick ETF</title>
-  <title th:unless="${#strings.isEmpty(title)}" th:text="${title + ' | Pick ETF'}"></title>
+    <title th:if="${#strings.isEmpty(title)}">Pick ETF</title>
+    <title th:unless="${#strings.isEmpty(title)}" th:text="${title + ' | Pick ETF'}"></title>
 
 </head>
 
@@ -32,46 +32,48 @@
       <!-- 위쪽: 일반 메뉴 (스크롤 영역) -->
       <nav class="sidebar-nav">
 
-        <div class="sidebar-section-title">OVERVIEW</div>
+        <div class="sidebar-section-title">로그인 기능</div>
 
         <a th:href="@{/isa}" class="sidebar-link">
           <i class="bi bi-house-door me-2"></i> ISA 계좌 관리
         </a>
 
-        <a th:href="@{/isa/tax}" class="sidebar-link">
-          <i class="bi bi-wallet2 me-2"></i> ISA 절세 계산기
-        </a>
-
-        <div class="sidebar-section-title">FINANCE</div>
-
         <a th:href="@{/subs}" class="sidebar-link">
           <i class="bi bi-bar-chart-line me-2"></i> 구독 관리
         </a>
 
-        <a th:href="@{/cpi}" class="sidebar-link">
-          <i class="bi bi-wallet2 me-2"></i> 화폐가치 계산기
+        <div class="sidebar-section-title">계산기</div>
+        
+        <a th:href="@{/isa/tax}" class="sidebar-link">
+          <i class="bi bi-wallet2 me-2"></i> ISA 절세 계산
         </a>
 
-        <div class="sidebar-section-title">ETC</div>
-        <a th:href="@{/portfolio}" class="sidebar-link">
-          <i class="bi bi-wallet2 me-2"></i> 자료 출처
+        <a th:href="@{/cpi}" class="sidebar-link">
+          <i class="bi bi-wallet2 me-2"></i> 화폐가치 계산
         </a>
-        <!-- <a th:href="@{/fees}" class="sidebar-link">
-          <i class="bi bi-wallet2 me-2"></i> 증권사 수수료 비교
-        </a> -->
+
+        <div class="sidebar-section-title">기타</div>
+
         <a th:href="@{/devlog}" class="sidebar-link">
           <i class="bi bi-wallet2 me-2"></i> Dev Log
         </a>
+        
+        <a th:href="@{/portfolio}" class="sidebar-link">
+          <i class="bi bi-wallet2 me-2"></i> 자료 출처
+        </a>
 
+        <!-- <a th:href="@{/fees}" class="sidebar-link">
+          <i class="bi bi-wallet2 me-2"></i> 증권사 수수료 비교
+        </a> -->
       </nav>
 
       <!-- 아래: 고정 영역 (Settings / Help) -->
       <div class="sidebar-footer">
         <a th:href="@{/settings}" class="sidebar-link">
-          <i class="bi bi-gear me-2"></i> Settings
+          <i class="bi bi-gear me-2"></i> 설정
         </a>
         <a th:href="@{/help}" class="sidebar-link">
-          <i class="bi bi-question-circle me-2"></i> Help
+          <i class="bi bi-question-circle me-2"></i> 도움말
         </a>
       </div>
 

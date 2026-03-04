@@ -51,10 +51,10 @@ public class HomeController {
     return "devlog";
   }
 
-  @GetMapping("/fees")
-  public String fees() {
-      return "fees";
-  }
+  // @GetMapping("/fees")
+  // public String fees() {
+  //     return "fees";
+  // }
   
 
 }

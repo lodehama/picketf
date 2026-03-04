@@ -34,7 +34,7 @@
         <div>
           <div class="text-muted hint">“ISA 계좌 vs 직투 (해외주식 양도세)”를 비교합니다.</div>
         </div>
-        
+
       </div>
 
       <div class="row g-3">
@@ -207,6 +207,21 @@
         const currentValue = toNumber(currentValueEl.value);
         const profit = currentValue - principal;
 
+        // 손실/손익0 처리: 과세 없음 안내
+        if (profit <= 0) {
+          profitText.textContent = `수익: ${formatWon(profit)}`;
+
+          isaTaxText.textContent = formatWon(0);
+          directTaxText.textContent = formatWon(0);
+          saveText.textContent = formatWon(0);
+
+          isaTaxNote.textContent = "손실 상태이므로 세금이 없습니다.";
+          directTaxNote.textContent = "손실 상태이므로 세금이 없습니다.";
+          saveNote.textContent = "손실 상태이므로 세금이 없습니다.";
+
+          return;
+        }
+
         const profitPos = clampMin0(profit);
 
         // ISA
@@ -223,7 +238,7 @@
           isaNote = `(수익 ${formatWon(profitPos)} - 비과세 ${formatWon(isaExempt)}) × 9.9%`;
         }
 
-        // 직투(해외주식 양도세 가정)
+        // 직투 (해외주식 양도세 가정)
         const directExempt = 2_500_000;
         const directTaxable = clampMin0(profitPos - directExempt);
         const directTax = directTaxable * 0.22;

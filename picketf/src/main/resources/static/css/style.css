@@ -98,6 +98,17 @@ main {
   cursor: pointer;
 }
 
+/* 로그인, 계정 만들기 */
+.app-nav__signup {
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: #191918;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  margin-left: 8px;
+}
+
 /* #endregion header */
 
 /* #region sidebar-layout */

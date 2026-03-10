@@ -764,16 +764,6 @@ input[type="number"].money {
   font-size: 14px;
 }
 
-.login-page .msg-logout {
-  margin-bottom: 16px;
-  padding: 12px 14px;
-  border-radius: 8px;
-  background: #eff6ff;
-  border: 1px solid #bfdbfe;
-  color: #1d4ed8;
-  font-size: 14px;
-}
-
 /* 로그인 - 아이디 찾기 / 비밀번호 재설정 */
 .login-links a {
   color: #2f8df3;

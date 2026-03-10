@@ -1,9 +1,14 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-  layout:decorate="~{fragments/layout/layout.html}">
-<head><title>회원가입</title></head>
-<main layout:fragment="content">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{fragments/layout/login-layout.html}">
+
+<head>
+  <title>회원가입</title>
+  <meta name="_csrf" th:content="${_csrf.token}">
+  <meta name="_csrf_header" th:content="${_csrf.headerName}">
+</head>
+
+<main class="login-layout-main login-page" layout:fragment="content">
   <div class="container mt-5">
     <h2 class="mb-4">회원가입</h2>
     <form action="/register" method="post">
@@ -19,8 +24,9 @@
         <label for="nickname" class="form-label">닉네임</label>
         <input type="text" class="form-control" id="nickname" name="us_nickname" required>
       </div>
-        <button type="submit" class="btn btn-primary d-block mx-auto">가입하기</button>
+      <button type="submit" class="btn btn-primary d-block mx-auto">가입하기</button>
     </form>
   </div>
 </main>
+
 </html>

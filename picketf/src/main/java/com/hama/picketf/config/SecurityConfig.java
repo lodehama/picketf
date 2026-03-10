@@ -43,6 +43,7 @@ public class SecurityConfig {
             .anyRequest().permitAll())
         .formLogin(form -> form
             .permitAll()
+            .loginPage("/login")
             .loginProcessingUrl("/login")
             .defaultSuccessUrl("/"))
         .rememberMe(rm -> rm

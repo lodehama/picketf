@@ -8,7 +8,7 @@
   <meta name="_csrf_header" th:content="${_csrf.headerName}">
 </head>
 
-<main class="login-page" layout:fragment="content">
+<main class="login-layout-main login-page" layout:fragment="content">
   <div class="login-wrap">
     <div class="login-card">
       <div class="login-logo">Pick ETF</div>
@@ -21,7 +21,7 @@
       </div>
 
       <div th:if="${param.logout}" class="msg-logout">
-        로그아웃되었습니다.
+        로그아웃 되었습니다.
       </div>
 
       <form th:action="@{/login}" method="post">

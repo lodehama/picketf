@@ -8,14 +8,15 @@
   <meta name="_csrf_header" th:content="${_csrf.headerName}">
 </head>
 
-<main class="login-layout-main login-page" layout:fragment="content">
-  <div class="login-wrap">
-    <div class="login-card">
-      <h1 class="login-title">
-        <span class="login-logo">Pick ETF</span>&nbsp;&nbsp;지수 투자자를 위한 절세 도구
+<main class="login-layout-main auth-page login-main" layout:fragment="content">
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <h1 class="auth-title">
+        <span class="auth-logo">Pick ETF</span>&nbsp;&nbsp;지수 투자자를 위한 절세 도구
       </h1>
-      <!-- <p class="login-desc">지수 투자자를 위한 절세 도구</p> -->
+      <!-- <p class="auth-desc">지수 투자자를 위한 절세 도구</p> -->
       <br>
+
       <div th:if="${param.error}" class="msg-error">
         아이디 또는 비밀번호가 올바르지 않습니다.
       </div>
@@ -33,15 +34,15 @@
           <input type="password" id="password" name="password" class="form-control">
         </div>
 
-        <div class="login-links top-link">
+        <div class="auth-links top-link">
           <a th:href="@{/find-id}">아이디 찾기</a>
           <span class="divider">|</span>
           <a th:href="@{/reset-password}">비밀번호 재설정</a>
         </div>
 
-        <button type="submit" class="btn-login">로그인</button>
+        <button type="submit" class="btn-auth">로그인</button>
 
-        <div class="login-links bottom-link">
+        <div class="auth-links bottom-link">
           <span>계정이 없으신가요?</span>
           <a th:href="@{/signup}">회원가입</a>
         </div>

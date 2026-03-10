@@ -624,7 +624,7 @@ input[type="number"].money {
 
 /* #endregion isa-tax */
 
-/* #region login */
+/* #region auth layout */
 .login-layout-body {
   margin: 0;
   min-height: 100vh;
@@ -635,21 +635,31 @@ input[type="number"].money {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: 260px 24px 40px;
   box-sizing: border-box;
 }
 
-.login-page {
+.login-main {
+  padding: 260px 24px 40px;
+}
+
+.signup-main {
+  padding: 160px 24px 40px;
+}
+/* #endregion auth layout */
+
+
+/* #region auth common */
+.auth-page {
   width: 100%;
 }
 
-.login-page .login-wrap {
+.auth-page .auth-wrap {
   width: 100%;
   display: flex;
   justify-content: center;
 }
 
-.login-page .login-card {
+.auth-page .auth-card {
   width: 100%;
   max-width: 460px;
   background: transparent;
@@ -658,8 +668,7 @@ input[type="number"].money {
   padding: 0;
 }
 
-/* 로그인 로고 */
-.login-page .login-logo {
+.auth-page .auth-logo {
   text-align: center;
   font-size: 28px;
   font-weight: 800;
@@ -667,7 +676,7 @@ input[type="number"].money {
   margin-bottom: 18px;
 }
 
-.login-page .login-title {
+.auth-page .auth-title {
   margin: 0 0 10px;
   text-align: center;
   font-size: 26px;
@@ -676,18 +685,18 @@ input[type="number"].money {
   line-height: 1.4;
 }
 
-.login-page .login-desc {
+.auth-page .auth-desc {
   margin: 0 0 34px;
   text-align: center;
   font-size: 14px;
   color: #6b7280;
 }
 
-.login-page .form-group {
+.auth-page .form-group {
   margin-bottom: 18px;
 }
 
-.login-page .form-label {
+.auth-page .form-label {
   display: block;
   margin-bottom: 8px;
   font-size: 15px;
@@ -695,7 +704,7 @@ input[type="number"].money {
   color: #111827;
 }
 
-.login-page .form-control {
+.auth-page .form-control {
   width: 100%;
   box-sizing: border-box;
   height: 48px;
@@ -707,31 +716,40 @@ input[type="number"].money {
   outline: none;
 }
 
-.login-page .form-control:focus {
+.auth-page .form-control:focus {
   border-color: #2f8df3;
   box-shadow: 0 0 0 3px rgba(47, 141, 243, 0.12);
 }
 
-.login-page .login-links {
+.auth-page .auth-links {
   font-size: 14px;
 }
 
-.login-page .login-links a {
+.auth-page .auth-links a {
   color: #2f8df3;
   text-decoration: none;
 }
 
-.login-page .login-links a:hover {
+.auth-page .auth-links a:hover {
   text-decoration: underline;
 }
 
-.login-page .top-link {
+.auth-page .top-link {
   text-align: right;
   margin: 4px 0 22px;
 }
 
-/* 로그인 버튼 */
-.login-page .btn-login {
+.auth-page .bottom-link {
+  margin-top: 24px;
+  text-align: center;
+  color: #374151;
+}
+
+.auth-page .bottom-link span {
+  margin-right: 4px;
+}
+
+.auth-page .btn-auth {
   width: 100%;
   height: 50px;
   border: none;
@@ -743,21 +761,11 @@ input[type="number"].money {
   cursor: pointer;
 }
 
-.login-page .btn-login:hover {
+.auth-page .btn-auth:hover {
   opacity: 0.95;
 }
 
-.login-page .bottom-link {
-  margin-top: 24px;
-  text-align: center;
-  color: #374151;
-}
-
-.login-page .bottom-link span {
-  margin-right: 4px;
-}
-
-.login-page .msg-error {
+.auth-page .msg-error {
   margin-bottom: 16px;
   padding: 12px 14px;
   border-radius: 8px;
@@ -767,17 +775,12 @@ input[type="number"].money {
   font-size: 14px;
 }
 
-/* 로그인 - 아이디 찾기 / 비밀번호 재설정 */
-.login-links a {
-  color: #2f8df3;
-  text-decoration: none;
-}
-
-.login-links .divider {
+.auth-links .divider {
   color: #adb5bd;
   margin: 0 4px;
 }
-/* #endregion login */
+/* #endregion auth common */
+
 
 /* #region signup */
 .input-message {

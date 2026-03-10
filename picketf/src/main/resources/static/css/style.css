@@ -634,7 +634,7 @@ input[type="number"].money {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: 240px 24px 40px;
+  padding: 260px 24px 40px;
   box-sizing: border-box;
 }
 

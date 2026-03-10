@@ -3,36 +3,13 @@ package com.hama.picketf.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-
-import com.hama.picketf.model.vo.UserVO;
 import com.hama.picketf.service.UserService;
-import org.springframework.web.bind.annotation.RequestParam;
-
-
 
 @Controller
 public class HomeController {
 
   @Autowired
   UserService userService;
-
-  @GetMapping("/signup")
-  public String signup() {
-    return "signup";
-  }
-
-  @GetMapping("/login")
-  public String login() {
-      return "login";
-  }
-  
-
-  @PostMapping("/register")
-  public String register(UserVO userVO) {
-    userService.register(userVO);
-    return "redirect:/login";
-  }
 
   @GetMapping("/")
   public String home() {
@@ -61,8 +38,7 @@ public class HomeController {
 
   // @GetMapping("/fees")
   // public String fees() {
-  //     return "fees";
+  // return "fees";
   // }
-  
 
 }

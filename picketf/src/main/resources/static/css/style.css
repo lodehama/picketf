@@ -779,3 +779,11 @@ input[type="number"].money {
   margin: 0 4px;
 }
 /* #endregion login */
+
+/* #region signup */
+.field-error {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #dc3545;
+}
+/* #endregion signup */

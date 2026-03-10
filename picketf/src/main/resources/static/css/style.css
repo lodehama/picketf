@@ -639,14 +639,14 @@ input[type="number"].money {
 }
 
 .login-main {
-  padding: 260px 24px 40px;
+  padding: 256px 24px 40px;
 }
 
 .signup-main {
-  padding: 160px 24px 40px;
+  padding: 148px 24px 40px;
 }
-/* #endregion auth layout */
 
+/* #endregion auth layout */
 
 /* #region auth common */
 .auth-page {
@@ -781,8 +781,11 @@ input[type="number"].money {
 }
 /* #endregion auth common */
 
-
 /* #region signup */
+.signup-btn {
+  margin-top: 12px;
+}
+
 .input-message {
   margin-top: 6px;
   font-size: 13px;

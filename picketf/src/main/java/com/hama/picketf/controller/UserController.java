@@ -21,6 +21,11 @@ public class UserController {
   @Autowired
   UserService userService;
 
+  @GetMapping("/login")
+  public String login() {
+    return "login";
+  }
+
   @GetMapping("/signup")
   public String signup(Model model) {
     model.addAttribute("blockedNicknames", UserConst.BLOCKED_NICKNAMES);
@@ -49,11 +54,7 @@ public class UserController {
     return result;
   }
 
-  @GetMapping("/login")
-  public String login() {
-    return "login";
-  }
-
+  // 회원가입 처리
   @PostMapping("/register")
   public String register(UserVO userVO, Model model) {
     try {

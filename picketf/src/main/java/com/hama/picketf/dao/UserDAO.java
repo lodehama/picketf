@@ -9,6 +9,7 @@ public interface UserDAO {
 
 	void insertUser(UserVO userVO);
 
+	// 아이디 중복 체크를 위한 메서드 추가
 	int countByUserId(String userId);
 
 }

@@ -27,6 +27,17 @@ public class UserController {
     return "signup";
   }
 
+  // 아이디 중복 체크
+  @GetMapping("/id/check")
+  @ResponseBody
+  public Map<String, Object> checkId(@RequestParam("userId") String userId) {
+    boolean duplicated = userService.existsByUserId(userId);
+
+    Map<String, Object> result = new HashMap<>();
+    result.put("duplicated", duplicated);
+    return result;
+  }
+
   // 닉네임 차단 여부 체크
   @GetMapping("/nickname/check")
   @ResponseBody

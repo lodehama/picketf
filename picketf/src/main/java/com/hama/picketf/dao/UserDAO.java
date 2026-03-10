@@ -6,6 +6,9 @@ import com.hama.picketf.model.vo.UserVO;
 public interface UserDAO {
 
 	UserVO selectUser(@Param("username") String username);
+
 	void insertUser(UserVO userVO);
+
+	int countByUserId(String userId);
 
 }

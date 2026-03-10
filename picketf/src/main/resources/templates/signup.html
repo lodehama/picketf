@@ -20,6 +20,7 @@
         <label for="username" class="form-label">아이디</label>
         <input type="text" class="form-control" id="username" name="us_id" th:value="${user != null ? user.us_id : ''}"
           maxlength="20" required>
+        <div id="idMessage" class="input-message"></div>
       </div>
 
       <!-- 비밀번호 -->
@@ -29,14 +30,12 @@
       </div>
 
       <!-- 닉네임 -->
-      <div class="form-group">
+      <div class="mb-3">
         <label for="us_nickname" class="form-label">닉네임</label>
         <input type="text" id="us_nickname" name="us_nickname" class="form-control"
           th:value="${user != null ? user.us_nickname : ''}" required>
 
-
         <div id="nicknameMessage" class="input-message"></div>
-
         <div class="msg-error" th:if="${nicknameError}" th:text="${nicknameError}"></div>
       </div>
 
@@ -50,29 +49,80 @@
       <button type="submit" id="signupBtn" class="btn btn-primary d-block mx-auto">
         가입하기
       </button>
-
     </form>
   </div>
+
   <script>
+    const usernameInput = document.getElementById("username");
+    const idMessage = document.getElementById("idMessage");
+
     const nicknameInput = document.getElementById("us_nickname");
     const nicknameMessage = document.getElementById("nicknameMessage");
+
     const signupBtn = document.getElementById("signupBtn");
 
-    let timer;
+    let idTimer;
+    let nicknameTimer;
+
+    let isIdValid = true;
+    let isNicknameValid = true;
+
+    function updateSignupButton() {
+      signupBtn.disabled = !(isIdValid && isNicknameValid);
+    }
+
+    usernameInput.addEventListener("input", function () {
+      clearTimeout(idTimer);
+
+      const value = usernameInput.value.trim();
+
+      if (value === "") {
+        idMessage.textContent = "";
+        idMessage.className = "input-message";
+        isIdValid = true;
+        updateSignupButton();
+        return;
+      }
+
+      idTimer = setTimeout(async function () {
+        try {
+          const response = await fetch(`/id/check?userId=${encodeURIComponent(value)}`);
+          const data = await response.json();
+
+          if (data.duplicated) {
+            idMessage.textContent = "이미 사용중인 아이디입니다.";
+            idMessage.className = "input-message error";
+            isIdValid = false;
+          } else {
+            idMessage.textContent = "사용 가능한 아이디입니다.";
+            idMessage.className = "input-message success";
+            isIdValid = true;
+          }
+
+          updateSignupButton();
+        } catch (error) {
+          idMessage.textContent = "아이디 확인 중 오류가 발생했습니다.";
+          idMessage.className = "input-message error";
+          isIdValid = false;
+          updateSignupButton();
+        }
+      }, 300);
+    });
 
     nicknameInput.addEventListener("input", function () {
-      clearTimeout(timer);
+      clearTimeout(nicknameTimer);
 
       const value = nicknameInput.value.trim();
 
       if (value === "") {
         nicknameMessage.textContent = "";
         nicknameMessage.className = "input-message";
-        signupBtn.disabled = false;
+        isNicknameValid = true;
+        updateSignupButton();
         return;
       }
 
-      timer = setTimeout(async function () {
+      nicknameTimer = setTimeout(async function () {
         try {
           const response = await fetch(`/nickname/check?nickname=${encodeURIComponent(value)}`);
           const data = await response.json();
@@ -80,16 +130,19 @@
           if (data.blocked) {
             nicknameMessage.textContent = "사용할 수 없는 닉네임입니다.";
             nicknameMessage.className = "input-message error";
-            signupBtn.disabled = true;
+            isNicknameValid = false;
           } else {
             nicknameMessage.textContent = "사용 가능한 닉네임입니다.";
             nicknameMessage.className = "input-message success";
-            signupBtn.disabled = false;
+            isNicknameValid = true;
           }
+
+          updateSignupButton();
         } catch (error) {
           nicknameMessage.textContent = "닉네임 확인 중 오류가 발생했습니다.";
           nicknameMessage.className = "input-message error";
-          signupBtn.disabled = true;
+          isNicknameValid = false;
+          updateSignupButton();
         }
       }, 300);
     });

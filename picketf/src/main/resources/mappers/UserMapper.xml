@@ -31,4 +31,9 @@
     NOW()
   )
   </insert>
+  <select id="countByUserId" parameterType="string" resultType="int">
+    SELECT COUNT(*)
+    FROM user
+    WHERE us_id = #{userId}
+  </select>
 </mapper>

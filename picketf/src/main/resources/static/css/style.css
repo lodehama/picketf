@@ -773,4 +773,15 @@ input[type="number"].money {
   color: #1d4ed8;
   font-size: 14px;
 }
+
+/* 로그인 - 아이디 찾기 / 비밀번호 재설정 */
+.login-links a {
+  color: #2f8df3;
+  text-decoration: none;
+}
+
+.login-links .divider {
+  color: #adb5bd;
+  margin: 0 4px;
+}
 /* #endregion login */

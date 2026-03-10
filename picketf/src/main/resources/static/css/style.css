@@ -781,9 +781,16 @@ input[type="number"].money {
 /* #endregion login */
 
 /* #region signup */
-.field-error {
+.input-message {
   margin-top: 6px;
   font-size: 13px;
+}
+
+.input-message.error {
   color: #dc3545;
+}
+
+.input-message.success {
+  color: #198754;
 }
 /* #endregion signup */

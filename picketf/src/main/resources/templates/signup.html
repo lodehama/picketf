@@ -29,9 +29,12 @@
 
       <!-- 닉네임 -->
       <div class="form-group">
-        <label for="us_nickname">닉네임</label>
+        <label for="us_nickname" class="form-label">닉네임</label>
         <input type="text" id="us_nickname" name="us_nickname" class="form-control"
           th:value="${user != null ? user.us_nickname : ''}" required>
+
+
+        <div id="nicknameMessage" class="input-message"></div>
 
         <div class="msg-error" th:if="${nicknameError}" th:text="${nicknameError}"></div>
       </div>
@@ -42,12 +45,53 @@
         <input type="email" class="form-control" id="email" name="us_email" maxlength="255" required>
       </div>
 
-      <button type="submit" class="btn btn-primary d-block mx-auto">
+      <button type="submit" id="signupBtn" class="btn btn-primary d-block mx-auto">
         가입하기
       </button>
 
     </form>
   </div>
+  <script>
+    const nicknameInput = document.getElementById("us_nickname");
+    const nicknameMessage = document.getElementById("nicknameMessage");
+    const signupBtn = document.getElementById("signupBtn");
+
+    let timer;
+
+    nicknameInput.addEventListener("input", function () {
+      clearTimeout(timer);
+
+      const value = nicknameInput.value.trim();
+
+      if (value === "") {
+        nicknameMessage.textContent = "";
+        nicknameMessage.className = "input-message";
+        signupBtn.disabled = false;
+        return;
+      }
+
+      timer = setTimeout(async function () {
+        try {
+          const response = await fetch(`/nickname/check?nickname=${encodeURIComponent(value)}`);
+          const data = await response.json();
+
+          if (data.blocked) {
+            nicknameMessage.textContent = "사용할 수 없는 닉네임입니다.";
+            nicknameMessage.className = "input-message error";
+            signupBtn.disabled = true;
+          } else {
+            nicknameMessage.textContent = "사용 가능한 닉네임입니다.";
+            nicknameMessage.className = "input-message success";
+            signupBtn.disabled = false;
+          }
+        } catch (error) {
+          nicknameMessage.textContent = "닉네임 확인 중 오류가 발생했습니다.";
+          nicknameMessage.className = "input-message error";
+          signupBtn.disabled = true;
+        }
+      }, 300);
+    });
+  </script>
 </main>
 
 </html>

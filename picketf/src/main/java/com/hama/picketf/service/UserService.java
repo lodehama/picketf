@@ -26,7 +26,7 @@ public class UserService {
 			userVO.setUs_nickname(nickname);
 		}
 
-		if (UserConst.BLOCKED_NICKNAMES.contains(nickname.toLowerCase())) {
+		if (nickname != null && UserConst.BLOCKED_NICKNAMES.contains(nickname.toLowerCase())) {
 			throw new RuntimeException("사용할 수 없는 닉네임입니다.");
 		}
 
@@ -35,13 +35,20 @@ public class UserService {
 		userDAO.insertUser(userVO);
 	}
 
+	public boolean isBlockedNickname(String nickname) {
+		if (nickname == null || nickname.trim().isEmpty()) {
+			return false;
+		}
+
+		return UserConst.BLOCKED_NICKNAMES.contains(nickname.trim().toLowerCase());
+	}
+
 	public boolean isDuplicate(String us_id) {
 		return userDAO.selectUser(us_id) != null;
 	}
 
 	public int getUserNum(String username) {
 		UserVO user = userDAO.selectUser(username);
-		return user != null ? user.getUs_num() : 0; // or 예외 던지기
+		return user != null ? user.getUs_num() : 0;
 	}
-
 }

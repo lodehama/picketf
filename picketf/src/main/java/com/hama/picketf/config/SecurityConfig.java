@@ -38,7 +38,7 @@ public class SecurityConfig {
             .csrfTokenRequestHandler(handler) // CSRF 토큰을 헤더에서 읽도록 설정
         )
         .authorizeHttpRequests(req -> req
-            .requestMatchers("/post/insert/*").hasAuthority(UserRole.USER.name())
+            .requestMatchers("/isa", "/isa/**", "/subs", "/subs/**").hasAuthority(UserRole.USER.name())
             .requestMatchers("/admin/**").hasAnyAuthority(UserRole.ADMIN.name())
             .anyRequest().permitAll())
         .formLogin(form -> form

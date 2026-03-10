@@ -44,9 +44,6 @@ public class IsaController {
 
     // 로그인 유저 번호 추출 => 인증 안 된 상태면 ISA 페이지 접근 차단
     Integer usNum = getLoginUsNumOrNull();
-    if (usNum == null) {
-      return "redirect:/login";
-    }
 
     // 현재 로그인 유저의 ISA 계좌 조회
     IsaDTO isa = isaService.getIsaByUser(usNum);
@@ -100,8 +97,6 @@ public class IsaController {
       @RequestParam("initialDeposit") long initialDeposit) {
 
     Integer usNum = getLoginUsNumOrNull();
-    if (usNum == null)
-      return "redirect:/login";
 
     isaService.createIsa(usNum, openedYear, accountType, initialDeposit);
     return "redirect:/isa";

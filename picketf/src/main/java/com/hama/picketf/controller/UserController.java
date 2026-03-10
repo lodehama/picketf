@@ -27,7 +27,7 @@ public class UserController {
     return "signup";
   }
 
-  // 닉네임 중복 및 차단 여부 체크
+  // 닉네임 차단 여부 체크
   @GetMapping("/nickname/check")
   @ResponseBody
   public Map<String, Object> checkNickname(@RequestParam("nickname") String nickname) {
@@ -45,13 +45,14 @@ public class UserController {
 
   @PostMapping("/register")
   public String register(UserVO userVO, Model model) {
-    if (userService.isBlockedNickname(userVO.getUs_nickname())) {
-      model.addAttribute("nicknameError", "사용할 수 없는 닉네임입니다.");
+    try {
+      userService.register(userVO);
+      return "redirect:/login";
+    } catch (IllegalArgumentException e) {
+      model.addAttribute("nicknameError", e.getMessage());
       model.addAttribute("user", userVO);
+      model.addAttribute("blockedNicknames", UserConst.BLOCKED_NICKNAMES);
       return "signup";
     }
-
-    userService.register(userVO);
-    return "redirect:/login";
   }
 }

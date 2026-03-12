@@ -61,7 +61,7 @@ public class UserController {
       userService.register(userVO);
       return "redirect:/login";
     } catch (IllegalArgumentException e) {
-      model.addAttribute("nicknameError", e.getMessage());
+      model.addAttribute("registerError", e.getMessage());
       model.addAttribute("user", userVO);
       model.addAttribute("blockedNicknames", UserConst.BLOCKED_NICKNAMES);
       return "signup";

@@ -39,7 +39,7 @@
             th:value="${user != null ? user.us_nickname : ''}" required>
 
           <div id="nicknameMessage" class="input-message"></div>
-          <div class="msg-error" th:if="${nicknameError}" th:text="${nicknameError}"></div>
+          <div class="msg-error" th:if="${registerError}" th:text="${registerError}"></div>
         </div>
 
         <!-- 이메일 -->
@@ -81,6 +81,45 @@
 
     function updateSignupButton() {
       signupBtn.disabled = !(isIdValid && isNicknameValid);
+    }
+
+    function validateNicknameFormat(value) {
+      const allowedRegex = /^[가-힣a-zA-Z0-9]+$/;
+
+      if (!allowedRegex.test(value)) {
+        return {
+          valid: false,
+          message: "닉네임은 한글, 영문, 숫자만 사용할 수 있습니다."
+        };
+      }
+
+      let koreanCount = 0;
+      let englishCount = 0;
+      let numberCount = 0;
+
+      for (const ch of value) {
+        if (/[가-힣]/.test(ch)) {
+          koreanCount++;
+        } else if (/[a-zA-Z]/.test(ch)) {
+          englishCount++;
+        } else if (/[0-9]/.test(ch)) {
+          numberCount++;
+        }
+      }
+
+      const isValid =
+        koreanCount >= 2 ||
+        englishCount >= 3 ||
+        numberCount >= 4;
+
+      if (!isValid) {
+        return {
+          valid: false,
+          message: "한글 2자 이상, 영문 3자 이상, 숫자 4자 이상 중 하나를 만족해야 합니다."
+        };
+      }
+
+      return { valid: true };
     }
 
     usernameInput.addEventListener("input", function () {
@@ -130,6 +169,16 @@
         nicknameMessage.textContent = "";
         nicknameMessage.className = "input-message";
         isNicknameValid = true;
+        updateSignupButton();
+        return;
+      }
+
+      const formatResult = validateNicknameFormat(value);
+
+      if (!formatResult.valid) {
+        nicknameMessage.textContent = formatResult.message;
+        nicknameMessage.className = "input-message error";
+        isNicknameValid = false;
         updateSignupButton();
         return;
       }

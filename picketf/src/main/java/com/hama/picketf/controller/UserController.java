@@ -32,14 +32,36 @@ public class UserController {
     return "signup";
   }
 
-  // 아이디 중복 체크
+  // 아이디 형식 + 중복 체크
   @GetMapping("/id/check")
   @ResponseBody
   public Map<String, Object> checkId(@RequestParam("userId") String userId) {
-    boolean duplicated = userService.existsByUserId(userId);
-
     Map<String, Object> result = new HashMap<>();
+
+    String normalizedId = userId == null ? "" : userId.trim();
+
+    if (normalizedId.isEmpty()) {
+      result.put("valid", false);
+      result.put("duplicated", false);
+      result.put("message", "");
+      return result;
+    }
+
+    try {
+      userService.validateUserId(normalizedId);
+    } catch (IllegalArgumentException e) {
+      result.put("valid", false);
+      result.put("duplicated", false);
+      result.put("message", e.getMessage());
+      return result;
+    }
+
+    boolean duplicated = userService.existsByUserId(normalizedId);
+
+    result.put("valid", true);
     result.put("duplicated", duplicated);
+    result.put("message", duplicated ? "이미 사용중인 아이디입니다." : "사용 가능한 아이디입니다.");
+
     return result;
   }
 

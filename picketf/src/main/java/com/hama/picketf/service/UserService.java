@@ -1,5 +1,7 @@
 package com.hama.picketf.service;
 
+import java.util.regex.Pattern;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,9 @@ import com.hama.picketf.model.vo.UserVO;
 
 @Service
 public class UserService {
+
+	private static final Pattern USER_ID_PATTERN =
+			Pattern.compile("^[a-zA-Z][a-zA-Z0-9]{3,15}$");
 
 	@Autowired
 	UserDAO userDAO;
@@ -28,9 +33,7 @@ public class UserService {
 		userVO.setUs_email(email);
 
 		// 아이디 검증
-		if (userId == null || userId.isEmpty()) {
-			throw new IllegalArgumentException("아이디를 입력해주세요.");
-		}
+		validateUserId(userId);
 
 		if (existsByUserId(userId)) {
 			throw new IllegalArgumentException("이미 사용중인 아이디입니다.");
@@ -53,15 +56,23 @@ public class UserService {
 			throw new IllegalArgumentException("비밀번호를 입력해주세요.");
 		}
 
-		// 비밀번호 암호화 및 권한 설정
 		userVO.setUs_pw(passwordEncoder.encode(password));
 		userVO.setUs_authority("USER");
 
 		userDAO.insertUser(userVO);
 	}
 
-	private void validateNickname(String nickname) {
+	public void validateUserId(String userId) {
+		if (userId == null || userId.isEmpty()) {
+			throw new IllegalArgumentException("아이디를 입력해주세요.");
+		}
 
+		if (!USER_ID_PATTERN.matcher(userId).matches()) {
+			throw new IllegalArgumentException("아이디는 4~16자 영문으로 시작해야 합니다.");
+		}
+	}
+
+	private void validateNickname(String nickname) {
 		if (nickname == null || nickname.isEmpty()) {
 			throw new IllegalArgumentException("닉네임을 입력해주세요.");
 		}
@@ -71,7 +82,6 @@ public class UserService {
 		int numberCount = 0;
 
 		for (char c : nickname.toCharArray()) {
-
 			if (c >= '가' && c <= '힣') {
 				koreanCount++;
 			} else if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {

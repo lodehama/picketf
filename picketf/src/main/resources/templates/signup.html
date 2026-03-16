@@ -29,7 +29,8 @@
         <!-- 비밀번호 -->
         <div class="form-group">
           <label for="password" class="form-label">비밀번호</label>
-          <input type="password" class="form-control" id="password" name="us_pw" required>
+          <input type="password" class="form-control" id="password" name="us_pw" minlength="8" maxlength="20" required>
+          <div id="passwordMessage" class="input-message"></div>
         </div>
 
         <!-- 닉네임 -->
@@ -37,7 +38,6 @@
           <label for="us_nickname" class="form-label">닉네임</label>
           <input type="text" id="us_nickname" name="us_nickname" class="form-control"
             th:value="${user != null ? user.us_nickname : ''}" required>
-
           <div id="nicknameMessage" class="input-message"></div>
           <div class="msg-error" th:if="${registerError}" th:text="${registerError}"></div>
         </div>
@@ -68,6 +68,9 @@
     const usernameInput = document.getElementById("username");
     const idMessage = document.getElementById("idMessage");
 
+    const passwordInput = document.getElementById("password");
+    const passwordMessage = document.getElementById("passwordMessage");
+
     const nicknameInput = document.getElementById("us_nickname");
     const nicknameMessage = document.getElementById("nicknameMessage");
 
@@ -77,10 +80,11 @@
     let nicknameTimer;
 
     let isIdValid = false;
+    let isPasswordValid = false;
     let isNicknameValid = false;
 
     function updateSignupButton() {
-      signupBtn.disabled = !(isIdValid && isNicknameValid);
+      signupBtn.disabled = !(isIdValid && isPasswordValid && isNicknameValid);
     }
 
     function validateUserIdFormat(value) {
@@ -89,7 +93,20 @@
       if (!idRegex.test(value)) {
         return {
           valid: false,
-          message: "아이디는 4~16자 영문으로 시작해야 합니다."
+          message: "아이디는 4~16자, 영문으로 시작해야 합니다."
+        };
+      }
+
+      return { valid: true };
+    }
+
+    function validatePasswordFormat(value) {
+      const passwordRegex = /^[A-Za-z0-9]{8,20}$/;
+
+      if (!passwordRegex.test(value)) {
+        return {
+          valid: false,
+          message: "비밀번호는 8~20자, 영문과 숫자만 가능합니다."
         };
       }
 
@@ -181,6 +198,32 @@
           updateSignupButton();
         }
       }, 300);
+    });
+
+    passwordInput.addEventListener("input", function () {
+      const value = passwordInput.value.trim();
+
+      if (value === "") {
+        passwordMessage.textContent = "";
+        passwordMessage.className = "input-message";
+        isPasswordValid = false;
+        updateSignupButton();
+        return;
+      }
+
+      const formatResult = validatePasswordFormat(value);
+
+      if (!formatResult.valid) {
+        passwordMessage.textContent = formatResult.message;
+        passwordMessage.className = "input-message error";
+        isPasswordValid = false;
+      } else {
+        passwordMessage.textContent = "사용 가능한 비밀번호 형식입니다.";
+        passwordMessage.className = "input-message success";
+        isPasswordValid = true;
+      }
+
+      updateSignupButton();
     });
 
     nicknameInput.addEventListener("input", function () {

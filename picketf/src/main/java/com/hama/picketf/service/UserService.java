@@ -16,6 +16,9 @@ public class UserService {
 	private static final Pattern USER_ID_PATTERN =
 			Pattern.compile("^[a-zA-Z][a-zA-Z0-9]{3,15}$");
 
+	private static final Pattern PASSWORD_PATTERN =
+			Pattern.compile("^[A-Za-z0-9]{8,20}$");
+
 	@Autowired
 	UserDAO userDAO;
 
@@ -39,6 +42,9 @@ public class UserService {
 			throw new IllegalArgumentException("이미 사용중인 아이디입니다.");
 		}
 
+		// 비밀번호 검증
+		validatePassword(password);
+
 		// 닉네임 검증
 		validateNickname(nickname);
 
@@ -47,14 +53,7 @@ public class UserService {
 		}
 
 		// 이메일 검증
-		if (email == null || email.isEmpty()) {
-			throw new IllegalArgumentException("이메일을 입력해주세요.");
-		}
-
-		// 비밀번호 검증
-		if (password == null || password.isBlank()) {
-			throw new IllegalArgumentException("비밀번호를 입력해주세요.");
-		}
+		validateEmail(email);
 
 		userVO.setUs_pw(passwordEncoder.encode(password));
 		userVO.setUs_authority("USER");
@@ -68,7 +67,17 @@ public class UserService {
 		}
 
 		if (!USER_ID_PATTERN.matcher(userId).matches()) {
-			throw new IllegalArgumentException("아이디는 4~16자 영문으로 시작해야 합니다.");
+			throw new IllegalArgumentException("아이디는 4~16자, 영문으로 시작해야 합니다.");
+		}
+	}
+
+	public void validatePassword(String password) {
+		if (password == null || password.isBlank()) {
+			throw new IllegalArgumentException("비밀번호를 입력해주세요.");
+		}
+
+		if (!PASSWORD_PATTERN.matcher(password).matches()) {
+			throw new IllegalArgumentException("비밀번호는 8~20자, 영문과 숫자만 가능합니다.");
 		}
 	}
 
@@ -100,6 +109,12 @@ public class UserService {
 		if (!valid) {
 			throw new IllegalArgumentException(
 					"닉네임은 한글 2자 이상, 영문 3자 이상, 숫자 4자 이상 중 하나를 만족해야 합니다.");
+		}
+	}
+
+	private void validateEmail(String email) {
+		if (email == null || email.isEmpty()) {
+			throw new IllegalArgumentException("이메일을 입력해주세요.");
 		}
 	}
 

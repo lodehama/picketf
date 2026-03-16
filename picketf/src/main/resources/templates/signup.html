@@ -69,7 +69,6 @@
   </div>
 
   <script>
-
     const usernameInput = document.getElementById("username");
     const idMessage = document.getElementById("idMessage");
 
@@ -122,6 +121,42 @@
       return { valid: true };
     }
 
+    function validateNicknameFormat(value) {
+      const allowedRegex = /^[가-힣a-zA-Z0-9]+$/;
+
+      if (!allowedRegex.test(value)) {
+        return {
+          valid: false,
+          message: "닉네임은 한글, 영문, 숫자만 사용할 수 있습니다."
+        };
+      }
+
+      let koreanCount = 0;
+      let englishCount = 0;
+      let numberCount = 0;
+
+      for (const ch of value) {
+        if (/[가-힣]/.test(ch)) {
+          koreanCount++;
+        } else if (/[a-zA-Z]/.test(ch)) {
+          englishCount++;
+        } else if (/[0-9]/.test(ch)) {
+          numberCount++;
+        }
+      }
+
+      const valid = koreanCount >= 2 || englishCount >= 3 || numberCount >= 4;
+
+      if (!valid) {
+        return {
+          valid: false,
+          message: "닉네임은 한글 2자 이상, 영문 3자 이상, 숫자 4자 이상 중 하나를 만족해야 합니다."
+        };
+      }
+
+      return { valid: true };
+    }
+
     function validateEmailFormat(value) {
       const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
@@ -136,7 +171,6 @@
     }
 
     usernameInput.addEventListener("input", function () {
-
       clearTimeout(idTimer);
 
       const value = usernameInput.value.trim();
@@ -160,28 +194,24 @@
       }
 
       idTimer = setTimeout(async function () {
-
         const response = await fetch(`/id/check?userId=${encodeURIComponent(value)}`);
         const data = await response.json();
 
-        if (data.duplicated) {
-          idMessage.textContent = "이미 사용중인 아이디입니다.";
+        if (!data.valid || data.duplicated) {
+          idMessage.textContent = data.message;
           idMessage.className = "input-message error";
           isIdValid = false;
         } else {
-          idMessage.textContent = "사용 가능한 아이디입니다.";
+          idMessage.textContent = data.message;
           idMessage.className = "input-message success";
           isIdValid = true;
         }
 
         updateSignupButton();
-
       }, 300);
     });
 
-
     passwordInput.addEventListener("input", function () {
-
       const value = passwordInput.value.trim();
 
       if (value === "") {
@@ -205,12 +235,9 @@
       }
 
       updateSignupButton();
-
     });
 
-
     nicknameInput.addEventListener("input", function () {
-
       clearTimeout(nicknameTimer);
 
       const value = nicknameInput.value.trim();
@@ -223,10 +250,10 @@
         return;
       }
 
-      const allowedRegex = /^[가-힣a-zA-Z0-9]+$/;
+      const formatResult = validateNicknameFormat(value);
 
-      if (!allowedRegex.test(value)) {
-        nicknameMessage.textContent = "닉네임은 한글, 영문, 숫자만 사용할 수 있습니다.";
+      if (!formatResult.valid) {
+        nicknameMessage.textContent = formatResult.message;
         nicknameMessage.className = "input-message error";
         isNicknameValid = false;
         updateSignupButton();
@@ -234,28 +261,24 @@
       }
 
       nicknameTimer = setTimeout(async function () {
-
         const response = await fetch(`/nickname/check?nickname=${encodeURIComponent(value)}`);
         const data = await response.json();
 
-        if (data.blocked) {
-          nicknameMessage.textContent = "사용할 수 없는 닉네임입니다.";
+        if (!data.valid) {
+          nicknameMessage.textContent = data.message;
           nicknameMessage.className = "input-message error";
           isNicknameValid = false;
         } else {
-          nicknameMessage.textContent = "사용 가능한 닉네임입니다.";
+          nicknameMessage.textContent = data.message;
           nicknameMessage.className = "input-message success";
           isNicknameValid = true;
         }
 
         updateSignupButton();
-
       }, 300);
     });
 
-
     emailInput.addEventListener("input", function () {
-
       const value = emailInput.value.trim();
 
       if (value === "") {
@@ -279,13 +302,10 @@
       }
 
       updateSignupButton();
-
     });
 
     updateSignupButton();
-
   </script>
-
 </main>
 
 </html>

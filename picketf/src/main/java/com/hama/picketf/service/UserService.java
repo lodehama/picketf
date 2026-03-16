@@ -81,7 +81,7 @@ public class UserService {
 		}
 	}
 
-	private void validateNickname(String nickname) {
+	public void validateNickname(String nickname) {
 		if (nickname == null || nickname.isEmpty()) {
 			throw new IllegalArgumentException("닉네임을 입력해주세요.");
 		}
@@ -102,17 +102,14 @@ public class UserService {
 			}
 		}
 
-		boolean valid = koreanCount >= 2 ||
-				englishCount >= 3 ||
-				numberCount >= 4;
+		boolean valid = koreanCount >= 2 || englishCount >= 3 || numberCount >= 4;
 
 		if (!valid) {
-			throw new IllegalArgumentException(
-					"닉네임은 한글 2자 이상, 영문 3자 이상, 숫자 4자 이상 중 하나를 만족해야 합니다.");
+			throw new IllegalArgumentException("닉네임은 한글 2자 이상, 영문 3자 이상, 숫자 4자 이상 중 하나를 만족해야 합니다.");
 		}
 	}
 
-	private void validateEmail(String email) {
+	public void validateEmail(String email) {
 		if (email == null || email.isEmpty()) {
 			throw new IllegalArgumentException("이메일을 입력해주세요.");
 		}

@@ -65,14 +65,36 @@ public class UserController {
     return result;
   }
 
-  // 닉네임 차단 여부 체크
+  // 닉네임 형식 + 차단 여부 체크
   @GetMapping("/nickname/check")
   @ResponseBody
   public Map<String, Object> checkNickname(@RequestParam("nickname") String nickname) {
-    boolean blocked = userService.isBlockedNickname(nickname);
-
     Map<String, Object> result = new HashMap<>();
+
+    String normalizedNickname = nickname == null ? "" : nickname.trim();
+
+    if (normalizedNickname.isEmpty()) {
+      result.put("valid", false);
+      result.put("blocked", false);
+      result.put("message", "");
+      return result;
+    }
+
+    try {
+      userService.validateNickname(normalizedNickname);
+    } catch (IllegalArgumentException e) {
+      result.put("valid", false);
+      result.put("blocked", false);
+      result.put("message", e.getMessage());
+      return result;
+    }
+
+    boolean blocked = userService.isBlockedNickname(normalizedNickname);
+
+    result.put("valid", !blocked);
     result.put("blocked", blocked);
+    result.put("message", blocked ? "사용할 수 없는 닉네임입니다." : "사용 가능한 닉네임입니다.");
+
     return result;
   }
 

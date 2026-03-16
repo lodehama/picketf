@@ -16,7 +16,11 @@
       <p class="auth-desc">계정을 만들고 다양한 기능을 이용해보세요.</p>
 
       <form action="/register" method="post" class="signup-form">
+
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+        <!-- 서버 에러 -->
+        <div class="msg-error" th:if="${registerError}" th:text="${registerError}"></div>
 
         <!-- 아이디 -->
         <div class="form-group">
@@ -39,7 +43,6 @@
           <input type="text" id="us_nickname" name="us_nickname" class="form-control"
             th:value="${user != null ? user.us_nickname : ''}" required>
           <div id="nicknameMessage" class="input-message"></div>
-          <div class="msg-error" th:if="${registerError}" th:text="${registerError}"></div>
         </div>
 
         <!-- 이메일 -->
@@ -47,6 +50,7 @@
           <label for="email" class="form-label">이메일</label>
           <input type="email" class="form-control" id="email" name="us_email"
             th:value="${user != null ? user.us_email : ''}" maxlength="255" required>
+          <div id="emailMessage" class="input-message"></div>
         </div>
 
         <!-- 가입 버튼 -->
@@ -65,6 +69,7 @@
   </div>
 
   <script>
+
     const usernameInput = document.getElementById("username");
     const idMessage = document.getElementById("idMessage");
 
@@ -74,6 +79,9 @@
     const nicknameInput = document.getElementById("us_nickname");
     const nicknameMessage = document.getElementById("nicknameMessage");
 
+    const emailInput = document.getElementById("email");
+    const emailMessage = document.getElementById("emailMessage");
+
     const signupBtn = document.getElementById("signupBtn");
 
     let idTimer;
@@ -82,9 +90,10 @@
     let isIdValid = false;
     let isPasswordValid = false;
     let isNicknameValid = false;
+    let isEmailValid = false;
 
     function updateSignupButton() {
-      signupBtn.disabled = !(isIdValid && isPasswordValid && isNicknameValid);
+      signupBtn.disabled = !(isIdValid && isPasswordValid && isNicknameValid && isEmailValid);
     }
 
     function validateUserIdFormat(value) {
@@ -113,39 +122,13 @@
       return { valid: true };
     }
 
-    function validateNicknameFormat(value) {
-      const allowedRegex = /^[가-힣a-zA-Z0-9]+$/;
+    function validateEmailFormat(value) {
+      const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
-      if (!allowedRegex.test(value)) {
+      if (!emailRegex.test(value)) {
         return {
           valid: false,
-          message: "닉네임은 한글, 영문, 숫자만 사용할 수 있습니다."
-        };
-      }
-
-      let koreanCount = 0;
-      let englishCount = 0;
-      let numberCount = 0;
-
-      for (const ch of value) {
-        if (/[가-힣]/.test(ch)) {
-          koreanCount++;
-        } else if (/[a-zA-Z]/.test(ch)) {
-          englishCount++;
-        } else if (/[0-9]/.test(ch)) {
-          numberCount++;
-        }
-      }
-
-      const isValid =
-        koreanCount >= 2 ||
-        englishCount >= 3 ||
-        numberCount >= 4;
-
-      if (!isValid) {
-        return {
-          valid: false,
-          message: "한글 2자 이상, 영문 3자 이상, 숫자 4자 이상 중 하나를 만족해야 합니다."
+          message: "올바른 이메일 형식이 아닙니다."
         };
       }
 
@@ -153,6 +136,7 @@
     }
 
     usernameInput.addEventListener("input", function () {
+
       clearTimeout(idTimer);
 
       const value = usernameInput.value.trim();
@@ -176,31 +160,28 @@
       }
 
       idTimer = setTimeout(async function () {
-        try {
-          const response = await fetch(`/id/check?userId=${encodeURIComponent(value)}`);
-          const data = await response.json();
 
-          if (data.duplicated) {
-            idMessage.textContent = "이미 사용중인 아이디입니다.";
-            idMessage.className = "input-message error";
-            isIdValid = false;
-          } else {
-            idMessage.textContent = "사용 가능한 아이디입니다.";
-            idMessage.className = "input-message success";
-            isIdValid = true;
-          }
+        const response = await fetch(`/id/check?userId=${encodeURIComponent(value)}`);
+        const data = await response.json();
 
-          updateSignupButton();
-        } catch (error) {
-          idMessage.textContent = "아이디 확인 중 오류가 발생했습니다.";
+        if (data.duplicated) {
+          idMessage.textContent = "이미 사용중인 아이디입니다.";
           idMessage.className = "input-message error";
           isIdValid = false;
-          updateSignupButton();
+        } else {
+          idMessage.textContent = "사용 가능한 아이디입니다.";
+          idMessage.className = "input-message success";
+          isIdValid = true;
         }
+
+        updateSignupButton();
+
       }, 300);
     });
 
+
     passwordInput.addEventListener("input", function () {
+
       const value = passwordInput.value.trim();
 
       if (value === "") {
@@ -224,9 +205,12 @@
       }
 
       updateSignupButton();
+
     });
 
+
     nicknameInput.addEventListener("input", function () {
+
       clearTimeout(nicknameTimer);
 
       const value = nicknameInput.value.trim();
@@ -239,10 +223,10 @@
         return;
       }
 
-      const formatResult = validateNicknameFormat(value);
+      const allowedRegex = /^[가-힣a-zA-Z0-9]+$/;
 
-      if (!formatResult.valid) {
-        nicknameMessage.textContent = formatResult.message;
+      if (!allowedRegex.test(value)) {
+        nicknameMessage.textContent = "닉네임은 한글, 영문, 숫자만 사용할 수 있습니다.";
         nicknameMessage.className = "input-message error";
         isNicknameValid = false;
         updateSignupButton();
@@ -250,31 +234,56 @@
       }
 
       nicknameTimer = setTimeout(async function () {
-        try {
-          const response = await fetch(`/nickname/check?nickname=${encodeURIComponent(value)}`);
-          const data = await response.json();
 
-          if (data.blocked) {
-            nicknameMessage.textContent = "사용할 수 없는 닉네임입니다.";
-            nicknameMessage.className = "input-message error";
-            isNicknameValid = false;
-          } else {
-            nicknameMessage.textContent = "사용 가능한 닉네임입니다.";
-            nicknameMessage.className = "input-message success";
-            isNicknameValid = true;
-          }
+        const response = await fetch(`/nickname/check?nickname=${encodeURIComponent(value)}`);
+        const data = await response.json();
 
-          updateSignupButton();
-        } catch (error) {
-          nicknameMessage.textContent = "닉네임 확인 중 오류가 발생했습니다.";
+        if (data.blocked) {
+          nicknameMessage.textContent = "사용할 수 없는 닉네임입니다.";
           nicknameMessage.className = "input-message error";
           isNicknameValid = false;
-          updateSignupButton();
+        } else {
+          nicknameMessage.textContent = "사용 가능한 닉네임입니다.";
+          nicknameMessage.className = "input-message success";
+          isNicknameValid = true;
         }
+
+        updateSignupButton();
+
       }, 300);
     });
 
+
+    emailInput.addEventListener("input", function () {
+
+      const value = emailInput.value.trim();
+
+      if (value === "") {
+        emailMessage.textContent = "";
+        emailMessage.className = "input-message";
+        isEmailValid = false;
+        updateSignupButton();
+        return;
+      }
+
+      const result = validateEmailFormat(value);
+
+      if (!result.valid) {
+        emailMessage.textContent = result.message;
+        emailMessage.className = "input-message error";
+        isEmailValid = false;
+      } else {
+        emailMessage.textContent = "사용 가능한 이메일 형식입니다.";
+        emailMessage.className = "input-message success";
+        isEmailValid = true;
+      }
+
+      updateSignupButton();
+
+    });
+
     updateSignupButton();
+
   </script>
 
 </main>

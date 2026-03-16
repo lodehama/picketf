@@ -19,6 +19,9 @@ public class UserService {
 	private static final Pattern PASSWORD_PATTERN =
 			Pattern.compile("^[A-Za-z0-9]{8,20}$");
 
+	private static final Pattern EMAIL_PATTERN =
+			Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
+
 	@Autowired
 	UserDAO userDAO;
 
@@ -115,6 +118,10 @@ public class UserService {
 	private void validateEmail(String email) {
 		if (email == null || email.isEmpty()) {
 			throw new IllegalArgumentException("이메일을 입력해주세요.");
+		}
+
+		if (!EMAIL_PATTERN.matcher(email).matches()) {
+			throw new IllegalArgumentException("올바른 이메일 형식이 아닙니다.");
 		}
 	}
 

@@ -13,14 +13,11 @@ import com.hama.picketf.model.vo.UserVO;
 @Service
 public class UserService {
 
-	private static final Pattern USER_ID_PATTERN =
-			Pattern.compile("^[a-zA-Z][a-zA-Z0-9]{3,15}$");
+	private static final Pattern USER_ID_PATTERN = Pattern.compile("^[a-zA-Z][a-zA-Z0-9]{3,15}$");
 
-	private static final Pattern PASSWORD_PATTERN =
-			Pattern.compile("^[A-Za-z0-9]{8,20}$");
+	private static final Pattern PASSWORD_PATTERN = Pattern.compile("^[A-Za-z0-9!@#$%^&*]{8,20}$");
 
-	private static final Pattern EMAIL_PATTERN =
-			Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
+	private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
 
 	@Autowired
 	UserDAO userDAO;
@@ -80,7 +77,7 @@ public class UserService {
 		}
 
 		if (!PASSWORD_PATTERN.matcher(password).matches()) {
-			throw new IllegalArgumentException("비밀번호는 8~20자, 영문과 숫자만 가능합니다.");
+			throw new IllegalArgumentException("비밀번호는 8~20자, 영문과 숫자, 특수문자만 가능합니다.");
 		}
 	}
 

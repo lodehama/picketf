@@ -110,12 +110,12 @@
     }
 
     function validatePasswordFormat(value) {
-      const passwordRegex = /^[A-Za-z0-9]{8,20}$/;
+      const passwordRegex = /^[A-Za-z0-9!@#$%^&*]{8,20}$/;
 
       if (!passwordRegex.test(value)) {
         return {
           valid: false,
-          message: "비밀번호는 8~20자, 영문과 숫자만 가능합니다."
+          message: "비밀번호는 8~20자, 영문과 숫자, 특수문자만 가능합니다."
         };
       }
 

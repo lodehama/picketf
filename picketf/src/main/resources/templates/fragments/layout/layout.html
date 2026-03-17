@@ -13,7 +13,8 @@
   <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
 
   <!-- 페이지 폰트 일괄 수정 -->
-   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
+  <link rel="stylesheet" as="style" crossorigin
+    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
 
   <!-- 페이지 제목을 "기능명 | Pick ETF" 형식으로 통일 -->
   <title layout:title-pattern="$CONTENT_TITLE | Pick ETF">Pick ETF</title>
@@ -50,10 +51,6 @@
 
         <div class="sidebar-section-title">기타</div>
 
-        <a th:href="@{/devlog}" class="sidebar-link">
-          <i class="bi bi-wallet2 me-2"></i> Dev Log
-        </a>
-
         <a th:href="@{/portfolio}" class="sidebar-link">
           <i class="bi bi-wallet2 me-2"></i> 자료 출처
         </a>
@@ -65,8 +62,9 @@
 
       <!-- 아래: 고정 영역 (Settings / Help) -->
       <div class="sidebar-footer">
-        <a th:href="@{/settings}" class="sidebar-link">
-          <i class="bi bi-gear me-2"></i> 설정
+        <a th:href="@{/devlog}" class="sidebar-link">
+          <i class="bi bi-pencil-fill"></i>
+          <div style="margin-right: 4px;"></div> Dev Log
         </a>
         <a th:href="@{/help}" class="sidebar-link">
           <i class="bi bi-question-circle me-2"></i> 도움말

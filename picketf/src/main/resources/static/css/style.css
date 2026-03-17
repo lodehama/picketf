@@ -109,10 +109,84 @@ main {
   margin-left: 8px;
 }
 
-.app-nav__mypage-icon {
+/* 우측 마이페이지 펼치는 곳 */
+.app-user-menu {
+  position: relative;
+  display: inline-block;
+}
+
+.app-user-menu__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.app-user-menu__icon {
   width: 32px;
   height: 32px;
   margin-right: 10px;
+  display: block;
+}
+
+.app-user-menu__dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 160px;
+  background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  padding: 8px 0;
+  display: none;
+  z-index: 1000;
+}
+
+.app-user-menu__dropdown.is-open {
+  display: block;
+}
+
+.app-user-menu__item {
+  display: block;
+  width: 100%;
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 14px;
+  color: #111827;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.app-user-menu__item:hover {
+  background: #f3f4f6;
+}
+
+.app-user-menu__form {
+  margin: 0;
+  width: 100%;
+}
+
+.app-user-menu__logout {
+  all: unset;
+  display: block;
+  width: 100%;
+  padding: 10px 14px;
+  box-sizing: border-box;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: #111827;
+  cursor: pointer;
 }
 
 /* #endregion header */

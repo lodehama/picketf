@@ -20,16 +20,53 @@
       <div class="app-header__right">
         <a href="/login" class="app-nav__link" sec:authorize="isAnonymous()">로그인</a>
         <a href="/signup" class="app-nav__signup" sec:authorize="isAnonymous()">계정 만들기</a>
-        <a href="/mypage" class="app-nav__mypage" sec:authorize="isAuthenticated()">
+
+        <!-- <a href="/mypage" class="app-nav__mypage" sec:authorize="isAuthenticated()">
           <img src="/img/person-square.svg" alt="마이페이지" class="app-nav__mypage-icon">
-        </a>
+        </a> -->
 
-        <!-- <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()" class="app-nav__logout">
-          <button type="submit" class="app-nav__link app-nav__btn"> <i class="bi bi-box-arrow-right me-2"></i>
+        <div class="app-user-menu" sec:authorize="isAuthenticated()">
+          <button type="button" class="app-user-menu__trigger" id="userMenuBtn">
+            <img src="/img/person-square.svg" alt="사용자 메뉴" class="app-user-menu__icon">
           </button>
-        </form> -->
-      </div>
 
+          <div class="app-user-menu__dropdown" id="userMenuDropdown">
+            <a href="/mypage" class="app-user-menu__item">마이 페이지</a>
+            <a href="/settings" class="app-user-menu__item">설정</a>
+
+            <form action="/logout" method="post" class="app-user-menu__form">
+              <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+              <button type="submit" class="app-user-menu__item app-user-menu__logout">로그아웃</button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   </header>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const menuWrap = document.querySelector(".app-user-menu");
+      const menuBtn = document.getElementById("userMenuBtn");
+      const dropdown = document.getElementById("userMenuDropdown");
+
+      if (!menuWrap || !menuBtn || !dropdown) return;
+
+      menuBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        dropdown.classList.toggle("is-open");
+      });
+
+      document.addEventListener("click", function (e) {
+        if (!menuWrap.contains(e.target)) {
+          dropdown.classList.remove("is-open");
+        }
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+          dropdown.classList.remove("is-open");
+        }
+      });
+    });
+  </script>
 </div>

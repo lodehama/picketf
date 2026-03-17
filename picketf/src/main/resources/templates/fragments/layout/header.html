@@ -20,11 +20,14 @@
       <div class="app-header__right">
         <a href="/login" class="app-nav__link" sec:authorize="isAnonymous()">로그인</a>
         <a href="/signup" class="app-nav__signup" sec:authorize="isAnonymous()">계정 만들기</a>
+        <a href="/mypage" class="app-nav__mypage" sec:authorize="isAuthenticated()">
+          <img src="/img/person-square.svg" alt="마이페이지" class="app-nav__mypage-icon">
+        </a>
 
-        <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()" class="app-nav__logout">
+        <!-- <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()" class="app-nav__logout">
           <button type="submit" class="app-nav__link app-nav__btn"> <i class="bi bi-box-arrow-right me-2"></i>
           </button>
-        </form>
+        </form> -->
       </div>
 
     </div>

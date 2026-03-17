@@ -109,6 +109,12 @@ main {
   margin-left: 8px;
 }
 
+.app-nav__mypage-icon {
+  width: 32px;
+  height: 32px;
+  margin-right: 10px;
+}
+
 /* #endregion header */
 
 /* #region sidebar-layout */

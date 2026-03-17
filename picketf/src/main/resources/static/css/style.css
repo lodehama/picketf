@@ -138,7 +138,7 @@ main {
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
-  min-width: 160px;
+  min-width: 112px;
   background: #fff;
   border: 1px solid #d1d5db;
   border-radius: 10px;

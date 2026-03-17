@@ -646,6 +646,28 @@ input[type="number"].money {
   padding: 148px 24px 40px;
 }
 
+.keep-login-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 20px;
+}
+
+.keep-login-wrap input[type="checkbox"] {
+  margin: 0;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.keep-login-wrap label {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  line-height: 1;
+}
+
 /* #endregion auth layout */
 
 /* #region auth common */

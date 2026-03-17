@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hama.picketf.model.util.UserConst;
 import com.hama.picketf.model.vo.UserVO;
+import com.hama.picketf.security.CustomUser;
 import com.hama.picketf.service.UserService;
 
 @Controller
@@ -110,5 +112,14 @@ public class UserController {
       model.addAttribute("blockedNicknames", UserConst.BLOCKED_NICKNAMES);
       return "signup";
     }
+  }
+
+  @GetMapping("/mypage")
+  public String mypage(Authentication authentication, Model model) {
+    CustomUser customUser = (CustomUser) authentication.getPrincipal();
+    UserVO loginUser = customUser.getMember();
+
+    model.addAttribute("loginUser", loginUser);
+    return "mypage";
   }
 }

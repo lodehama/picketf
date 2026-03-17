@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{fragments/layout/layout.html}">
+
+<head>
+  <title>마이 페이지</title>
+</head>
+
+<main class="login-layout-main auth-page signup-main" layout:fragment="content">
+  <div class="mypage-wrap">
+
+    <!-- 상단 프로필 영역 -->
+    <section class="mypage-profile-card">
+      <div class="mypage-profile-header">
+        <button type="button" class="mypage-profile-btn">프로필</button>
+        <span class="mypage-profile-name" th:text="${loginUser.us_nickname}">계정</span>
+      </div>
+    </section>
+
+    <!-- 닉네임 수정 영역 -->
+    <section class="mypage-info-section">
+      <form action="/mypage/update" method="post" class="mypage-form">
+        <div class="mypage-form-row">
+          <label for="nickname" class="mypage-label">닉네임</label>
+          <input type="text" id="nickname" name="us_nickname" class="mypage-input" th:value="${loginUser.us_nickname}"
+            maxlength="20">
+        </div>
+
+        <div class="mypage-form-actions">
+          <button type="submit" class="mypage-save-btn">저장</button>
+        </div>
+       
+      </form>
+    </section>
+
+  </div>
+</main>
+
+</html>

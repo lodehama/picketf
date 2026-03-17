@@ -254,7 +254,7 @@ main {
 }
 
 .mypage-label {
-  min-width: 80px;
+  min-width: 72px;
   font-size: 14px;
   font-weight: 600;
   color: #374151;
@@ -320,6 +320,67 @@ main {
   font-size: 14px;
   color: #6b7280;
 }
+
+/* 계정 탭 - 비밀번호 변경 한 줄 영역 */
+.mypage-password-form {
+  width: 100%;
+}
+
+.mypage-password-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.mypage-password-current {
+  min-width: 180px;
+  height: 44px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  border: 1px solid #cfd8e3;
+  border-radius: 10px;
+  background: #eaf1fb;
+  font-size: 18px;
+  color: #111827;
+  box-sizing: border-box;
+}
+
+.mypage-password-input {
+  width: 180px;
+  height: 44px;
+  padding: 0 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  background: #ffffff;
+  font-size: 14px;
+  color: #111827;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.mypage-password-input::placeholder {
+  color: #9ca3af;
+}
+
+.mypage-password-input:focus {
+  border-color: #93c5fd;
+}
+
+.mypage-password-btn {
+  height: 44px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 999px;
+  background: #9fc2f8;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
 /* #endregion mypage */
 
 /* #region sidebar-layout */

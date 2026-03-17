@@ -240,8 +240,7 @@ main {
 }
 
 .mypage-info-row,
-.mypage-form-row,
-.mypage-account-row {
+.mypage-form-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -269,15 +268,13 @@ main {
   font-size: 14px;
 }
 
-.mypage-form-actions,
-.mypage-account-actions {
+.mypage-form-actions {
   display: flex;
   justify-content: flex-end;
   margin-top: 12px;
 }
 
 .mypage-save-btn,
-.mypage-action-btn,
 .mypage-delete-btn {
   display: inline-flex;
   align-items: center;
@@ -291,8 +288,7 @@ main {
   box-sizing: border-box;
 }
 
-.mypage-save-btn,
-.mypage-action-btn {
+.mypage-save-btn {
   border: 1px solid #111827;
   background: #111827;
   color: #ffffff;
@@ -308,17 +304,6 @@ main {
   margin-top: 24px;
   padding-top: 20px;
   border-top: 1px solid #d1d5db;
-}
-
-.mypage-account-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: #374151;
-}
-
-.mypage-account-value {
-  font-size: 14px;
-  color: #6b7280;
 }
 
 /* 계정 탭 - 비밀번호 변경 한 줄 영역 */
@@ -366,19 +351,6 @@ main {
 
 .mypage-password-input:focus {
   border-color: #93c5fd;
-}
-
-.mypage-password-btn {
-  height: 44px;
-  padding: 0 18px;
-  border: none;
-  border-radius: 999px;
-  background: #9fc2f8;
-  font-size: 14px;
-  font-weight: 600;
-  color: #ffffff;
-  cursor: pointer;
-  white-space: nowrap;
 }
 
 /* #endregion mypage */

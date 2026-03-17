@@ -650,7 +650,7 @@ input[type="number"].money {
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-top: 20px;
+  margin-top: 24px;
 }
 
 .keep-login-wrap input[type="checkbox"] {

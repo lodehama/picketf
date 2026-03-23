@@ -13,6 +13,13 @@
 
     <h2 class="mypage-title">마이 페이지</h2>
 
+    <style>
+      .mypage-title {
+        text-align: center;
+        margin-bottom: 36px;
+      }
+    </style>
+
     <section class="mypage-profile-card">
       <div class="mypage-profile-header">
         <button type="button" class="mypage-tab-btn active" data-tab="profile">프로필</button>
@@ -42,13 +49,8 @@
           <div class="mypage-form-row">
             <label for="nickname" class="mypage-label">닉네임</label>
             <div class="mypage-nickname-box">
-              <input type="text"
-                     id="nickname"
-                     name="us_nickname"
-                     class="mypage-input"
-                     th:value="${loginUser.us_nickname}"
-                     th:data-current-nickname="${loginUser.us_nickname}"
-                     maxlength="20">
+              <input type="text" id="nickname" name="us_nickname" class="mypage-input"
+                th:value="${loginUser.us_nickname}" th:data-current-nickname="${loginUser.us_nickname}" maxlength="20">
               <div id="nicknameMessage" class="input-message"></div>
             </div>
           </div>

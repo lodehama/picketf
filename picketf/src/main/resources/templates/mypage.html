@@ -4,20 +4,15 @@
 
 <head>
   <title>마이 페이지</title>
+  <meta name="_csrf" th:content="${_csrf.token}">
+  <meta name="_csrf_header" th:content="${_csrf.headerName}">
 </head>
 
 <main class="login-layout-main auth-page signup-main" layout:fragment="content">
   <div class="mypage-wrap">
 
-    <!-- 타이틀 -->
     <h2 class="mypage-title">마이 페이지</h2>
-    <style>
-      .mypage-title {
-        text-align: center;
-        margin-bottom: 36px;
-      }
-    </style>
-    <!-- 상단 탭 영역 -->
+
     <section class="mypage-profile-card">
       <div class="mypage-profile-header">
         <button type="button" class="mypage-tab-btn active" data-tab="profile">프로필</button>
@@ -42,14 +37,27 @@
 
       <section class="mypage-info-section">
         <form action="/mypage/update" method="post" class="mypage-form">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
           <div class="mypage-form-row">
             <label for="nickname" class="mypage-label">닉네임</label>
-            <input type="text" id="nickname" name="us_nickname" class="mypage-input" th:value="${loginUser.us_nickname}"
-              maxlength="20">
+            <div class="mypage-nickname-box">
+              <input type="text"
+                     id="nickname"
+                     name="us_nickname"
+                     class="mypage-input"
+                     th:value="${loginUser.us_nickname}"
+                     th:data-current-nickname="${loginUser.us_nickname}"
+                     maxlength="20">
+              <div id="nicknameMessage" class="input-message"></div>
+            </div>
           </div>
 
+          <div class="msg-error" th:if="${nicknameError}" th:text="${nicknameError}"></div>
+          <div class="msg-success" th:if="${nicknameSuccess}" th:text="${nicknameSuccess}"></div>
+
           <div class="mypage-form-actions">
-            <button type="submit" class="mypage-save-btn">저장</button>
+            <button type="submit" id="nicknameSaveBtn" class="mypage-save-btn" disabled>저장</button>
           </div>
         </form>
       </section>
@@ -59,10 +67,12 @@
     <section id="accountTab" class="mypage-tab-content">
       <section class="mypage-info-section">
         <form action="/mypage/password" method="post" class="mypage-password-form">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
           <div class="mypage-password-row">
             <label class="mypage-label">비밀번호</label>
             <div class="mypage-password-current">••••••••</div>
-            <input type="password" class="mypage-password-input" placeholder="새 비밀번호">
+            <input type="password" class="mypage-password-input" placeholder="새 비밀번호" name="newPassword">
             <button type="submit" class="mypage-save-btn">비밀번호 변경</button>
           </div>
         </form>
@@ -96,6 +106,104 @@
         }
       });
     });
+
+    const nicknameInput = document.getElementById("nickname");
+    const nicknameMessage = document.getElementById("nicknameMessage");
+    const nicknameSaveBtn = document.getElementById("nicknameSaveBtn");
+    const currentNickname = nicknameInput.dataset.currentNickname;
+
+    let nicknameTimer;
+    let isNicknameValid = false;
+
+    function updateNicknameButton() {
+      nicknameSaveBtn.disabled = !isNicknameValid;
+    }
+
+    function validateNicknameFormat(value) {
+      const allowedRegex = /^[가-힣a-zA-Z0-9]+$/;
+
+      if (!allowedRegex.test(value)) {
+        return {
+          valid: false,
+          message: "닉네임은 한글, 영문, 숫자만 사용할 수 있습니다."
+        };
+      }
+
+      let koreanCount = 0;
+      let englishCount = 0;
+      let numberCount = 0;
+
+      for (const ch of value) {
+        if (/[가-힣]/.test(ch)) {
+          koreanCount++;
+        } else if (/[a-zA-Z]/.test(ch)) {
+          englishCount++;
+        } else if (/[0-9]/.test(ch)) {
+          numberCount++;
+        }
+      }
+
+      const valid = koreanCount >= 2 || englishCount >= 3 || numberCount >= 4;
+
+      if (!valid) {
+        return {
+          valid: false,
+          message: "닉네임은 한글 2자 이상, 영문 3자 이상, 숫자 4자 이상 중 하나를 만족해야 합니다."
+        };
+      }
+
+      return { valid: true };
+    }
+
+    nicknameInput.addEventListener("input", function () {
+      clearTimeout(nicknameTimer);
+
+      const value = nicknameInput.value.trim();
+
+      if (value === "") {
+        nicknameMessage.textContent = "";
+        nicknameMessage.className = "input-message";
+        isNicknameValid = false;
+        updateNicknameButton();
+        return;
+      }
+
+      const formatResult = validateNicknameFormat(value);
+
+      if (!formatResult.valid) {
+        nicknameMessage.textContent = formatResult.message;
+        nicknameMessage.className = "input-message error";
+        isNicknameValid = false;
+        updateNicknameButton();
+        return;
+      }
+
+      nicknameTimer = setTimeout(async function () {
+        const response = await fetch(`/mypage/nickname/check?nickname=${encodeURIComponent(value)}`);
+        const data = await response.json();
+
+        if (!data.valid) {
+          nicknameMessage.textContent = data.message;
+          nicknameMessage.className = "input-message error";
+          isNicknameValid = false;
+        } else if (data.same) {
+          nicknameMessage.textContent = data.message;
+          nicknameMessage.className = "input-message";
+          isNicknameValid = false;
+        } else {
+          nicknameMessage.textContent = data.message;
+          nicknameMessage.className = "input-message success";
+          isNicknameValid = true;
+        }
+
+        updateNicknameButton();
+      }, 300);
+    });
+
+    if (nicknameInput.value.trim() === currentNickname.trim()) {
+      isNicknameValid = false;
+      updateNicknameButton();
+    }
   </script>
 </main>
 

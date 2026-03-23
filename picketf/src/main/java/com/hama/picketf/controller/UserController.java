@@ -67,7 +67,7 @@ public class UserController {
     return result;
   }
 
-  // 닉네임 형식 + 차단 여부 체크
+  // 회원가입용 닉네임 형식 + 차단 여부 체크
   @GetMapping("/nickname/check")
   @ResponseBody
   public Map<String, Object> checkNickname(@RequestParam("nickname") String nickname) {
@@ -121,5 +121,93 @@ public class UserController {
 
     model.addAttribute("loginUser", loginUser);
     return "mypage";
+  }
+
+  // 마이페이지용 닉네임 검사
+  @GetMapping("/mypage/nickname/check")
+  @ResponseBody
+  public Map<String, Object> checkNicknameForMypage(
+      @RequestParam("nickname") String nickname,
+      Authentication authentication) {
+
+    Map<String, Object> result = new HashMap<>();
+
+    String normalizedNickname = nickname == null ? "" : nickname.trim();
+
+    if (normalizedNickname.isEmpty()) {
+      result.put("valid", false);
+      result.put("same", false);
+      result.put("message", "");
+      return result;
+    }
+
+    try {
+      CustomUser customUser = (CustomUser) authentication.getPrincipal();
+      UserVO loginUser = customUser.getMember();
+
+      String currentNickname = loginUser.getUs_nickname() == null ? "" : loginUser.getUs_nickname().trim();
+
+      userService.validateNickname(normalizedNickname);
+
+      if (userService.isBlockedNickname(normalizedNickname)) {
+        result.put("valid", false);
+        result.put("same", false);
+        result.put("message", "사용할 수 없는 닉네임입니다.");
+        return result;
+      }
+
+      if (currentNickname.equalsIgnoreCase(normalizedNickname)) {
+        result.put("valid", false);
+        result.put("same", true);
+        result.put("message", "현재 닉네임과 동일합니다.");
+        return result;
+      }
+
+      if (userService.existsByNickname(normalizedNickname)) {
+        result.put("valid", false);
+        result.put("same", false);
+        result.put("message", "이미 사용중인 닉네임입니다.");
+        return result;
+      }
+
+      result.put("valid", true);
+      result.put("same", false);
+      result.put("message", "사용 가능한 닉네임입니다.");
+
+    } catch (IllegalArgumentException e) {
+      result.put("valid", false);
+      result.put("same", false);
+      result.put("message", e.getMessage());
+    }
+
+    return result;
+  }
+
+  // 마이페이지 닉네임 변경 처리
+  @PostMapping("/mypage/update")
+  public String updateNickname(
+      @RequestParam("us_nickname") String nickname,
+      Authentication authentication,
+      Model model) {
+
+    CustomUser customUser = (CustomUser) authentication.getPrincipal();
+    UserVO loginUser = customUser.getMember();
+
+    try {
+      userService.updateNickname(loginUser.getUs_num(), nickname);
+
+      // DB 반영 후 세션 사용자 정보도 같이 갱신
+      loginUser.setUs_nickname(nickname == null ? "" : nickname.trim());
+      customUser.setMember(loginUser);
+
+      model.addAttribute("loginUser", loginUser);
+      model.addAttribute("nicknameSuccess", "닉네임이 변경되었습니다.");
+      return "mypage";
+
+    } catch (IllegalArgumentException e) {
+      model.addAttribute("loginUser", loginUser);
+      model.addAttribute("nicknameError", e.getMessage());
+      return "mypage";
+    }
   }
 }

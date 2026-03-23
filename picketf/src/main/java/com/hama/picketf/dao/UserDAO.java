@@ -12,4 +12,9 @@ public interface UserDAO {
 	// 아이디 중복 체크를 위한 메서드 추가
 	int countByUserId(String userId);
 
+	int countByNickname(String us_nickname);
+
+	UserVO selectUserByNum(int us_num);
+
+	void updateNickname(@Param("us_num") int us_num, @Param("us_nickname") String us_nickname);
 }

@@ -14,9 +14,7 @@ import com.hama.picketf.model.vo.UserVO;
 public class UserService {
 
 	private static final Pattern USER_ID_PATTERN = Pattern.compile("^[a-zA-Z][a-zA-Z0-9]{3,15}$");
-
 	private static final Pattern PASSWORD_PATTERN = Pattern.compile("^[A-Za-z0-9!@#$%^&*]{8,20}$");
-
 	private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
 
 	@Autowired
@@ -52,6 +50,10 @@ public class UserService {
 			throw new IllegalArgumentException("사용할 수 없는 닉네임입니다.");
 		}
 
+		if (existsByNickname(nickname)) {
+			throw new IllegalArgumentException("이미 사용중인 닉네임입니다.");
+		}
+
 		// 이메일 검증
 		validateEmail(email);
 
@@ -59,6 +61,60 @@ public class UserService {
 		userVO.setUs_authority("USER");
 
 		userDAO.insertUser(userVO);
+	}
+
+	public void updateNickname(int userNum, String newNickname) {
+		String nickname = normalize(newNickname);
+
+		validateNickname(nickname);
+
+		if (isBlockedNickname(nickname)) {
+			throw new IllegalArgumentException("사용할 수 없는 닉네임입니다.");
+		}
+
+		UserVO loginUser = userDAO.selectUserByNum(userNum);
+		if (loginUser == null) {
+			throw new IllegalArgumentException("사용자 정보를 찾을 수 없습니다.");
+		}
+
+		String currentNickname = normalize(loginUser.getUs_nickname());
+
+		if (currentNickname != null && currentNickname.equalsIgnoreCase(nickname)) {
+			throw new IllegalArgumentException("현재 닉네임과 동일합니다.");
+		}
+
+		if (existsByNickname(nickname)) {
+			throw new IllegalArgumentException("이미 사용중인 닉네임입니다.");
+		}
+
+		userDAO.updateNickname(userNum, nickname);
+	}
+
+	public String checkNicknameForUpdate(int userNum, String nickname) {
+		String normalizedNickname = normalize(nickname);
+
+		validateNickname(normalizedNickname);
+
+		if (isBlockedNickname(normalizedNickname)) {
+			throw new IllegalArgumentException("사용할 수 없는 닉네임입니다.");
+		}
+
+		UserVO loginUser = userDAO.selectUserByNum(userNum);
+		if (loginUser == null) {
+			throw new IllegalArgumentException("사용자 정보를 찾을 수 없습니다.");
+		}
+
+		String currentNickname = normalize(loginUser.getUs_nickname());
+
+		if (currentNickname != null && currentNickname.equalsIgnoreCase(normalizedNickname)) {
+			return "current";
+		}
+
+		if (existsByNickname(normalizedNickname)) {
+			throw new IllegalArgumentException("이미 사용중인 닉네임입니다.");
+		}
+
+		return "available";
 	}
 
 	public void validateUserId(String userId) {
@@ -139,10 +195,24 @@ public class UserService {
 		return userDAO.countByUserId(normalizedId) > 0;
 	}
 
+	public boolean existsByNickname(String nickname) {
+		String normalizedNickname = normalize(nickname);
+
+		if (normalizedNickname == null || normalizedNickname.isEmpty()) {
+			return false;
+		}
+
+		return userDAO.countByNickname(normalizedNickname) > 0;
+	}
+
 	public int getUserNum(String username) {
 		String normalizedUsername = normalize(username);
 		UserVO user = userDAO.selectUser(normalizedUsername);
 		return user != null ? user.getUs_num() : 0;
+	}
+
+	public UserVO getUserByNum(int userNum) {
+		return userDAO.selectUserByNum(userNum);
 	}
 
 	private String normalize(String value) {

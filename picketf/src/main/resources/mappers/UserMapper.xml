@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.hama.picketf.dao.UserDAO">
-  
-	<select id="selectUser" parameterType="string" resultType="com.hama.picketf.model.vo.UserVO">
+
+  <select id="selectUser" parameterType="string" resultType="com.hama.picketf.model.vo.UserVO">
     SELECT
       us_num,
       us_id,
@@ -16,22 +16,22 @@
     WHERE us_id = #{username}
   </select>
 
-  <insert id="insertUser" parameterType="UserVO">
+  <insert id="insertUser" parameterType="com.hama.picketf.model.vo.UserVO">
     INSERT INTO user (
-    us_id,
-    us_pw,
-    us_nickname,
-    us_email,
-    us_authority,
-    us_created
-  ) VALUES (
-    #{us_id},
-    #{us_pw},
-    #{us_nickname},
-    #{us_email},
-    #{us_authority},
-    NOW()
-  )
+      us_id,
+      us_pw,
+      us_nickname,
+      us_email,
+      us_authority,
+      us_created
+    ) VALUES (
+      #{us_id},
+      #{us_pw},
+      #{us_nickname},
+      #{us_email},
+      #{us_authority},
+      NOW()
+    )
   </insert>
 
   <select id="countByUserId" parameterType="string" resultType="int">
@@ -39,5 +39,30 @@
     FROM user
     WHERE us_id = #{userId}
   </select>
+
+  <select id="countByNickname" parameterType="string" resultType="int">
+    SELECT COUNT(*)
+    FROM user
+    WHERE us_nickname = #{us_nickname}
+  </select>
+
+  <select id="selectUserByNum" parameterType="int" resultType="com.hama.picketf.model.vo.UserVO">
+    SELECT
+      us_num,
+      us_id,
+      us_pw,
+      us_nickname,
+      us_email,
+      us_authority,
+      us_created
+    FROM user
+    WHERE us_num = #{us_num}
+  </select>
+
+  <update id="updateNickname">
+    UPDATE user
+    SET us_nickname = #{us_nickname}
+    WHERE us_num = #{us_num}
+  </update>
 
 </mapper>

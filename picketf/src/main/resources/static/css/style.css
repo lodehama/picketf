@@ -319,7 +319,7 @@ main {
 }
 
 .mypage-password-current {
-  min-width: 180px;
+  min-width: 100px;
   height: 44px;
   padding: 0 16px;
   display: flex;

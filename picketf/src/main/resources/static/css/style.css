@@ -408,6 +408,14 @@ main {
   border-top: 1px solid #d1d5db;
 }
 
+/* 비밀번호 변경 메세지 */
+.msg-success {
+  margin-top: 8px;
+  font-size: 16px;
+  color: #16a34a;
+  font-weight: 500;
+}
+
 /* #endregion mypage */
 
 /* #region sidebar-layout */

@@ -59,7 +59,8 @@
             </div>
 
             <div class="msg-error" th:if="${nicknameError}" th:text="${nicknameError}"></div>
-            <div class="msg-success" th:if="${nicknameSuccess}" th:text="${nicknameSuccess}"></div>
+            <div class="msg-success" th:if="${nicknameSuccess}" th:text="${nicknameSuccess}">
+            </div>
 
             <div class="mypage-form-actions">
               <button type="submit" id="nicknameSaveBtn" class="mypage-save-btn" disabled>저장</button>

@@ -198,7 +198,23 @@ main {
 /* #endregion header */
 
 /* #region mypage */
-/* 섹션 구분선 + 여백 */
+
+:root {
+  --mypage-fixed-width: 520px;
+}
+
+/* 제목 */
+.mypage-title {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+/* 탭 버튼 영역도 같은 폭 */
+.mypage-profile-card {
+  width: var(--mypage-fixed-width);
+  margin: 0 auto;
+  box-sizing: border-box;
+}
 
 .mypage-profile-header {
   display: flex;
@@ -223,54 +239,89 @@ main {
   border-color: #111827;
 }
 
+/* hr도 같은 폭 */
+.mypage-wrap .my-4 {
+  width: var(--mypage-fixed-width);
+  margin: 0 auto 22px auto;
+  box-sizing: border-box;
+}
+
+/* 탭 내용 영역 자체도 같은 폭 */
 .mypage-tab-content {
   display: none;
+  width: var(--mypage-fixed-width);
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .mypage-tab-content.active {
   display: block;
 }
 
+/* 카드 가로폭 완전 통일 */
 .mypage-info-section {
+  width: 100%;
   padding: 24px;
   border: 1px solid #d1d5db;
   border-radius: 12px;
   background: #ffffff;
   margin-bottom: 16px;
+  box-sizing: border-box;
 }
 
-.mypage-info-row,
-.mypage-form-row {
+/* 프로필 조회 영역 */
+.mypage-info-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 16px;
+}
+
+.mypage-info-row + .mypage-info-row {
+  margin-top: 12px;
+}
+
+/* 공통 라벨 */
+.mypage-label {
+  width: 72px;
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  line-height: 44px;
+}
+
+/* 닉네임 수정 */
+.mypage-form-row {
+  display: flex;
+  align-items: flex-start;
   gap: 16px;
   margin-bottom: 16px;
 }
 
-.mypage-form-row {
-  align-items: flex-start;
-}
-
-.mypage-label {
-  min-width: 72px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #374151;
+.mypage-nickname-box {
+  width: calc(100% - 88px);
 }
 
 .mypage-input {
-  flex: 1;
-  max-width: 320px;
+  width: 100%;
   padding: 10px 12px;
   border: 1px solid #d1d5db;
   border-radius: 8px;
   font-size: 14px;
+  box-sizing: border-box;
+}
+
+.input-message {
+  min-height: 20px;
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.4;
 }
 
 .mypage-form-actions {
   display: flex;
   justify-content: flex-end;
+  width: 100%;
   margin-top: 12px;
 }
 
@@ -279,7 +330,8 @@ main {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 16px;
+  height: 40px;
+  padding: 0 16px;
   border-radius: 8px;
   font-size: 14px;
   font-weight: 500;
@@ -300,13 +352,7 @@ main {
   color: #dc2626;
 }
 
-.danger-zone {
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid #d1d5db;
-}
-
-/* 계정 탭 - 비밀번호 변경 한 줄 영역 */
+/* 계정 탭 */
 .mypage-password-form {
   width: 100%;
 }
@@ -319,21 +365,23 @@ main {
 }
 
 .mypage-password-current {
-  min-width: 100px;
+  width: 92px;
   height: 44px;
   padding: 0 16px;
   display: flex;
   align-items: center;
+  justify-content: center;
   border: 1px solid #cfd8e3;
   border-radius: 10px;
   background: #eaf1fb;
   font-size: 18px;
   color: #111827;
   box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 .mypage-password-input {
-  width: 180px;
+  width: 122px;
   height: 44px;
   padding: 0 14px;
   border: 1px solid #d1d5db;
@@ -343,6 +391,7 @@ main {
   color: #111827;
   box-sizing: border-box;
   outline: none;
+  flex-shrink: 0;
 }
 
 .mypage-password-input::placeholder {
@@ -351,6 +400,12 @@ main {
 
 .mypage-password-input:focus {
   border-color: #93c5fd;
+}
+
+.danger-zone {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #d1d5db;
 }
 
 /* #endregion mypage */

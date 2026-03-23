@@ -26,187 +26,189 @@
         <button type="button" class="mypage-tab-btn" data-tab="account">계정</button>
       </div>
     </section>
-    <hr class="my-4" />
 
-    <!-- 프로필 탭 -->
-    <section id="profileTab" class="mypage-tab-content active">
-      <section class="mypage-info-section">
-        <div class="mypage-info-row">
-          <label class="mypage-label">아이디</label>
-          <span th:text="${loginUser.us_id}"></span>
-        </div>
+    <div class="mypage-content-box">
+      <hr class="my-4" />
 
-        <div class="mypage-info-row">
-          <label class="mypage-label">이메일</label>
-          <span th:text="${loginUser.us_email}"></span>
-        </div>
-      </section>
+      <!-- 프로필 탭 -->
+      <section id="profileTab" class="mypage-tab-content active">
+        <section class="mypage-info-section">
+          <div class="mypage-info-row">
+            <label class="mypage-label">아이디</label>
+            <span th:text="${loginUser.us_id}"></span>
+          </div>
 
-      <section class="mypage-info-section">
-        <form action="/mypage/update" method="post" class="mypage-form">
-          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+          <div class="mypage-info-row">
+            <label class="mypage-label">이메일</label>
+            <span th:text="${loginUser.us_email}"></span>
+          </div>
+        </section>
 
-          <div class="mypage-form-row">
-            <label for="nickname" class="mypage-label">닉네임</label>
-            <div class="mypage-nickname-box">
-              <input type="text" id="nickname" name="us_nickname" class="mypage-input"
-                th:value="${loginUser.us_nickname}" th:data-current-nickname="${loginUser.us_nickname}" maxlength="20">
-              <div id="nicknameMessage" class="input-message"></div>
+        <section class="mypage-info-section">
+          <form action="/mypage/update" method="post" class="mypage-form">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+            <div class="mypage-form-row">
+              <label for="nickname" class="mypage-label">닉네임</label>
+              <div class="mypage-nickname-box">
+                <input type="text" id="nickname" name="us_nickname" class="mypage-input"
+                  th:value="${loginUser.us_nickname}" th:data-current-nickname="${loginUser.us_nickname}"
+                  maxlength="20">
+                <div id="nicknameMessage" class="input-message"></div>
+              </div>
             </div>
-          </div>
 
-          <div class="msg-error" th:if="${nicknameError}" th:text="${nicknameError}"></div>
-          <div class="msg-success" th:if="${nicknameSuccess}" th:text="${nicknameSuccess}"></div>
+            <div class="msg-error" th:if="${nicknameError}" th:text="${nicknameError}"></div>
+            <div class="msg-success" th:if="${nicknameSuccess}" th:text="${nicknameSuccess}"></div>
 
-          <div class="mypage-form-actions">
-            <button type="submit" id="nicknameSaveBtn" class="mypage-save-btn" disabled>저장</button>
-          </div>
-        </form>
+            <div class="mypage-form-actions">
+              <button type="submit" id="nicknameSaveBtn" class="mypage-save-btn" disabled>저장</button>
+            </div>
+          </form>
+        </section>
       </section>
-    </section>
 
-    <!-- 계정 탭 -->
-    <section id="accountTab" class="mypage-tab-content">
-      <section class="mypage-info-section">
-        <form action="/mypage/password" method="post" class="mypage-password-form">
-          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+      <!-- 계정 탭 -->
+      <section id="accountTab" class="mypage-tab-content">
+        <section class="mypage-info-section">
+          <form action="/mypage/password" method="post" class="mypage-password-form">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
-          <div class="mypage-password-row">
-            <label class="mypage-label">비밀번호</label>
-            <div class="mypage-password-current">••••••••</div>
-            <input type="password" class="mypage-password-input" placeholder="새 비밀번호" name="newPassword">
-            <button type="submit" class="mypage-save-btn">비밀번호 변경</button>
+            <div class="mypage-password-row">
+              <label class="mypage-label">비밀번호</label>
+              <div class="mypage-password-current">••••••••</div>
+              <input type="password" class="mypage-password-input" placeholder="새 비밀번호" name="newPassword">
+              <button type="submit" class="mypage-save-btn">비밀번호 변경</button>
+            </div>
+          </form>
+
+          <div class="danger-zone">
+            <button type="button" class="mypage-delete-btn">계정 삭제</button>
           </div>
-        </form>
-
-        <div class="danger-zone">
-          <button type="button" class="mypage-delete-btn">계정 삭제</button>
-        </div>
+        </section>
       </section>
-    </section>
+    </div>
 
-  </div>
+    <script>
+      const tabButtons = document.querySelectorAll('.mypage-tab-btn');
+      const profileTab = document.getElementById('profileTab');
+      const accountTab = document.getElementById('accountTab');
 
-  <script>
-    const tabButtons = document.querySelectorAll('.mypage-tab-btn');
-    const profileTab = document.getElementById('profileTab');
-    const accountTab = document.getElementById('accountTab');
+      tabButtons.forEach(button => {
+        button.addEventListener('click', function () {
+          tabButtons.forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
 
-    tabButtons.forEach(button => {
-      button.addEventListener('click', function () {
-        tabButtons.forEach(btn => btn.classList.remove('active'));
-        this.classList.add('active');
+          const tab = this.dataset.tab;
 
-        const tab = this.dataset.tab;
-
-        if (tab === 'profile') {
-          profileTab.classList.add('active');
-          accountTab.classList.remove('active');
-        } else {
-          accountTab.classList.add('active');
-          profileTab.classList.remove('active');
-        }
+          if (tab === 'profile') {
+            profileTab.classList.add('active');
+            accountTab.classList.remove('active');
+          } else {
+            accountTab.classList.add('active');
+            profileTab.classList.remove('active');
+          }
+        });
       });
-    });
 
-    const nicknameInput = document.getElementById("nickname");
-    const nicknameMessage = document.getElementById("nicknameMessage");
-    const nicknameSaveBtn = document.getElementById("nicknameSaveBtn");
-    const currentNickname = nicknameInput.dataset.currentNickname;
+      const nicknameInput = document.getElementById("nickname");
+      const nicknameMessage = document.getElementById("nicknameMessage");
+      const nicknameSaveBtn = document.getElementById("nicknameSaveBtn");
+      const currentNickname = nicknameInput.dataset.currentNickname;
 
-    let nicknameTimer;
-    let isNicknameValid = false;
+      let nicknameTimer;
+      let isNicknameValid = false;
 
-    function updateNicknameButton() {
-      nicknameSaveBtn.disabled = !isNicknameValid;
-    }
-
-    function validateNicknameFormat(value) {
-      const allowedRegex = /^[가-힣a-zA-Z0-9]+$/;
-
-      if (!allowedRegex.test(value)) {
-        return {
-          valid: false,
-          message: "닉네임은 한글, 영문, 숫자만 사용할 수 있습니다."
-        };
+      function updateNicknameButton() {
+        nicknameSaveBtn.disabled = !isNicknameValid;
       }
 
-      let koreanCount = 0;
-      let englishCount = 0;
-      let numberCount = 0;
+      function validateNicknameFormat(value) {
+        const allowedRegex = /^[가-힣a-zA-Z0-9]+$/;
 
-      for (const ch of value) {
-        if (/[가-힣]/.test(ch)) {
-          koreanCount++;
-        } else if (/[a-zA-Z]/.test(ch)) {
-          englishCount++;
-        } else if (/[0-9]/.test(ch)) {
-          numberCount++;
+        if (!allowedRegex.test(value)) {
+          return {
+            valid: false,
+            message: "닉네임은 한글, 영문, 숫자만 사용할 수 있습니다."
+          };
         }
+
+        let koreanCount = 0;
+        let englishCount = 0;
+        let numberCount = 0;
+
+        for (const ch of value) {
+          if (/[가-힣]/.test(ch)) {
+            koreanCount++;
+          } else if (/[a-zA-Z]/.test(ch)) {
+            englishCount++;
+          } else if (/[0-9]/.test(ch)) {
+            numberCount++;
+          }
+        }
+
+        const valid = koreanCount >= 2 || englishCount >= 3 || numberCount >= 4;
+
+        if (!valid) {
+          return {
+            valid: false,
+            message: "닉네임은 한글 2자 이상, 영문 3자 이상, 숫자 4자 이상 중 하나를 만족해야 합니다."
+          };
+        }
+
+        return { valid: true };
       }
 
-      const valid = koreanCount >= 2 || englishCount >= 3 || numberCount >= 4;
+      nicknameInput.addEventListener("input", function () {
+        clearTimeout(nicknameTimer);
 
-      if (!valid) {
-        return {
-          valid: false,
-          message: "닉네임은 한글 2자 이상, 영문 3자 이상, 숫자 4자 이상 중 하나를 만족해야 합니다."
-        };
-      }
+        const value = nicknameInput.value.trim();
 
-      return { valid: true };
-    }
-
-    nicknameInput.addEventListener("input", function () {
-      clearTimeout(nicknameTimer);
-
-      const value = nicknameInput.value.trim();
-
-      if (value === "") {
-        nicknameMessage.textContent = "";
-        nicknameMessage.className = "input-message";
-        isNicknameValid = false;
-        updateNicknameButton();
-        return;
-      }
-
-      const formatResult = validateNicknameFormat(value);
-
-      if (!formatResult.valid) {
-        nicknameMessage.textContent = formatResult.message;
-        nicknameMessage.className = "input-message error";
-        isNicknameValid = false;
-        updateNicknameButton();
-        return;
-      }
-
-      nicknameTimer = setTimeout(async function () {
-        const response = await fetch(`/mypage/nickname/check?nickname=${encodeURIComponent(value)}`);
-        const data = await response.json();
-
-        if (!data.valid) {
-          nicknameMessage.textContent = data.message;
-          nicknameMessage.className = "input-message error";
-          isNicknameValid = false;
-        } else if (data.same) {
-          nicknameMessage.textContent = data.message;
+        if (value === "") {
+          nicknameMessage.textContent = "";
           nicknameMessage.className = "input-message";
           isNicknameValid = false;
-        } else {
-          nicknameMessage.textContent = data.message;
-          nicknameMessage.className = "input-message success";
-          isNicknameValid = true;
+          updateNicknameButton();
+          return;
         }
 
-        updateNicknameButton();
-      }, 300);
-    });
+        const formatResult = validateNicknameFormat(value);
 
-    if (nicknameInput.value.trim() === currentNickname.trim()) {
-      isNicknameValid = false;
-      updateNicknameButton();
-    }
-  </script>
+        if (!formatResult.valid) {
+          nicknameMessage.textContent = formatResult.message;
+          nicknameMessage.className = "input-message error";
+          isNicknameValid = false;
+          updateNicknameButton();
+          return;
+        }
+
+        nicknameTimer = setTimeout(async function () {
+          const response = await fetch(`/mypage/nickname/check?nickname=${encodeURIComponent(value)}`);
+          const data = await response.json();
+
+          if (!data.valid) {
+            nicknameMessage.textContent = data.message;
+            nicknameMessage.className = "input-message error";
+            isNicknameValid = false;
+          } else if (data.same) {
+            nicknameMessage.textContent = data.message;
+            nicknameMessage.className = "input-message";
+            isNicknameValid = false;
+          } else {
+            nicknameMessage.textContent = data.message;
+            nicknameMessage.className = "input-message success";
+            isNicknameValid = true;
+          }
+
+          updateNicknameButton();
+        }, 300);
+      });
+
+      if (nicknameInput.value.trim() === currentNickname.trim()) {
+        isNicknameValid = false;
+        updateNicknameButton();
+      }
+    </script>
 </main>
 
 </html>

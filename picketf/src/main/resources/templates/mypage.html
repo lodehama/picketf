@@ -76,9 +76,15 @@
 
               <div class="mypage-password-current">••••••••</div>
 
-              <div class="mypage-nickname-box">
+              <div class="mypage-password-box">
+                <input type="password" id="currentPassword" name="currentPassword" class="mypage-password-input"
+                  placeholder="현재 비밀번호">
+
                 <input type="password" id="newPassword" name="newPassword" class="mypage-password-input"
                   placeholder="새 비밀번호">
+
+                <input type="password" id="newPasswordConfirm" name="newPasswordConfirm" class="mypage-password-input"
+                  placeholder="새 비밀번호 확인">
 
                 <div id="passwordMessage" class="input-message"></div>
               </div>
@@ -212,7 +218,9 @@
       // ======================
       // 비밀번호 로직
       // ======================
-      const passwordInput = document.getElementById("newPassword");
+      const currentPasswordInput = document.getElementById("currentPassword");
+      const newPasswordInput = document.getElementById("newPassword");
+      const newPasswordConfirmInput = document.getElementById("newPasswordConfirm");
       const passwordMessage = document.getElementById("passwordMessage");
       const passwordSaveBtn = document.getElementById("passwordSaveBtn");
 
@@ -235,10 +243,12 @@
         passwordSaveBtn.disabled = !isPasswordValid;
       }
 
-      passwordInput.addEventListener("input", function () {
-        const value = passwordInput.value.trim();
+      function validatePasswordForm() {
+        const currentPassword = currentPasswordInput.value.trim();
+        const newPassword = newPasswordInput.value.trim();
+        const newPasswordConfirm = newPasswordConfirmInput.value.trim();
 
-        if (value === "") {
+        if (currentPassword === "" && newPassword === "" && newPasswordConfirm === "") {
           passwordMessage.textContent = "";
           passwordMessage.className = "input-message";
           isPasswordValid = false;
@@ -246,20 +256,65 @@
           return;
         }
 
-        const result = validatePasswordFormat(value);
+        if (currentPassword === "") {
+          passwordMessage.textContent = "현재 비밀번호를 입력해주세요.";
+          passwordMessage.className = "input-message error";
+          isPasswordValid = false;
+          updatePasswordButton();
+          return;
+        }
+
+        if (newPassword === "") {
+          passwordMessage.textContent = "새 비밀번호를 입력해주세요.";
+          passwordMessage.className = "input-message error";
+          isPasswordValid = false;
+          updatePasswordButton();
+          return;
+        }
+
+        const result = validatePasswordFormat(newPassword);
 
         if (!result.valid) {
           passwordMessage.textContent = result.message;
           passwordMessage.className = "input-message error";
           isPasswordValid = false;
-        } else {
-          passwordMessage.textContent = "사용 가능한 비밀번호입니다.";
-          passwordMessage.className = "input-message success";
-          isPasswordValid = true;
+          updatePasswordButton();
+          return;
         }
 
+        if (currentPassword === newPassword) {
+          passwordMessage.textContent = "현재 비밀번호와 다른 비밀번호를 입력해주세요.";
+          passwordMessage.className = "input-message error";
+          isPasswordValid = false;
+          updatePasswordButton();
+          return;
+        }
+
+        if (newPasswordConfirm === "") {
+          passwordMessage.textContent = "새 비밀번호 확인을 입력해주세요.";
+          passwordMessage.className = "input-message error";
+          isPasswordValid = false;
+          updatePasswordButton();
+          return;
+        }
+
+        if (newPassword !== newPasswordConfirm) {
+          passwordMessage.textContent = "새 비밀번호가 일치하지 않습니다.";
+          passwordMessage.className = "input-message error";
+          isPasswordValid = false;
+          updatePasswordButton();
+          return;
+        }
+
+        passwordMessage.textContent = "사용 가능한 비밀번호입니다.";
+        passwordMessage.className = "input-message success";
+        isPasswordValid = true;
         updatePasswordButton();
-      });
+      }
+
+      currentPasswordInput.addEventListener("input", validatePasswordForm);
+      newPasswordInput.addEventListener("input", validatePasswordForm);
+      newPasswordConfirmInput.addEventListener("input", validatePasswordForm);
 
       updatePasswordButton();
     </script>

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.hama.picketf.model.util.UserConst;
 import com.hama.picketf.model.vo.UserVO;
@@ -209,5 +210,30 @@ public class UserController {
       model.addAttribute("nicknameError", e.getMessage());
       return "mypage";
     }
+  }
+
+  @PostMapping("/mypage/password")
+  public String updatePassword(@RequestParam("currentPassword") String currentPassword,
+      @RequestParam("newPassword") String newPassword,
+      @RequestParam("newPasswordConfirm") String newPasswordConfirm,
+      Authentication authentication,
+      RedirectAttributes redirectAttributes) {
+
+    CustomUser customUser = (CustomUser) authentication.getPrincipal();
+    UserVO loginUser = customUser.getMember();
+
+    try {
+      userService.updatePassword(
+          loginUser.getUs_num(),
+          currentPassword,
+          newPassword,
+          newPasswordConfirm);
+
+      redirectAttributes.addFlashAttribute("passwordSuccess", "비밀번호가 변경되었습니다.");
+    } catch (IllegalArgumentException e) {
+      redirectAttributes.addFlashAttribute("passwordError", e.getMessage());
+    }
+
+    return "redirect:/mypage";
   }
 }

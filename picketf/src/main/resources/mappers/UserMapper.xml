@@ -65,4 +65,10 @@
     WHERE us_num = #{us_num}
   </update>
 
+  <update id="updatePassword">
+    UPDATE user
+    SET us_pw = #{us_pw}
+    WHERE us_num = #{us_num}
+  </update>
+
 </mapper>

@@ -204,4 +204,40 @@ public class UserService {
 		}
 		return value.trim();
 	}
+
+	public void updatePassword(int userNum, String currentPassword, String newPassword, String newPasswordConfirm) {
+		if (currentPassword == null || currentPassword.isBlank()) {
+			throw new IllegalArgumentException("현재 비밀번호를 입력해주세요.");
+		}
+
+		if (newPassword == null || newPassword.isBlank()) {
+			throw new IllegalArgumentException("새 비밀번호를 입력해주세요.");
+		}
+
+		if (newPasswordConfirm == null || newPasswordConfirm.isBlank()) {
+			throw new IllegalArgumentException("새 비밀번호 확인을 입력해주세요.");
+		}
+
+		if (!newPassword.equals(newPasswordConfirm)) {
+			throw new IllegalArgumentException("새 비밀번호가 일치하지 않습니다.");
+		}
+
+		validatePassword(newPassword);
+
+		UserVO loginUser = userDAO.selectUserByNum(userNum);
+		if (loginUser == null) {
+			throw new IllegalArgumentException("사용자 정보를 찾을 수 없습니다.");
+		}
+
+		if (!passwordEncoder.matches(currentPassword, loginUser.getUs_pw())) {
+			throw new IllegalArgumentException("현재 비밀번호가 올바르지 않습니다.");
+		}
+
+		if (passwordEncoder.matches(newPassword, loginUser.getUs_pw())) {
+			throw new IllegalArgumentException("현재 비밀번호와 다른 비밀번호를 입력해주세요.");
+		}
+
+		String encodedPassword = passwordEncoder.encode(newPassword);
+		userDAO.updatePassword(userNum, encodedPassword);
+	}
 }

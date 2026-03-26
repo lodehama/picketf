@@ -17,4 +17,6 @@ public interface UserDAO {
 	UserVO selectUserByNum(int us_num);
 
 	void updateNickname(@Param("us_num") int us_num, @Param("us_nickname") String us_nickname);
+
+	void updatePassword(@Param("us_num") int us_num, @Param("us_pw") String us_pw);
 }

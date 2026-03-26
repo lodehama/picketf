@@ -15,6 +15,7 @@ public class UserService {
 
 	private static final Pattern USER_ID_PATTERN = Pattern.compile("^[a-zA-Z][a-zA-Z0-9]{3,15}$");
 	private static final Pattern PASSWORD_PATTERN = Pattern.compile("^[A-Za-z0-9!@#$%^&*]{8,20}$");
+	private static final Pattern NICKNAME_PATTERN = Pattern.compile("^[가-힣A-Za-z0-9]{2,8}$");
 	private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
 
 	@Autowired
@@ -142,26 +143,8 @@ public class UserService {
 			throw new IllegalArgumentException("닉네임을 입력해주세요.");
 		}
 
-		int koreanCount = 0;
-		int englishCount = 0;
-		int numberCount = 0;
-
-		for (char c : nickname.toCharArray()) {
-			if (c >= '가' && c <= '힣') {
-				koreanCount++;
-			} else if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
-				englishCount++;
-			} else if (c >= '0' && c <= '9') {
-				numberCount++;
-			} else {
-				throw new IllegalArgumentException("닉네임은 한글, 영문, 숫자만 사용할 수 있습니다.");
-			}
-		}
-
-		boolean valid = koreanCount >= 2 || englishCount >= 3 || numberCount >= 4;
-
-		if (!valid) {
-			throw new IllegalArgumentException("닉네임은 한글 2자 이상, 영문 3자 이상, 숫자 4자 이상 중 하나를 만족해야 합니다.");
+		if (!NICKNAME_PATTERN.matcher(nickname).matches()) {
+			throw new IllegalArgumentException("닉네임은 2~8자이며, 한글/영문/숫자만 가능합니다.");
 		}
 	}
 

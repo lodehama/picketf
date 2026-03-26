@@ -299,7 +299,22 @@ main {
 }
 
 .mypage-nickname-box {
-  width: calc(100% - 88px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.mypage-nickname-box .mypage-password-input {
+  width: 100%;
+}
+
+.input-message.error {
+  color: #dc2626;
+}
+
+.input-message.success {
+  color: #16a34a;
 }
 
 .mypage-input {
@@ -359,7 +374,7 @@ main {
 
 .mypage-password-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
   width: 100%;
 }

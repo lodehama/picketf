@@ -48,19 +48,20 @@
           <form action="/mypage/update" method="post" class="mypage-form">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
-            <div class="mypage-form-row">
-              <label for="nickname" class="mypage-label">닉네임</label>
+            <div class="mypage-password-row">
+              <label for="newNickname" class="mypage-label">닉네임</label>
+
+              <div class="mypage-password-current" th:text="${loginUser.us_nickname}"></div>
+
               <div class="mypage-nickname-box">
-                <input type="text" id="nickname" name="us_nickname" class="mypage-input"
-                  th:value="${loginUser.us_nickname}" th:data-current-nickname="${loginUser.us_nickname}"
-                  maxlength="20">
+                <input type="text" id="newNickname" name="us_nickname" class="mypage-password-input" placeholder="새 닉네임"
+                  th:data-current-nickname="${loginUser.us_nickname}" maxlength="20">
                 <div id="nicknameMessage" class="input-message"></div>
               </div>
             </div>
 
             <div class="msg-error" th:if="${nicknameError}" th:text="${nicknameError}"></div>
-            <div class="msg-success" th:if="${nicknameSuccess}" th:text="${nicknameSuccess}">
-            </div>
+            <div class="msg-success" th:if="${nicknameSuccess}" th:text="${nicknameSuccess}"></div>
 
             <div class="mypage-form-actions">
               <button type="submit" id="nicknameSaveBtn" class="mypage-save-btn" disabled>저장</button>
@@ -90,6 +91,7 @@
       </section>
     </div>
 
+    <!-- 스크립트 -->
     <script>
       const tabButtons = document.querySelectorAll('.mypage-tab-btn');
       const profileTab = document.getElementById('profileTab');
@@ -112,7 +114,7 @@
         });
       });
 
-      const nicknameInput = document.getElementById("nickname");
+      const nicknameInput = document.getElementById("newNickname");
       const nicknameMessage = document.getElementById("nicknameMessage");
       const nicknameSaveBtn = document.getElementById("nicknameSaveBtn");
       const currentNickname = nicknameInput.dataset.currentNickname;
@@ -183,6 +185,14 @@
           return;
         }
 
+        if (value === currentNickname.trim()) {
+          nicknameMessage.textContent = "현재 닉네임과 동일합니다.";
+          nicknameMessage.className = "input-message";
+          isNicknameValid = false;
+          updateNicknameButton();
+          return;
+        }
+
         nicknameTimer = setTimeout(async function () {
           const response = await fetch(`/mypage/nickname/check?nickname=${encodeURIComponent(value)}`);
           const data = await response.json();
@@ -205,10 +215,7 @@
         }, 300);
       });
 
-      if (nicknameInput.value.trim() === currentNickname.trim()) {
-        isNicknameValid = false;
-        updateNicknameButton();
-      }
+      updateNicknameButton();
     </script>
 </main>
 

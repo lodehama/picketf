@@ -48,14 +48,14 @@
           <form action="/mypage/update" method="post" class="mypage-form">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
-            <div class="mypage-password-row">
+            <div class="mypage-nickname-row">
               <label for="newNickname" class="mypage-label">닉네임</label>
 
-              <div class="mypage-password-current" th:text="${loginUser.us_nickname}"></div>
+              <div class="mypage-nickname-current" th:text="${loginUser.us_nickname}"></div>
 
               <div class="mypage-nickname-box">
-                <input type="text" id="newNickname" name="us_nickname" class="mypage-password-input" placeholder="새 닉네임"
-                  th:data-current-nickname="${loginUser.us_nickname}" maxlength="20">
+                <input type="text" id="newNickname" name="us_nickname" class="mypage-nickname-input" placeholder="새 닉네임"
+                  maxlength="20" th:data-current-nickname="${loginUser.us_nickname}">
                 <div id="nicknameMessage" class="input-message"></div>
               </div>
             </div>

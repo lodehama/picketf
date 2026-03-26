@@ -476,6 +476,19 @@ main {
   font-weight: 500;
 }
 
+/* 비밀번호 메시지도 */
+#passwordMessage {
+  min-height: 20px;
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* 입력칸 width 통일 */
+.mypage-password-input {
+  width: 100%;
+}
+
 /* #endregion mypage */
 
 /* #region sidebar-layout */

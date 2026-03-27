@@ -88,7 +88,7 @@
             </div>
           </form>
 
-          <form action="/mypage/delete" method="post">
+          <form action="/mypage/delete" method="post" onsubmit="return confirmWithdraw();">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <button type="submit" class="mypage-delete-btn">회원 탈퇴</button>
           </form>
@@ -265,6 +265,9 @@
 
       newPasswordInput.addEventListener("input", validatePasswordForm);
 
+      function confirmWithdraw() {
+        return confirm("탈퇴 시 모든 계정 정보와 데이터는 삭제됩니다.\n정말 탈퇴하시겠습니까?");
+      }
       updatePasswordButton();
     </script>
 </main>

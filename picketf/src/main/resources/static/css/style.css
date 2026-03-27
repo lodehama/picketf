@@ -454,6 +454,13 @@ main {
   flex-shrink: 0;
 }
 
+.mypage-password-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
 .mypage-password-input::placeholder {
   color: #9ca3af;
 }

@@ -213,9 +213,8 @@ public class UserController {
   }
 
   @PostMapping("/mypage/password")
-  public String updatePassword(@RequestParam("currentPassword") String currentPassword,
+  public String updatePassword(
       @RequestParam("newPassword") String newPassword,
-      @RequestParam("newPasswordConfirm") String newPasswordConfirm,
       Authentication authentication,
       RedirectAttributes redirectAttributes) {
 
@@ -223,12 +222,7 @@ public class UserController {
     UserVO loginUser = customUser.getMember();
 
     try {
-      userService.updatePassword(
-          loginUser.getUs_num(),
-          currentPassword,
-          newPassword,
-          newPasswordConfirm);
-
+      userService.updatePassword(loginUser.getUs_num(), newPassword);
       redirectAttributes.addFlashAttribute("passwordSuccess", "비밀번호가 변경되었습니다.");
     } catch (IllegalArgumentException e) {
       redirectAttributes.addFlashAttribute("passwordError", e.getMessage());

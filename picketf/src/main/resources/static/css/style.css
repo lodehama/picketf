@@ -967,6 +967,13 @@ input[type="number"].money {
   font-variant-numeric: tabular-nums;
 }
 
+/* isa 유형 박스 */
+.isa-type-group {
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+
 /* #endregion isa-tax */
 
 /* #region auth layout */

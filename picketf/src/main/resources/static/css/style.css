@@ -446,12 +446,6 @@ main {
   border-color: #93c5fd;
 }
 
-.danger-zone {
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid #d1d5db;
-}
-
 /* 비밀번호 메시지도 */
 #passwordMessage {
   min-height: 20px;

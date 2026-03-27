@@ -71,4 +71,9 @@
     WHERE us_num = #{us_num}
   </update>
 
+  <delete id="deleteUser" parameterType="int">
+    DELETE FROM user
+    WHERE us_num = #{us_num}
+  </delete>
+
 </mapper>

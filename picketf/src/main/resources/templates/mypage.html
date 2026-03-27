@@ -88,9 +88,11 @@
             </div>
           </form>
 
-          <div class="danger-zone">
-            <button type="button" class="mypage-delete-btn">회원 탈퇴</button>
-          </div>
+          <form action="/mypage/delete" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <button type="submit" class="mypage-delete-btn">회원 탈퇴</button>
+          </form>
+
         </section>
       </section>
     </div>

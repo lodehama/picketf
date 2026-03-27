@@ -19,4 +19,6 @@ public interface UserDAO {
 	void updateNickname(@Param("us_num") int us_num, @Param("us_nickname") String us_nickname);
 
 	void updatePassword(@Param("us_num") int us_num, @Param("us_pw") String us_pw);
+	
+	void deleteUser(@Param("us_num") int us_num);
 }

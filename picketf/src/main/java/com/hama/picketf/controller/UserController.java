@@ -212,6 +212,7 @@ public class UserController {
     }
   }
 
+  // 비밀번호 변경
   @PostMapping("/mypage/password")
   public String updatePassword(
       @RequestParam("newPassword") String newPassword,
@@ -229,5 +230,17 @@ public class UserController {
     }
 
     return "redirect:/mypage";
+  }
+
+  // 회원 탈퇴
+  @PostMapping("/mypage/delete")
+  public String deleteUser(Authentication authentication) {
+
+    CustomUser customUser = (CustomUser) authentication.getPrincipal();
+    UserVO loginUser = customUser.getMember();
+
+    userService.deleteUser(loginUser.getUs_num());
+
+    return "redirect:/";
   }
 }

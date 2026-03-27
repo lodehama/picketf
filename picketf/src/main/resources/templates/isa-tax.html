@@ -80,6 +80,23 @@
                   </div>
                 </div>
 
+                <!-- 직투 비과세 매년 수익실현 -->
+                <div class="mt-2 ms-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="directExempt3y" />
+                    <label class="form-check-label" for="directExempt3y">
+                      직투 매년 비과세만큼 수익실현 (3년)
+                    </label>
+                  </div>
+
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="directExempt5y" />
+                    <label class="form-check-label" for="directExempt5y">
+                      직투 매년 비과세만큼 수익실현 (5년)
+                    </label>
+                  </div>
+                </div>
+
                 <hr class="my-4" />
 
                 <div class="d-flex gap-2">
@@ -132,6 +149,7 @@
                   <li>ISA (3년 이상 유지) : <br>(수익 - 비과세 한도) × 9.9%</li>
                   <li>ISA (중도해지) : 수익 × 15.4%</li>
                   <li>직투 : (수익 - 250만원) × 22%</li>
+                  <li>직투 수익실현 선택 시 : 비과세 한도 x n년) × 22%</li>
                 </ul>
               </div>
             </div>
@@ -140,6 +158,7 @@
       </div>
     </main>
 
+    <!-- 스크립트 -->
     <script>
       // ===== 숫자 유틸 =====
       const toNumber = (v) => {
@@ -169,6 +188,10 @@
       const currentValueEl = document.getElementById("currentValue");
       const earlyCloseEl = document.getElementById("earlyClose");
 
+      // 직투 수익실현 옵션 체크박스
+      const directExempt3yEl = document.getElementById("directExempt3y");
+      const directExempt5yEl = document.getElementById("directExempt5y");
+
       const profitText = document.getElementById("profitText");
       const isaTaxText = document.getElementById("isaTaxText");
       const directTaxText = document.getElementById("directTaxText");
@@ -181,10 +204,47 @@
       attachCommaInput(principalEl);
       attachCommaInput(currentValueEl);
 
+      // ===== 체크박스 한 개만 선택되게 =====
+      directExempt3yEl.addEventListener("change", () => {
+        if (directExempt3yEl.checked) {
+          directExempt5yEl.checked = false;
+        }
+      });
+
+      directExempt5yEl.addEventListener("change", () => {
+        if (directExempt5yEl.checked) {
+          directExempt3yEl.checked = false;
+        }
+      });
+
       // ===== 계산 로직 =====
       const getIsaExempt = () => {
         const type = document.querySelector("input[name='isaType']:checked")?.value || "NORMAL";
         return type === "LOW_INCOME" ? 4_000_000 : 2_000_000;
+      };
+
+      const getDirectExempt = () => {
+        if (directExempt3yEl.checked) {
+          return 7_500_000;
+        }
+
+        if (directExempt5yEl.checked) {
+          return 12_500_000;
+        }
+
+        return 2_500_000;
+      };
+
+      const getDirectExemptLabel = () => {
+        if (directExempt3yEl.checked) {
+          return "3년 수익실현 적용";
+        }
+
+        if (directExempt5yEl.checked) {
+          return "5년 수익실현 적용";
+        }
+
+        return "기본";
       };
 
       const calc = () => {
@@ -192,7 +252,7 @@
         const currentValue = toNumber(currentValueEl.value);
         const profit = currentValue - principal;
 
-        // 손실/손익0 처리: 과세 없음 안내
+        // 손실/손익0 처리
         if (profit <= 0) {
           profitText.textContent = `수익: ${formatWon(profit)}`;
 
@@ -209,7 +269,7 @@
 
         const profitPos = clampMin0(profit);
 
-        // ISA
+        // ===== ISA =====
         const isaExempt = getIsaExempt();
         let isaTax = 0;
         let isaNote = "";
@@ -218,20 +278,22 @@
           isaTax = profitPos * 0.154;
           isaNote = `중도해지: 수익 ${formatWon(profitPos)} × 15.4%`;
         } else {
-          const taxable = clampMin0(profitPos - isaExempt);
-          isaTax = taxable * 0.099;
+          const isaTaxable = clampMin0(profitPos - isaExempt);
+          isaTax = isaTaxable * 0.099;
           isaNote = `(수익 ${formatWon(profitPos)} - 비과세 ${formatWon(isaExempt)}) × 9.9%`;
         }
 
-        // 직투 (해외주식 양도세 가정)
-        const directExempt = 2_500_000;
+        // ===== 직투 =====
+        const directExempt = getDirectExempt();
+        const directExemptLabel = getDirectExemptLabel();
         const directTaxable = clampMin0(profitPos - directExempt);
         const directTax = directTaxable * 0.22;
-        const directNote = `(수익 ${formatWon(profitPos)} - 비과세 ${formatWon(directExempt)}) × 22%`;
+        const directNote = `${directExemptLabel}: (수익 ${formatWon(profitPos)} - 비과세 ${formatWon(directExempt)}) × 22%`;
 
+        // ===== 절세액 =====
         const saved = directTax - isaTax;
 
-        // 출력
+        // ===== 출력 =====
         profitText.textContent = `수익: ${formatWon(profit)}`;
         isaTaxText.textContent = formatWon(isaTax);
         directTaxText.textContent = formatWon(directTax);
@@ -251,6 +313,8 @@
         principalEl.value = (20_000_000).toLocaleString("ko-KR");
         currentValueEl.value = (30_000_000).toLocaleString("ko-KR");
         earlyCloseEl.checked = false;
+        directExempt3yEl.checked = false;
+        directExempt5yEl.checked = false;
         document.getElementById("typeNormal").checked = true;
         calc();
       });
@@ -259,6 +323,8 @@
         principalEl.value = "";
         currentValueEl.value = "";
         earlyCloseEl.checked = false;
+        directExempt3yEl.checked = false;
+        directExempt5yEl.checked = false;
         document.getElementById("typeNormal").checked = true;
 
         profitText.textContent = "수익: -";

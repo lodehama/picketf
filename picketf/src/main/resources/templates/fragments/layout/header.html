@@ -21,10 +21,6 @@
         <a href="/login" class="app-nav__link" sec:authorize="isAnonymous()">로그인</a>
         <a href="/signup" class="app-nav__signup" sec:authorize="isAnonymous()">계정 만들기</a>
 
-        <!-- <a href="/mypage" class="app-nav__mypage" sec:authorize="isAuthenticated()">
-          <img src="/img/person-square.svg" alt="마이페이지" class="app-nav__mypage-icon">
-        </a> -->
-
         <div class="app-user-menu" sec:authorize="isAuthenticated()">
           <button type="button" class="app-user-menu__trigger" id="userMenuBtn">
             <img src="/img/person-square.svg" alt="사용자 메뉴" class="app-user-menu__icon">

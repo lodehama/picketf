@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{fragments/layout/layout.html}">
+
+<head>
+  <title>자료 출처</title>
+</head>
+
+<main layout:fragment="content">
+  <div class="container py-4 sources-page">
+    <div class="sources-wrap">
+      <h2 class="sources-title">자료 출처</h2>
+      <p class="sources-desc">
+        Pick ETF에서 제공하는 메뉴는 아래 기관의 자료를 바탕으로 합니다.
+      </p>
+      <div class="sources-list">
+        <div class="source-card">
+          <div class="source-card__body">
+            <h3 class="source-card__title">화폐가치 계산</h3>
+            <p class="source-card__text">소비자 물가 지수 // 연도별 최저임금</p>
+            <a href="https://kosis.kr/statHtml/statHtml.do?sso=ok&returnurl=https%3A%2F%2Fkosis.kr%3A443%2FstatHtml%2FstatHtml.do%3FtmprScrId%3D20260331230945509_e9616e8866da4bc5%26tblId%3DDT_1J22003%26orgId%3D101%26"
+              target="_blank" rel="noopener noreferrer" class="source-card__link">
+              국가통계포털
+            </a>
+            <a>//</a>
+            <a href="https://www.minimumwage.go.kr/minWage/policy/decisionMain.do" target="_blank"
+              rel="noopener noreferrer" class="source-card__link">
+              최저임금위원회
+            </a>
+          </div>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card__body">
+            <h3 class="source-card__title">ETF 실부담비용</h3>
+            <p class="source-card__text">해당 종목의 실부담비용
+            </p>
+            <a href="https://dis.kofia.or.kr/websquare/index.jsp?w2xPath=/wq/fundann/DISFundFeeCMS.xml&divisionId=MDIS01005001000000&serviceId=SDIS01005001000"
+              target="_blank" rel="noopener noreferrer" class="source-card__link">
+              금융투자협회
+            </a>
+          </div>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card__body">
+            <h3 class="source-card__title">ETF 정보</h3>
+            <p class="source-card__text">기준일자,
+              종목코드,
+              종목명,
+              증가,
+              대비,
+              등락률,
+              순자산가치(NAV),
+              시가,
+              고가,
+              저가,
+              거래량,
+              거래대금,
+              시가총액,
+              순자산총액,
+              상장좌수,
+              기초지수_지수명,
+              기초지수_증가,
+              기초지수_대비
+              기초지수_등락률</p>
+            <a href="https://data.krx.co.kr" target="_blank" rel="noopener noreferrer" class="source-card__link">
+              한국거래소 (KRX)
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .sources-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .sources-title {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #111827;
+    }
+
+    .sources-desc {
+      text-align: center;
+      font-size: 15px;
+      color: #6b7280;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .sources-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .source-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      background: #ffffff;
+      box-shadow: 0 2px 8px rgba(17, 24, 39, 0.04);
+    }
+
+    .source-card__body {
+      padding: 20px 22px;
+    }
+
+    .source-card__title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 8px;
+    }
+
+    .source-card__text {
+      font-size: 15px;
+      color: #4b5563;
+      margin-bottom: 12px;
+      line-height: 1.6;
+    }
+
+    .source-card__link {
+      display: inline-block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    .source-card__link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</main>
+
+</html>

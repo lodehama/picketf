@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import com.hama.picketf.service.UserService;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Controller
 public class HomeController {
@@ -35,6 +37,12 @@ public class HomeController {
   public String devlog() {
     return "devlog";
   }
+
+  @GetMapping("/sources")
+  public String sources() {
+    return "sources";
+  }
+
 
   // @GetMapping("/fees")
   // public String fees() {

@@ -189,11 +189,14 @@ main {
   cursor: pointer;
 }
 
-.mypage-divider {
-  grid-column: 1 / -1; /*  grid 2열 전체 차지 */
-  border-top: 1px solid #9ca3af;
-  margin: 24px 0 24px; /* 위/아래 여백  */
+/* 비활성화 메뉴 */
+.disabled-link {
+  pointer-events: none;
+  color: #9ca3af;
+  cursor: not-allowed;
 }
+  
+/* 비활설화 메뉴 */
 
 /* #endregion header */
 

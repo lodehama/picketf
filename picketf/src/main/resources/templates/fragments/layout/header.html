@@ -28,12 +28,13 @@
 
           <div class="app-user-menu__dropdown" id="userMenuDropdown">
             <a href="/mypage" class="app-user-menu__item">마이 페이지</a>
-            <a href="/settings" class="app-user-menu__item">설정</a>
 
             <form action="/logout" method="post" class="app-user-menu__form">
               <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
               <button type="submit" class="app-user-menu__item app-user-menu__logout">로그아웃</button>
             </form>
+            
+            <a href="#" class="app-user-menu__item disabled-link">설정</a>
           </div>
         </div>
       </div>

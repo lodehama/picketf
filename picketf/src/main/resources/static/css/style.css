@@ -216,6 +216,29 @@ main {
 }
 /* #endregion footer */
 
+/* #region index */
+.title-blue {
+  text-align: center;
+  font-size: 36px;
+  font-weight: 800;
+  color: #2f8df3;
+  margin-bottom: 18px;
+}
+
+.content-blue {
+  text-align: center;
+  font-weight: 700;
+  color: #2f8df3;
+}
+
+.content-black {
+  text-align: center;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* #endregion index */
+
 /* #region mypage */
 
 :root {
@@ -1041,7 +1064,7 @@ input[type="number"].money {
 
 /* #endregion auth layout */
 
-/* #region auth common */
+/* #region auth common login */
 .auth-page {
   width: 100%;
 }
@@ -1172,7 +1195,7 @@ input[type="number"].money {
   color: #adb5bd;
   margin: 0 4px;
 }
-/* #endregion auth common */
+/* #endregion auth common login */
 
 /* #region signup */
 .signup-btn {

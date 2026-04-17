@@ -300,7 +300,7 @@
         const rows = Array.from(document.querySelectorAll("tr[data-code]"));
         const codes = rows.map((r) => r.dataset.code).join(",");
 
-        // ✅ KRX + META 병렬 호출
+        // KRX + META 병렬 호출
         const [krxRes, metaRes] = await Promise.all([
           fetch(`/api/krx?codes=${codes}`),
           fetch(`/api/etf/meta?codes=${codes}`)
@@ -501,7 +501,7 @@
         const $btnHedged = document.getElementById("btn-hedged");
         const $btnLeverage = document.getElementById("btn-leverage");
 
-        // ✅ META 기반 플래그 + 실부담비용 한 번에 처리
+        // META 기반 플래그 + 실부담비용 한 번에 처리
         rows.forEach((row) => {
           const code = row.dataset.code;
           const meta = metaMap[code] || {};

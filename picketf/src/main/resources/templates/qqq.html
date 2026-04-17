@@ -9,10 +9,11 @@
   <div class="container py-3">
     <h5 class="mb-3">나스닥 100 ETF</h5>
     <div class="mb-2">
-      <p><strong>페이지 로드시 정렬 기준은 시가총액 내림차순</strong></p>
-      <p><strong>항목별 데이터 출처 확인하기</strong></p>
-      <p><strong>카테고리 분류 버튼 배포전에 꼭 바꾸기</strong></p>
-
+      <p><strong>종목 정보는 전날 종가 기준입니다.</strong></p>
+      <p><strong>휴장일을 제외하고 매일 업데이트 됩니다.</strong></p>
+      <p><strong>업데이트 기준 => 실부담비용 : 수동 업데이트 = TER (A+B) + 매매 · 중개 수수료율 (D)</strong></p>
+      <p><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          => 나머지 정보 : 자동 업데이트</strong></p>
 
       <div class="d-flex gap-2 mb-2" id="etf-filter-bar">
         <button class="btn btn-light border active" id="btn-basic" type="button">파생상품 제외</button>
@@ -29,7 +30,7 @@
             <th id="bas-date-header">기준일</th>
             <th>종목명 <i class="bi bi-caret-down-fill"></i></th>
             <th>실부담비용 <i class="bi bi-caret-down-fill"></i></th>
-            <th>시가총액 <i class="bi bi-caret-down-fill"></i></th>
+            <th>순자산총액 <i class="bi bi-caret-down-fill"></i></th>
             <th>거래대금 <i class="bi bi-caret-down-fill"></i></th>
             <th>종가 <i class="bi bi-caret-down-fill"></i></th>
             <th>NAV</th>
@@ -44,7 +45,7 @@
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
             <td class="etf_real_cost">-</td>
-            <td class="MKTCAP">-</td>
+            <td class="INVSTASST_NETASST_TOTAMT">-</td>
             <td class="ACC_TRDVAL">-</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="NAV">-</td>
@@ -58,7 +59,7 @@
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
             <td class="etf_real_cost">-</td>
-            <td class="MKTCAP">-</td>
+            <td class="INVSTASST_NETASST_TOTAMT">-</td>
             <td class="ACC_TRDVAL">-</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="NAV">-</td>
@@ -72,7 +73,7 @@
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
             <td class="etf_real_cost">-</td>
-            <td class="MKTCAP">-</td>
+            <td class="INVSTASST_NETASST_TOTAMT">-</td>
             <td class="ACC_TRDVAL">-</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="NAV">-</td>
@@ -86,7 +87,7 @@
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
             <td class="etf_real_cost">-</td>
-            <td class="MKTCAP">-</td>
+            <td class="INVSTASST_NETASST_TOTAMT">-</td>
             <td class="ACC_TRDVAL">-</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="NAV">-</td>
@@ -100,7 +101,7 @@
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
             <td class="etf_real_cost">-</td>
-            <td class="MKTCAP">-</td>
+            <td class="INVSTASST_NETASST_TOTAMT">-</td>
             <td class="ACC_TRDVAL">-</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="NAV">-</td>
@@ -114,7 +115,7 @@
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
             <td class="etf_real_cost">-</td>
-            <td class="MKTCAP">-</td>
+            <td class="INVSTASST_NETASST_TOTAMT">-</td>
             <td class="ACC_TRDVAL">-</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="NAV">-</td>
@@ -128,7 +129,7 @@
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
             <td class="etf_real_cost">-</td>
-            <td class="MKTCAP">-</td>
+            <td class="INVSTASST_NETASST_TOTAMT">-</td>
             <td class="ACC_TRDVAL">-</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="NAV">-</td>
@@ -142,7 +143,7 @@
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
             <td class="etf_real_cost">-</td>
-            <td class="MKTCAP">-</td>
+            <td class="INVSTASST_NETASST_TOTAMT">-</td>
             <td class="ACC_TRDVAL">-</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="NAV">-</td>
@@ -156,7 +157,7 @@
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
             <td class="etf_real_cost">-</td>
-            <td class="MKTCAP">-</td>
+            <td class="INVSTASST_NETASST_TOTAMT">-</td>
             <td class="ACC_TRDVAL">-</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="NAV">-</td>
@@ -170,7 +171,7 @@
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
             <td class="etf_real_cost">-</td>
-            <td class="MKTCAP">-</td>
+            <td class="INVSTASST_NETASST_TOTAMT">-</td>
             <td class="ACC_TRDVAL">-</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="NAV">-</td>
@@ -184,7 +185,7 @@
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
             <td class="etf_real_cost">-</td>
-            <td class="MKTCAP">-</td>
+            <td class="INVSTASST_NETASST_TOTAMT">-</td>
             <td class="ACC_TRDVAL">-</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="NAV">-</td>
@@ -198,7 +199,7 @@
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
             <td class="etf_real_cost">-</td>
-            <td class="MKTCAP">-</td>
+            <td class="INVSTASST_NETASST_TOTAMT">-</td>
             <td class="ACC_TRDVAL">-</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="NAV">-</td>
@@ -383,7 +384,7 @@
         const fmtCommaFloat = (n, d = 2) => Number(n).toLocaleString("ko-KR", { minimumFractionDigits: d, maximumFractionDigits: d });
         const fmtPercent = (n, d = 2) => `${Number(n).toFixed(d)}%`;
 
-        const keysToFormatWon = ["MKTCAP", "ACC_TRDVAL"];
+        const keysToFormatWon = ["MKTCAP", "ACC_TRDVAL", "INVSTASST_NETASST_TOTAMT"];
         const keysToFormatCommaI = ["TDD_CLSPRC"];
         const keysToFormatCommaF = ["NAV"];
         const keysToFormatPercent = ["FLUC_RT"];
@@ -542,7 +543,7 @@
 
         // ===== 하이라이트 (가시 행 기준, 정확히 3개) =====
         function clearHighlights() {
-          tbody.querySelectorAll('.etf_real_cost, .MKTCAP').forEach(td => {
+          tbody.querySelectorAll('.etf_real_cost, .INVSTASST_NETASST_TOTAMT').forEach(td => {
             td.classList.remove('hl-green', 'hl-red');
             td.style.fontWeight = '';
           });
@@ -581,9 +582,9 @@
             highN.forEach(({ td }) => td.classList.add('hl-red'));
           }
 
-          // ===== 시가총액 =====
+          // ===== 순자산총액 =====
           const capArr = vis.map(r => {
-            const td = r.querySelector('.MKTCAP');
+            const td = r.querySelector('.INVSTASST_NETASST_TOTAMT');
             if (!td) return null;
             const raw = td.dataset?.raw ?? td.textContent;
             const val = Number(String(raw).replace(/[^\d.-]/g, ""));
@@ -670,8 +671,8 @@
 
         // ===== 초기 정렬: 시총 내림차순 =====
         const sortedRows = [...rows].sort((a, b) => {
-          const aVal = Number(a.querySelector(".MKTCAP").dataset.raw || 0);
-          const bVal = Number(b.querySelector(".MKTCAP").dataset.raw || 0);
+          const aVal = Number(a.querySelector(".INVSTASST_NETASST_TOTAMT").dataset.raw || 0);
+          const bVal = Number(b.querySelector(".INVSTASST_NETASST_TOTAMT").dataset.raw || 0);
           return bVal - aVal;
         });
         sortedRows.forEach((r) => tbody.appendChild(r));

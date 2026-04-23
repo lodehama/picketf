@@ -51,8 +51,8 @@ public class KrxApiService {
   /** 실제로 사용된 기준일 (화면 표기를 위해) */
   private volatile String lastResolvedBasDd;
 
-  private String today() {
-    return LocalDate.now().format(FMT);
+  private String yesterday() {
+    return LocalDate.now().minusDays(1).format(FMT);
   }
 
   /** basDd가 없으면: today() → (옵션) testBasDd 순으로 시작일 결정 */
@@ -61,7 +61,7 @@ public class KrxApiService {
       return basDd;
     if (testBasDd != null && !testBasDd.isBlank())
       return testBasDd;
-    return today();
+    return yesterday();
   }
 
   private void log(String msg) {

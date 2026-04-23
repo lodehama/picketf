@@ -195,7 +195,7 @@ main {
   color: #9ca3af;
   cursor: not-allowed;
 }
-  
+
 /* 비활설화 메뉴 */
 
 /* #endregion header */
@@ -560,10 +560,80 @@ main {
 /* #endregion sidebar-layout */
 
 /* #region qqq.html ETF table */
-/* 테이블 전체 경계선 제거 */
+.container {
+  max-width: 1100px;
+}
+
 .table.etf {
-  border-collapse: collapse !important;
-  border: none !important;
+  font-size: 17px;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.table.etf td,
+.table.etf th {
+  padding: 6px 8px;
+}
+
+/* 북마크 */
+.table.etf td:nth-child(1),
+.table.etf th:nth-child(1) {
+  width: 20px;
+}
+
+/* 넘버 */
+.table.etf td:nth-child(2),
+.table.etf th:nth-child(2) {
+  width: 20px;
+}
+
+/* 날짜 */
+.table.etf td:nth-child(3),
+.table.etf th:nth-child(3) {
+  width: 120px;
+}
+
+/* 종목명 */
+.table.etf td:nth-child(4),
+.table.etf th:nth-child(4) {
+  width: 220px;
+}
+
+/* 실부담비용 */
+.table.etf td:nth-child(5),
+.table.etf th:nth-child(5) {
+  width: 120px;
+}
+
+/* 순자산총액 */
+.table.etf td:nth-child(6),
+.table.etf th:nth-child(6) {
+  width: 150px;
+}
+
+/* 거래대금 */
+.table.etf td:nth-child(7),
+.table.etf th:nth-child(7) {
+  width: 110px;
+}
+
+/* 종가 */
+.table.etf td:nth-child(8),
+.table.etf th:nth-child(8) {
+  width: 120px;
+}
+
+/* NAV */
+.table.etf td:nth-child(9),
+.table.etf th:nth-child(9) {
+  width: 120px;
+}
+
+/* 괴리율 */
+.table.etf td:nth-child(10),
+.table.etf th:nth-child(10) {
+  width: 80px;
 }
 
 /* 셀 사이 경계선 제거 */
@@ -576,6 +646,10 @@ main {
 .table.etf th,
 .table.etf td {
   text-align: right !important;
+}
+
+.table.etf tbody tr {
+  border-bottom: 1px solid #f1f3f5;
 }
 
 /* 헤더 글자색 변경 */

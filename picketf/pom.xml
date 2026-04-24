@@ -102,7 +102,6 @@
 
 	<build>
 		<plugins>
-
 			<!-- 컴파일러 설정 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -120,6 +119,10 @@
 							<version>1.18.30</version>
 						</path>
 					</annotationProcessorPaths>
+
+					<compilerArgs>
+						<arg>-parameters</arg>
+					</compilerArgs>
 				</configuration>
 			</plugin>
 
@@ -138,5 +141,5 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 </project>

@@ -543,7 +543,7 @@
           }
         });
 
-        // ===== 하이라이트 (가시 행 기준, 정확히 3개) =====
+        // ===== 하이라이트 (가시 행 기준, 3개) =====
         function clearHighlights() {
           tbody.querySelectorAll('.etf_real_cost, .INVSTASST_NETASST_TOTAMT').forEach(td => {
             td.classList.remove('hl-green', 'hl-red');
@@ -789,7 +789,7 @@
             issuerCell.textContent = meta.etf_issuer || "-";
           }
           if (codeCell) {
-            codeCell.textContent = code || "-"; // ← 여기서 data-code로 가져온 값 사용
+            codeCell.textContent = code || "-"; // data-code로 가져온 값 사용
           }
           if (listedCell) {
             // 필요하면 여기서 날짜 포맷 함수 한 번 더 써도 됨

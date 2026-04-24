@@ -22,8 +22,9 @@
         <button class="btn btn-light border active" id="btn-basic" type="button">파생상품 제외</button>
         <button class="btn btn-light border" id="btn-hedged" type="button">환헷지</button>
         <button class="btn btn-light border" id="btn-leverage" type="button">레버리지</button>
+        <button type="button" class="btn btn-secondary ms-auto" data-bs-toggle="modal"
+          data-bs-target="#glossaryModal">항목 설명</button>
       </div>
-
       <table class="table etf">
         <thead>
           <tr>
@@ -32,7 +33,7 @@
             <th id="bas-date-header">기준일</th>
             <th>종목명 <i class="bi bi-caret-down-fill"></i></th>
             <th>실부담비용 <i class="bi bi-caret-down-fill"></i></th>
-            <th>시가총액 <i class="bi bi-caret-down-fill"></i></th>
+            <th>순자산총액 <i class="bi bi-caret-down-fill"></i></th>
             <th>거래대금 <i class="bi bi-caret-down-fill"></i></th>
             <th>종가 <i class="bi bi-caret-down-fill"></i></th>
             <th>NAV</th>
@@ -47,7 +48,7 @@
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
             <td class="etf_real_cost">-</td>
-            <td class="MKTCAP">-</td>
+            <td class="INVSTASST_NETASST_TOTAMT">-</td>
             <td class="ACC_TRDVAL">-</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="NAV">-</td>
@@ -55,17 +56,16 @@
           </tr>
 
           <!-- 2 -->
-          <tr data-code="360750">
-            <td><i class="bi bi-bookmark"></i></td>
-            <td></td>
-            <td class="BAS_DD">-</td>
-            <td class="ISU_NM">-</td>
-            <td class="etf_real_cost">-</td>
-            <td class="MKTCAP">-</td>
-            <td class="ACC_TRDVAL">-</td>
-            <td class="TDD_CLSPRC">-</td>
-            <td class="NAV">-</td>
-            <td class="premium">-</td>
+          <td><i class="bi bi-bookmark"></i></td>
+          <td></td>
+          <td class="BAS_DD">-</td>
+          <td class="ISU_NM">-</td>
+          <td class="etf_real_cost">-</td>
+          <td class="INVSTASST_NETASST_TOTAMT">-</td>
+          <td class="ACC_TRDVAL">-</td>
+          <td class="TDD_CLSPRC">-</td>
+          <td class="NAV">-</td>
+          <td class="premium">-</td>
           </tr>
 
           <!-- 3 -->
@@ -75,7 +75,7 @@
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
             <td class="etf_real_cost">-</td>
-            <td class="MKTCAP">-</td>
+            <td class="INVSTASST_NETASST_TOTAMT">-</td>
             <td class="ACC_TRDVAL">-</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="NAV">-</td>
@@ -89,7 +89,7 @@
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
             <td class="etf_real_cost">-</td>
-            <td class="MKTCAP">-</td>
+            <td class="INVSTASST_NETASST_TOTAMT">-</td>
             <td class="ACC_TRDVAL">-</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="NAV">-</td>
@@ -103,7 +103,7 @@
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
             <td class="etf_real_cost">-</td>
-            <td class="MKTCAP">-</td>
+            <td class="INVSTASST_NETASST_TOTAMT">-</td>
             <td class="ACC_TRDVAL">-</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="NAV">-</td>
@@ -117,7 +117,7 @@
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
             <td class="etf_real_cost">-</td>
-            <td class="MKTCAP">-</td>
+            <td class="INVSTASST_NETASST_TOTAMT">-</td>
             <td class="ACC_TRDVAL">-</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="NAV">-</td>
@@ -131,7 +131,7 @@
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
             <td class="etf_real_cost">-</td>
-            <td class="MKTCAP">-</td>
+            <td class="INVSTASST_NETASST_TOTAMT">-</td>
             <td class="ACC_TRDVAL">-</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="NAV">-</td>
@@ -145,7 +145,7 @@
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
             <td class="etf_real_cost">-</td>
-            <td class="MKTCAP">-</td>
+            <td class="INVSTASST_NETASST_TOTAMT">-</td>
             <td class="ACC_TRDVAL">-</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="NAV">-</td>
@@ -159,13 +159,12 @@
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
             <td class="etf_real_cost">-</td>
-            <td class="MKTCAP">-</td>
+            <td class="INVSTASST_NETASST_TOTAMT">-</td>
             <td class="ACC_TRDVAL">-</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="NAV">-</td>
             <td class="premium">-</td>
           </tr>
-
           <!-- 10 -->
           <tr data-code="449180">
             <td><i class="bi bi-bookmark"></i></td>
@@ -173,7 +172,7 @@
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
             <td class="etf_real_cost">-</td>
-            <td class="MKTCAP">-</td>
+            <td class="INVSTASST_NETASST_TOTAMT">-</td>
             <td class="ACC_TRDVAL">-</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="NAV">-</td>
@@ -187,7 +186,7 @@
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
             <td class="etf_real_cost">-</td>
-            <td class="MKTCAP">-</td>
+            <td class="INVSTASST_NETASST_TOTAMT">-</td>
             <td class="ACC_TRDVAL">-</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="NAV">-</td>
@@ -201,7 +200,7 @@
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
             <td class="etf_real_cost">-</td>
-            <td class="MKTCAP">-</td>
+            <td class="INVSTASST_NETASST_TOTAMT">-</td>
             <td class="ACC_TRDVAL">-</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="NAV">-</td>
@@ -215,7 +214,7 @@
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
             <td class="etf_real_cost">-</td>
-            <td class="MKTCAP">-</td>
+            <td class="INVSTASST_NETASST_TOTAMT">-</td>
             <td class="ACC_TRDVAL">-</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="NAV">-</td>
@@ -229,7 +228,7 @@
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
             <td class="etf_real_cost">-</td>
-            <td class="MKTCAP">-</td>
+            <td class="INVSTASST_NETASST_TOTAMT">-</td>
             <td class="ACC_TRDVAL">-</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="NAV">-</td>
@@ -243,7 +242,7 @@
             <td class="BAS_DD">-</td>
             <td class="ISU_NM">-</td>
             <td class="etf_real_cost">-</td>
-            <td class="MKTCAP">-</td>
+            <td class="INVSTASST_NETASST_TOTAMT">-</td>
             <td class="ACC_TRDVAL">-</td>
             <td class="TDD_CLSPRC">-</td>
             <td class="NAV">-</td>
@@ -256,8 +255,23 @@
       document.addEventListener("DOMContentLoaded", async () => {
         const rows = Array.from(document.querySelectorAll("tr[data-code]"));
         const codes = rows.map((r) => r.dataset.code).join(",");
-        const res = await fetch(`/api/krx?codes=${codes}`);
-        const allData = await res.json();
+
+        // KRX + META 병렬 호출
+        const [krxRes, metaRes] = await Promise.all([
+          fetch(`/api/krx?codes=${codes}`),
+          fetch(`/api/etf/meta?codes=${codes}`)
+        ]);
+
+        const allData = await krxRes.json();
+
+        // META 응답 처리
+        let metaMap = {};
+        if (metaRes.ok) {
+          metaMap = await metaRes.json();
+          window.etfMetaByCode = metaMap; // 모달 등에서 사용
+        } else {
+          window.etfMetaByCode = {};
+        }
 
         // ===== 유틸: 보이는 행 / 재번호 / 줄무늬 =====
         const tbody = document.querySelector("tbody");
@@ -325,7 +339,7 @@
         const fmtCommaFloat = (n, d = 2) => Number(n).toLocaleString("ko-KR", { minimumFractionDigits: d, maximumFractionDigits: d });
         const fmtPercent = (n, d = 2) => `${Number(n).toFixed(d)}%`;
 
-        const keysToFormatWon = ["MKTCAP", "ACC_TRDVAL"];
+        const keysToFormatWon = ["MKTCAP", "ACC_TRDVAL", "INVSTASST_NETASST_TOTAMT"];
         const keysToFormatCommaI = ["TDD_CLSPRC"];
         const keysToFormatCommaF = ["NAV"];
         const keysToFormatPercent = ["FLUC_RT"];
@@ -358,18 +372,27 @@
           dtoKeys.forEach((k) => {
             const el = row.querySelector(`.${k}`);
             if (!el) return;
-
             const raw = data[k];
 
-            if (k === "BAS_DD") { el.textContent = normalizeBasDd(raw) ?? "-"; return; }
+            // 기준일
+            if (k === "BAS_DD") {
+              el.textContent = normalizeBasDd(raw) ?? "-";
+              return;
+            }
 
+            // 시가총액, 거래대금 → 한글 금액 포맷
             if (keysToFormatWon.includes(k)) {
               if (raw != null && String(raw).trim() !== "") {
                 el.textContent = formatKoreanWon(raw);
                 el.dataset.raw = String(raw).replace(/,/g, "");
-              } else { el.textContent = "-"; el.dataset.raw = "0"; }
+              } else {
+                el.textContent = "-";
+                el.dataset.raw = "0";
+              }
               return;
             }
+
+            // 종가 → 콤마 + 원
             if (keysToFormatCommaI.includes(k)) {
               const n = toNum(raw);
               if (isNaN(n)) {
@@ -381,12 +404,16 @@
               }
               return;
             }
+
+            // NAV → 소수 2자리
             if (keysToFormatCommaF.includes(k)) {
               const n = toNum(raw);
               el.textContent = isNaN(n) ? "-" : fmtCommaFloat(n, 2);
               el.dataset.raw = isNaN(n) ? "0" : String(n);
               return;
             }
+
+            // 등락률 → %
             if (keysToFormatPercent.includes(k)) {
               const n = toNum(raw);
               el.textContent = isNaN(n) ? "-" : fmtPercent(n, 2);
@@ -394,10 +421,25 @@
               return;
             }
 
+            // 종목명 + 느낌표 아이콘 (여기서 data-code 심어줌)
+            if (k === "ISU_NM") {
+              const name = raw ?? "-";
+              el.innerHTML = `
+        ${name} 
+        <i 
+          class="bi bi-exclamation-circle text-secondary ms-1 isu-info-icon" 
+          style="cursor:pointer"
+          data-code="${code}"
+        ></i>
+      `;
+              return;
+            }
+
+            // 그 외 필드
             el.textContent = raw ?? "-";
           });
 
-          // 괴리율
+          // ===== 괴리율 =====
           const elPrem = row.querySelector(".premium");
           if (elPrem) {
             const nav = toNum(allData[row.dataset.code]?.NAV);
@@ -415,32 +457,48 @@
         const $btnHedged = document.getElementById("btn-hedged");
         const $btnLeverage = document.getElementById("btn-leverage");
 
-        // (선택) 메타 정보
-        let metaMap = {};
-        try {
-          const metaRes = await fetch(`/api/etf/meta?codes=${codes}`);
-          if (metaRes.ok) metaMap = await metaRes.json();
-        } catch { }
-
+        // META 기반 플래그 + 실부담비용 한 번에 처리
         rows.forEach((row) => {
           const code = row.dataset.code;
+          const meta = metaMap[code] || {};
+          const data = allData[code] || {};
+
+          // 레버리지 / 환헷지 플래그
           const levRaw = Number(
-            (metaMap[code]?.etf_leverage) ??
-            (allData[code]?.etf_leverage) ??
-            (allData[code]?.ETF_LEVERAGE) ?? 1
+            meta.etf_leverage ??
+            data.etf_leverage ??
+            data.ETF_LEVERAGE ??
+            1
           );
           const hedgedRaw = Number(
-            (metaMap[code]?.etf_fx_hedged) ??
-            (allData[code]?.etf_fx_hedged) ??
-            (allData[code]?.ETF_FX_HEDGED) ?? 0
+            meta.etf_fx_hedged ??
+            data.etf_fx_hedged ??
+            data.ETF_FX_HEDGED ??
+            0
           );
+
           row.dataset.leveraged = (levRaw > 1.0) ? "1" : "0";
           row.dataset.hedged = (hedgedRaw === 1) ? "1" : "0";
+
+          // 실부담비용 채우기
+          const terCell = row.querySelector(".etf_real_cost");
+          const ter = meta.etf_real_cost;
+
+          if (terCell) {
+            if (ter === null || ter === undefined) {
+              terCell.textContent = "-";
+              terCell.dataset.raw = "0";
+            } else {
+              const n = Number(ter);
+              terCell.textContent = `${n.toFixed(4)}%`;
+              terCell.dataset.raw = String(n);
+            }
+          }
         });
 
-        // ===== 하이라이트 (가시 행 기준, 정확히 3개) =====
+        // ===== 하이라이트 (가시 행 기준, 3개) =====
         function clearHighlights() {
-          tbody.querySelectorAll('.etf_real_cost, .MKTCAP').forEach(td => {
+          tbody.querySelectorAll('.etf_real_cost, .INVSTASST_NETASST_TOTAMT').forEach(td => {
             td.classList.remove('hl-green', 'hl-red');
             td.style.fontWeight = '';
           });
@@ -454,7 +512,8 @@
           const costArr = vis.map(r => {
             const td = r.querySelector('.etf_real_cost');
             if (!td) return null;
-            const val = Number(String(td.textContent).replace(/[^\d.-]/g, ""));
+            const raw = td.dataset?.raw ?? td.textContent;
+            const val = Number(String(raw).replace(/[^\d.-]/g, ""));
             return Number.isFinite(val) ? { td, val } : null;
           }).filter(Boolean);
 
@@ -478,9 +537,9 @@
             highN.forEach(({ td }) => td.classList.add('hl-red'));
           }
 
-          // ===== 시가총액 =====
+          // ===== 순자산총액 =====
           const capArr = vis.map(r => {
-            const td = r.querySelector('.MKTCAP');
+            const td = r.querySelector('.INVSTASST_NETASST_TOTAMT');
             if (!td) return null;
             const raw = td.dataset?.raw ?? td.textContent;
             const val = Number(String(raw).replace(/[^\d.-]/g, ""));
@@ -565,24 +624,10 @@
           renderButtons(); applyFilter();
         });
 
-        // ===== etf_real_cost(실부담비용) 채우기 =====
-        for (const row of rows) {
-          const code = row.dataset.code;
-          const terCell = row.querySelector(".etf_real_cost");
-          try {
-            const res = await fetch(`/api/etf/real-cost?code=${code}`);
-            if (!res.ok) { terCell.textContent = "-"; continue; }
-            const ter = await res.json();
-            terCell.textContent = ter !== null ? `${ter.toFixed(3)}%` : "-";
-          } catch {
-            terCell.textContent = "-";
-          }
-        }
-
         // ===== 초기 정렬: 시총 내림차순 =====
         const sortedRows = [...rows].sort((a, b) => {
-          const aVal = Number(a.querySelector(".MKTCAP").dataset.raw || 0);
-          const bVal = Number(b.querySelector(".MKTCAP").dataset.raw || 0);
+          const aVal = Number(a.querySelector(".INVSTASST_NETASST_TOTAMT").dataset.raw || 0);
+          const bVal = Number(b.querySelector(".INVSTASST_NETASST_TOTAMT").dataset.raw || 0);
           return bVal - aVal;
         });
         sortedRows.forEach((r) => tbody.appendChild(r));
@@ -666,6 +711,65 @@
           }
           setBookmarks([...cur]);
         });
+
+        // ===== 모달: ISU 설명 (느낌표 클릭 전용) =====
+        document.addEventListener("click", (e) => {
+          const icon = e.target.closest(".isu-info-icon");
+          if (!icon) return;
+
+          // 2) 코드 가져오기: 아이콘에 data-code가 있으면 그거, 없으면 tr[data-code]에서
+          const row = icon.closest("tr[data-code]");
+          const code = icon.dataset.code
+            || row?.dataset.code
+            || "-";
+
+          // 3) META 데이터에서 현재 종목 메타 정보 꺼내기
+          const metaMapGlobal = window.etfMetaByCode || {};
+          const meta = metaMapGlobal[code] || {};
+
+          // 4) 모달 안 요소들 찾아오기
+          const nameCell = document.getElementById("detail-etf-name");
+          const issuerCell = document.getElementById("detail-etf-issuer");
+          const codeCell = document.getElementById("detailCodeCell");
+          const listedCell = document.getElementById("detail-etf-listed-date");
+          const urlAnchor = document.getElementById("detail-etf-url");
+
+          // 5) 텍스트 채우기
+          if (nameCell) {
+            nameCell.textContent = meta.etf_full_name || meta.etf_name || "-";
+          }
+          if (issuerCell) {
+            issuerCell.textContent = meta.etf_issuer || "-";
+          }
+          if (codeCell) {
+            codeCell.textContent = code || "-"; // data-code로 가져온 값 사용
+          }
+          if (listedCell) {
+            // 필요하면 여기서 날짜 포맷 함수 한 번 더 써도 됨
+            listedCell.textContent = meta.etf_listed_date || "-";
+          }
+
+          // 6) 바로가기 링크
+          if (urlAnchor) {
+            const url = meta.etf_url;
+            if (url) {
+              urlAnchor.textContent = "종목 페이지 바로가기";
+              urlAnchor.href = url;
+              urlAnchor.style.pointerEvents = "";
+            } else {
+              urlAnchor.textContent = "-";
+              urlAnchor.removeAttribute("href");
+              urlAnchor.style.pointerEvents = "none";
+            }
+          }
+
+          // 7) 모달 열기
+          const modalEl = document.getElementById("detailModal");
+          if (!modalEl) return;
+          const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+          modal.show();
+        });
+
       });
     </script>
 </main>

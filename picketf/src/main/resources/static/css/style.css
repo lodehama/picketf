@@ -1315,3 +1315,17 @@ input[type="number"].money {
   color: #198754;
 }
 /* #endregion signup */
+
+table.updates th {
+  background-color: #f8f9fa;
+  font-weight: 700;
+  text-align: center;
+  padding: 12px;
+  border-bottom: 2px solid #dee2e6;
+}
+
+table.updates td {
+  padding: 6px 6px;
+  vertical-align: middle; /* 셀 내용 수직 중앙 정렬 */
+  border-bottom: 1px solid #eee;
+}

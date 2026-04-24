@@ -14,540 +14,541 @@
 
 <main layout:fragment="content">
   <div class="container py-4">
-    <h1>ISA 계좌 관리 페이지</h1>
+    <div class="text-center mb-3">
+      <h1 class="mb-3">ISA 계좌 관리 페이지</h1>
 
-    <a th:if="${isa == null}" th:href="@{/isa/add}" class="btn btn-sm btn-dark mb-3">
-      + 계좌 만들기
-    </a>
+      <a th:if="${isa == null}" th:href="@{/isa/add}" class="btn btn-sm btn-dark">
+        + 계좌 만들기
+      </a>
 
-    <!-- ISA 있을 때만 삭제 버튼 노출 -->
-    <button th:if="${isa != null}" type="button" class="btn btn-sm btn-danger mb-3" data-bs-toggle="modal"
-      data-bs-target="#deleteIsaModal">
-      계좌 삭제
-    </button>
+      <button th:if="${isa != null}" type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
+        data-bs-target="#deleteIsaModal">
+        계좌 삭제
+      </button>
 
-    <!-- ISA 없으면 모달 띄워도 의미 없으니 버튼 숨김(UX) -->
-    <button th:if="${isa != null}" type="button" class="btn btn-sm btn-dark mb-3 ms-2" data-bs-toggle="modal"
-      data-bs-target="#depositModal">
-      + 예수금 추가
-    </button>
+      <button th:if="${isa != null}" type="button" class="btn btn-sm btn-dark ms-2" data-bs-toggle="modal"
+        data-bs-target="#depositModal">
+        + 예수금 추가
+      </button>
 
-    <div th:if="${isa == null}" class="alert alert-secondary" style="max-width: 452px;">
-      아직 ISA 계좌가 없습니다. “+ 계좌 만들기”로 생성하세요.
-    </div>
+      <div class="d-flex justify-content-center mt-4">
+        <div class="alert alert-secondary" style="max-width: 452px;">
+          아직 ISA 계좌가 없습니다. “+ 계좌 만들기”로 생성하세요.
+        </div>
+      </div>
 
-    <div class="row justify-content-center">
-      <div class="col-md-10 col-lg-8 col-xl-6">
-        <div th:if="${isa != null}" class="card shadow-sm">
-          <div class="card-body">
-            <h5 class="card-title mb-3 text-center">내 계좌 요약</h5>
-            <table class="table table-sm">
-              <tbody>
-                <tr>
-                  <th style="width: 220px;">계좌 개설연도</th>
-                  <td th:text="${isa.isaYear}">2026</td>
-                </tr>
-                <tr>
-                  <th>계좌 타입</th>
-                  <td th:text="${isa.isaType}">NORMAL</td>
-                </tr>
-                <tr>
-                  <th>올해 남은 납입 한도</th>
-                  <td>
-                    <span id="currentRemainText" th:if="${currentRemain > 0}"
-                      th:text="${#numbers.formatInteger(currentRemain, 0, 'COMMA')} + '원'"></span>
+      <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-6">
+          <div th:if="${isa != null}" class="card shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title mb-3 text-center">내 계좌 요약</h5>
+              <table class="table table-sm">
+                <tbody>
+                  <tr>
+                    <th style="width: 220px;">계좌 개설연도</th>
+                    <td th:text="${isa.isaYear}">2026</td>
+                  </tr>
+                  <tr>
+                    <th>계좌 타입</th>
+                    <td th:text="${isa.isaType}">NORMAL</td>
+                  </tr>
+                  <tr>
+                    <th>올해 남은 납입 한도</th>
+                    <td>
+                      <span id="currentRemainText" th:if="${currentRemain > 0}"
+                        th:text="${#numbers.formatInteger(currentRemain, 0, 'COMMA')} + '원'"></span>
 
-                    <span id="currentRemainZeroText" th:if="${currentRemain == 0}" class="text-muted">
-                      올해 납입 한도를 모두 사용했습니다
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <th>총 남은 납입 한도</th>
-                  <td>
-                    <span id="lifetimeRemainText"
-                      th:text="${#numbers.formatInteger(lifetimeRemain, 0, 'COMMA')} + '원'">0원</span>
-                  </td>
-                </tr>
-                <tr>
-                  <th>비과세 한도</th>
-                  <td th:switch="${isa.isaType}">
-                    <span th:case="'일반형'">200만원</span>
-                    <span th:case="'서민형'">400만원</span>
-                    <span th:case="*">-</span>
-                  </td>
-                </tr>
+                      <span id="currentRemainZeroText" th:if="${currentRemain == 0}" class="text-muted">
+                        올해 납입 한도를 모두 사용했습니다
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>총 남은 납입 한도</th>
+                    <td>
+                      <span id="lifetimeRemainText"
+                        th:text="${#numbers.formatInteger(lifetimeRemain, 0, 'COMMA')} + '원'">0원</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>비과세 한도</th>
+                    <td th:switch="${isa.isaType}">
+                      <span th:case="'일반형'">200만원</span>
+                      <span th:case="'서민형'">400만원</span>
+                      <span th:case="*">-</span>
+                    </td>
+                  </tr>
 
-                <tr>
-                  <th>과세 방식</th>
-                  <td>9.9% 분리과세</td>
-                </tr>
+                  <tr>
+                    <th>과세 방식</th>
+                    <td>9.9% 분리과세</td>
+                  </tr>
 
-              </tbody>
-            </table>
-            <!-- 프로그래스 바 -->
-            <div class="progress-wrapper">
-              <div class="progress-header">
-                <div>총 납입 진행률</div>
-                <div id="totalPctText" th:text="${progressPct} + '%'">0%</div>
-              </div>
+                </tbody>
+              </table>
+              <!-- 프로그래스 바 -->
+              <div class="progress-wrapper">
+                <div class="progress-header">
+                  <div>총 납입 진행률</div>
+                  <div id="totalPctText" th:text="${progressPct} + '%'">0%</div>
+                </div>
 
-              <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-                <!-- 올해 가능한 범위(회색 밴드) -->
-                <div class="progress-band" id="annualBand" style="left:0%; width:0%;"></div>
+                <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                  <!-- 올해 가능한 범위(회색 밴드) -->
+                  <div class="progress-band" id="annualBand" style="left:0%; width:0%;"></div>
 
-                <!-- 총 누적 진행(검정 채움) -->
-                <div class="progress-fill" id="totalFill" th:style="'width:' + ${progressPct} + '%'"></div>
-              </div>
-              <!-- 납입 금액 표기 -->
-              <div class="text-muted small mt-2 text-end" id="totalAmountText">
-                0원 / 100,000,000원
+                  <!-- 총 누적 진행(검정 채움) -->
+                  <div class="progress-fill" id="totalFill" th:style="'width:' + ${progressPct} + '%'"></div>
+                </div>
+                <!-- 납입 금액 표기 -->
+                <div class="text-muted small mt-2 text-end" id="totalAmountText">
+                  0원 / 100,000,000원
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- 최근 납입 내역 카드 -->
-    <div class="row justify-content-center mt-4">
-      <div class="col-md-10 col-lg-8 col-xl-6">
-        <div th:if="${isa != null}" class="card shadow-sm">
-          <div class="card-body">
+      <!-- 최근 납입 내역 카드 -->
+      <div class="row justify-content-center mt-4">
+        <div class="col-md-10 col-lg-8 col-xl-6">
+          <div th:if="${isa != null}" class="card shadow-sm">
+            <div class="card-body">
 
-            <div class="d-flex justify-content-between align-items-center mb-3">
-              <h5 class="card-title mb-0 text-center flex-grow-1">최근 납입 내역</h5>
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="card-title mb-0 text-center flex-grow-1">최근 납입 내역</h5>
 
-              <!-- 추후 전체보기 만들면 살리기 -->
-              <!-- <a href="/isa/deposits" class="small text-decoration-none">전체보기</a> -->
-            </div>
+                <!-- 추후 전체보기 만들면 살리기 -->
+                <!-- <a href="/isa/deposits" class="small text-decoration-none">전체보기</a> -->
+              </div>
 
-            <!-- 납입 기록이 없을 때 -->
-            <div th:if="${#lists.isEmpty(recentDepositLogs)}" class="text-muted small">
-              아직 납입 기록이 없습니다.
-            </div>
+              <!-- 납입 기록이 없을 때 -->
+              <div th:if="${#lists.isEmpty(recentDepositLogs)}" class="text-muted small">
+                아직 납입 기록이 없습니다.
+              </div>
 
-            <!-- 납입 기록이 있을 때 -->
-            <ul th:if="${!#lists.isEmpty(recentDepositLogs)}" class="list-group list-group-flush">
+              <!-- 납입 기록이 있을 때 -->
+              <ul th:if="${!#lists.isEmpty(recentDepositLogs)}" class="list-group list-group-flush">
 
-              <li class="list-group-item px-0" th:each="log : ${recentDepositLogs}">
+                <li class="list-group-item px-0" th:each="log : ${recentDepositLogs}">
 
-                <!-- 날짜 + 금액 -->
-                <div class="d-flex justify-content-between">
+                  <!-- 날짜 + 금액 -->
+                  <div class="d-flex justify-content-between">
 
-                  <!-- 날짜 -->
-                  <div class="fw-semibold" th:text="${#temporals.format(log.isaDepositLogCreated, 'yyyy.MM.dd')}">
-                    2026.02.01
+                    <!-- 날짜 -->
+                    <div class="fw-semibold" th:text="${#temporals.format(log.isaDepositLogCreated, 'yyyy.MM.dd')}">
+                      2026.02.01
+                    </div>
+
+                    <!-- 금액 -->
+                    <div class="text-end fw-semibold"
+                      th:text="${'+ ' + #numbers.formatInteger(log.isaDepositLogAmount, 0, 'COMMA') + '원'}">
+                      + 2,000,000원
+                    </div>
+
                   </div>
 
-                  <!-- 금액 -->
-                  <div class="text-end fw-semibold"
-                    th:text="${'+ ' + #numbers.formatInteger(log.isaDepositLogAmount, 0, 'COMMA') + '원'}">
-                    + 2,000,000원
+                  <!-- 메모 -->
+                  <div class="small text-muted mt-1"
+                    th:text="${#strings.isEmpty(log.isaDepositLogMemo) ? '메모 없음' : log.isaDepositLogMemo}">
+                    메모
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- 예수금 추가 모달 -->
+      <div th:if="${isa != null}" class="modal fade" id="depositModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
+          <div class="modal-content">
+
+            <div class="modal-header">
+              <h5 class="modal-title">예수금 추가</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+              <form id="depositForm" onsubmit="return false;">
+                <div class="mb-3">
+                  <label class="form-label">추가할 금액</label>
+
+                  <div class="d-flex align-items-center gap-2">
+                    <input type="text" class="form-control text-end" id="depositAmount" style="flex: 0 0 160px;"
+                      placeholder="예: 1,000,000">
+
+                    <button type="button" id="depositPlusBtn" class="btn btn-outline-secondary btn-sm ms-2">+
+                      100만원</button>
+                    <button type="button" id="depositMinusBtn" class="btn btn-outline-secondary btn-sm ms-2">-
+                      100만원</button>
                   </div>
 
+                  <small id="depositLimitHelp" class="text-muted"></small>
                 </div>
 
-                <!-- 메모 -->
-                <div class="small text-muted mt-1"
-                  th:text="${#strings.isEmpty(log.isaDepositLogMemo) ? '메모 없음' : log.isaDepositLogMemo}">
-                  메모
+                <div class="mb-3">
+                  <label class="form-label">메모 (선택)</label>
+                  <input type="text" class="form-control" id="depositMemo" placeholder="예: 월급, 추가납입, 보너스">
                 </div>
-              </li>
-            </ul>
+              </form>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                취소
+              </button>
+              <button type="button" class="btn btn-primary" id="btnDepositSubmit">
+                추가
+              </button>
+            </div>
+
           </div>
         </div>
       </div>
-    </div>
 
+      <!-- 삭제 확인 모달 -->
+      <div th:if="${isa != null}" class="modal fade" id="deleteIsaModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 460px;">
+          <div class="modal-content">
 
-    <!-- 예수금 추가 모달 -->
-    <div th:if="${isa != null}" class="modal fade" id="depositModal" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
-        <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">ISA 계좌 삭제</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
 
-          <div class="modal-header">
-            <h5 class="modal-title">예수금 추가</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
+            <div class="modal-body">
+              <p class="mb-2">
+                정말로 ISA 계좌를 삭제할까요?
+              </p>
+              <p class="text-danger mb-0">
+                삭제하면 계좌 정보와 관련 데이터가 함께 제거됩니다.
+              </p>
+            </div>
 
-          <div class="modal-body">
-            <form id="depositForm" onsubmit="return false;">
-              <div class="mb-3">
-                <label class="form-label">추가할 금액</label>
-
-                <div class="d-flex align-items-center gap-2">
-                  <input type="text" class="form-control text-end" id="depositAmount" style="flex: 0 0 160px;"
-                    placeholder="예: 1,000,000">
-
-                  <button type="button" id="depositPlusBtn" class="btn btn-outline-secondary btn-sm ms-2">+
-                    100만원</button>
-                  <button type="button" id="depositMinusBtn" class="btn btn-outline-secondary btn-sm ms-2">-
-                    100만원</button>
-                </div>
-
-                <small id="depositLimitHelp" class="text-muted"></small>
-              </div>
-
-              <div class="mb-3">
-                <label class="form-label">메모 (선택)</label>
-                <input type="text" class="form-control" id="depositMemo" placeholder="예: 월급, 추가납입, 보너스">
-              </div>
-            </form>
-          </div>
-
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-              취소
-            </button>
-            <button type="button" class="btn btn-primary" id="btnDepositSubmit">
-              추가
-            </button>
-          </div>
-
-        </div>
-      </div>
-    </div>
-
-    <!-- 삭제 확인 모달 -->
-    <div th:if="${isa != null}" class="modal fade" id="deleteIsaModal" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered" style="max-width: 460px;">
-        <div class="modal-content">
-
-          <div class="modal-header">
-            <h5 class="modal-title">ISA 계좌 삭제</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-
-          <div class="modal-body">
-            <p class="mb-2">
-              정말로 ISA 계좌를 삭제할까요?
-            </p>
-            <p class="text-danger mb-0">
-              삭제하면 계좌 정보와 관련 데이터가 함께 제거됩니다.
-            </p>
-          </div>
-
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-            <button type="button" class="btn btn-danger" id="btnIsaDelete">삭제</button>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+              <button type="button" class="btn btn-danger" id="btnIsaDelete">삭제</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
+      <script>
+        document.addEventListener("DOMContentLoaded", () => {
 
-        // =========================
-        // 공통 유틸
-        // =========================
-        const getCookie = (name) => {
-          const v = document.cookie.split("; ").find(row => row.startsWith(name + "="));
-          return v ? decodeURIComponent(v.split("=")[1]) : null;
-        };
+          // =========================
+          // 공통 유틸
+          // =========================
+          const getCookie = (name) => {
+            const v = document.cookie.split("; ").find(row => row.startsWith(name + "="));
+            return v ? decodeURIComponent(v.split("=")[1]) : null;
+          };
 
-        const buildHeaders = () => {
-          const headers = { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" };
-          const xsrf = getCookie("XSRF-TOKEN");
-          if (xsrf) headers["X-XSRF-TOKEN"] = xsrf;
-          return headers;
-        };
+          const buildHeaders = () => {
+            const headers = { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" };
+            const xsrf = getCookie("XSRF-TOKEN");
+            if (xsrf) headers["X-XSRF-TOKEN"] = xsrf;
+            return headers;
+          };
 
-        const fmtWon = (n) => Number(n).toLocaleString("ko-KR") + "원";
+          const fmtWon = (n) => Number(n).toLocaleString("ko-KR") + "원";
 
-        const safeJson = async (res) => {
-          const ct = (res.headers.get("content-type") || "").toLowerCase();
-          if (ct.includes("application/json")) {
-            return await res.json().catch(() => ({}));
-          }
-          return {};
-        };
+          const safeJson = async (res) => {
+            const ct = (res.headers.get("content-type") || "").toLowerCase();
+            if (ct.includes("application/json")) {
+              return await res.json().catch(() => ({}));
+            }
+            return {};
+          };
 
-        // 숫자 유틸
-        const onlyDigits = (str) => (str ?? "").toString().replace(/[^\d]/g, "");
-        const toNumber = (str) => {
-          const raw = onlyDigits(str);
-          return raw ? Number(raw) : 0;
-        };
-        const formatComma = (num) => Number(num).toLocaleString("ko-KR");
-        const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
+          // 숫자 유틸
+          const onlyDigits = (str) => (str ?? "").toString().replace(/[^\d]/g, "");
+          const toNumber = (str) => {
+            const raw = onlyDigits(str);
+            return raw ? Number(raw) : 0;
+          };
+          const formatComma = (num) => Number(num).toLocaleString("ko-KR");
+          const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
 
-        // =========================
-        // 2단 프로그래스(겹침) 계산/반영
-        // - 검정: 총 누적(1억 기준)
-        // - 회색: 올해 가능한 범위(연 2천 기준) 밴드
-        // =========================
-        const YEAR_LIMIT = 20_000_000;
-        const TOTAL_LIMIT = 100_000_000;
+          // =========================
+          // 2단 프로그래스(겹침) 계산/반영
+          // - 검정: 총 누적(1억 기준)
+          // - 회색: 올해 가능한 범위(연 2천 기준) 밴드
+          // =========================
+          const YEAR_LIMIT = 20_000_000;
+          const TOTAL_LIMIT = 100_000_000;
 
-        function updateTwoTierProgress() {
-          // 화면에 찍힌 "올해 남은 납입 한도", "총 남은 납입 한도" 텍스트를 읽어서 계산
-          const currentText = document.getElementById("currentRemainText")?.textContent || "";
-          const lifetimeText = document.getElementById("lifetimeRemainText")?.textContent || "";
+          function updateTwoTierProgress() {
+            // 화면에 찍힌 "올해 남은 납입 한도", "총 남은 납입 한도" 텍스트를 읽어서 계산
+            const currentText = document.getElementById("currentRemainText")?.textContent || "";
+            const lifetimeText = document.getElementById("lifetimeRemainText")?.textContent || "";
 
-          // 올해 0원 안내 문구가 보이면 currentRemain=0 처리
-          const currentZeroEl = document.getElementById("currentRemainZeroText");
-          const currentZeroShown = !!currentZeroEl && (currentZeroEl.style.display !== "none");
+            // 올해 0원 안내 문구가 보이면 currentRemain=0 처리
+            const currentZeroEl = document.getElementById("currentRemainZeroText");
+            const currentZeroShown = !!currentZeroEl && (currentZeroEl.style.display !== "none");
 
-          const currentRemain = currentZeroShown ? 0 : toNumber(currentText);
-          const lifetimeRemain = toNumber(lifetimeText);
+            const currentRemain = currentZeroShown ? 0 : toNumber(currentText);
+            const lifetimeRemain = toNumber(lifetimeText);
 
-          // 납입액 역산
-          const thisYearDeposited = clamp(YEAR_LIMIT - currentRemain, 0, YEAR_LIMIT);
-          const totalDeposited = clamp(TOTAL_LIMIT - lifetimeRemain, 0, TOTAL_LIMIT);
+            // 납입액 역산
+            const thisYearDeposited = clamp(YEAR_LIMIT - currentRemain, 0, YEAR_LIMIT);
+            const totalDeposited = clamp(TOTAL_LIMIT - lifetimeRemain, 0, TOTAL_LIMIT);
 
-          // 올해 밴드 시작점(작년까지 누적) = 총누적 - 올해납입
-          const prevTotal = clamp(totalDeposited - thisYearDeposited, 0, TOTAL_LIMIT);
+            // 올해 밴드 시작점(작년까지 누적) = 총누적 - 올해납입
+            const prevTotal = clamp(totalDeposited - thisYearDeposited, 0, TOTAL_LIMIT);
 
-          // 밴드는 "올해 한도(2천)"를 보여주되, 총한도 끝을 넘지 않게 조절
-          const bandAmount = Math.min(YEAR_LIMIT, TOTAL_LIMIT - prevTotal);
+            // 밴드는 "올해 한도(2천)"를 보여주되, 총한도 끝을 넘지 않게 조절
+            const bandAmount = Math.min(YEAR_LIMIT, TOTAL_LIMIT - prevTotal);
 
-          // 퍼센트 변환
-          const bandLeftPct = (prevTotal / TOTAL_LIMIT) * 100;
-          const bandWidthPct = (bandAmount / TOTAL_LIMIT) * 100;
-          const totalPct = Math.round((totalDeposited / TOTAL_LIMIT) * 100);
+            // 퍼센트 변환
+            const bandLeftPct = (prevTotal / TOTAL_LIMIT) * 100;
+            const bandWidthPct = (bandAmount / TOTAL_LIMIT) * 100;
+            const totalPct = Math.round((totalDeposited / TOTAL_LIMIT) * 100);
 
-          // DOM 반영
-          const bandEl = document.getElementById("annualBand");   // 회색 밴드
-          const fillEl = document.getElementById("totalFill");    // 검정 채움
-          const pctTextEl = document.getElementById("totalPctText"); // "총 납입 진행률" 우측 %
+            // DOM 반영
+            const bandEl = document.getElementById("annualBand");   // 회색 밴드
+            const fillEl = document.getElementById("totalFill");    // 검정 채움
+            const pctTextEl = document.getElementById("totalPctText"); // "총 납입 진행률" 우측 %
 
-          if (bandEl) {
-            bandEl.style.left = bandLeftPct.toFixed(2) + "%";
-            bandEl.style.width = bandWidthPct.toFixed(2) + "%";
-            bandEl.style.display = (bandAmount > 0) ? "" : "none";
-          }
+            if (bandEl) {
+              bandEl.style.left = bandLeftPct.toFixed(2) + "%";
+              bandEl.style.width = bandWidthPct.toFixed(2) + "%";
+              bandEl.style.display = (bandAmount > 0) ? "" : "none";
+            }
 
-          if (fillEl) fillEl.style.width = totalPct + "%";
-          if (pctTextEl) pctTextEl.textContent = totalPct + "%";
+            if (fillEl) fillEl.style.width = totalPct + "%";
+            if (pctTextEl) pctTextEl.textContent = totalPct + "%";
 
-          // 납입 금액 텍스트 업데이트
-          const amountTextEl = document.getElementById("totalAmountText");
-          if (amountTextEl) {
-            amountTextEl.textContent =
-              formatComma(totalDeposited) + "원 / " +
-              formatComma(TOTAL_LIMIT) + "원";
-          }
-        }
-
-        // =========================
-        // 1) 예수금 추가 모달 (+/- 버튼 버전)
-        // =========================
-        const depositModalEl = document.getElementById("depositModal");
-        const depositInput = document.getElementById("depositAmount");
-        const depositMemo = document.getElementById("depositMemo");
-        const depositBtn = document.getElementById("btnDepositSubmit");
-
-        const plusBtn = document.getElementById("depositPlusBtn");
-        const minusBtn = document.getElementById("depositMinusBtn");
-        const limitHelp = document.getElementById("depositLimitHelp");
-
-        const STEP = 1_000_000; // 100만원 단위
-        const MIN = 1; // 최소 1원부터
-
-        // “추가 가능한 최대 금액” = 올해 남은 한도 vs 총 남은 한도 중 min
-        const getMaxAddAmount = () => {
-          const currentText = document.getElementById("currentRemainText")?.textContent || "";
-          const lifetimeText = document.getElementById("lifetimeRemainText")?.textContent || "";
-
-          const currentRemain = toNumber(currentText);
-          const lifetimeRemain = toNumber(lifetimeText);
-
-          const currentZeroShown = !!document.getElementById("currentRemainZeroText") &&
-            (document.getElementById("currentRemainZeroText").style.display !== "none");
-
-          if (currentZeroShown) return 0;
-
-          if (currentRemain > 0 && lifetimeRemain > 0) return Math.min(currentRemain, lifetimeRemain);
-          if (currentRemain > 0) return currentRemain;
-          if (lifetimeRemain > 0) return lifetimeRemain;
-          return 0;
-        };
-
-        const syncPlaceholderAndClamp = () => {
-          const max = getMaxAddAmount();
-
-          if (depositInput) {
-            depositInput.placeholder = max >= MIN ? `1 ~ ${formatComma(max)}` : "추가 가능한 한도가 없습니다";
-
-            const rawDigits = onlyDigits(depositInput.value);
-            let val = toNumber(depositInput.value);
-
-            if (rawDigits !== "" && val < MIN) val = MIN;
-            if (val > max) val = max;
-
-            if (max < MIN) {
-              depositInput.value = "";
-            } else {
-              depositInput.value = (rawDigits === "" ? "" : formatComma(val));
+            // 납입 금액 텍스트 업데이트
+            const amountTextEl = document.getElementById("totalAmountText");
+            if (amountTextEl) {
+              amountTextEl.textContent =
+                formatComma(totalDeposited) + "원 / " +
+                formatComma(TOTAL_LIMIT) + "원";
             }
           }
 
-          if (limitHelp) {
-            limitHelp.textContent =
-              max >= MIN
-                ? `최소 1원 ~ 최대 ${formatComma(max)}원까지 추가 가능`
-                : `추가 가능한 한도가 없습니다`;
-          }
+          // =========================
+          // 1) 예수금 추가 모달 (+/- 버튼 버전)
+          // =========================
+          const depositModalEl = document.getElementById("depositModal");
+          const depositInput = document.getElementById("depositAmount");
+          const depositMemo = document.getElementById("depositMemo");
+          const depositBtn = document.getElementById("btnDepositSubmit");
 
-          const disabled = (max < MIN);
-          if (plusBtn) plusBtn.disabled = disabled;
-          if (minusBtn) minusBtn.disabled = disabled;
-          if (depositBtn) depositBtn.disabled = disabled;
-        };
+          const plusBtn = document.getElementById("depositPlusBtn");
+          const minusBtn = document.getElementById("depositMinusBtn");
+          const limitHelp = document.getElementById("depositLimitHelp");
 
-        if (depositModalEl && depositInput && depositBtn) {
+          const STEP = 1_000_000; // 100만원 단위
+          const MIN = 1; // 최소 1원부터
 
-          depositModalEl.addEventListener("shown.bs.modal", () => {
-            syncPlaceholderAndClamp();
-            depositInput.focus();
-          });
+          // “추가 가능한 최대 금액” = 올해 남은 한도 vs 총 남은 한도 중 min
+          const getMaxAddAmount = () => {
+            const currentText = document.getElementById("currentRemainText")?.textContent || "";
+            const lifetimeText = document.getElementById("lifetimeRemainText")?.textContent || "";
 
-          depositModalEl.addEventListener("hidden.bs.modal", () => {
-            depositInput.value = "";
-            if (depositMemo) depositMemo.value = "";
-          });
+            const currentRemain = toNumber(currentText);
+            const lifetimeRemain = toNumber(lifetimeText);
 
-          depositInput.addEventListener("input", () => {
+            const currentZeroShown = !!document.getElementById("currentRemainZeroText") &&
+              (document.getElementById("currentRemainZeroText").style.display !== "none");
+
+            if (currentZeroShown) return 0;
+
+            if (currentRemain > 0 && lifetimeRemain > 0) return Math.min(currentRemain, lifetimeRemain);
+            if (currentRemain > 0) return currentRemain;
+            if (lifetimeRemain > 0) return lifetimeRemain;
+            return 0;
+          };
+
+          const syncPlaceholderAndClamp = () => {
             const max = getMaxAddAmount();
-            let val = toNumber(depositInput.value);
-            if (val > max) val = max;
-            depositInput.value = (val === 0 && onlyDigits(depositInput.value) === "") ? "" : formatComma(val);
-          });
 
-          if (plusBtn) {
-            plusBtn.addEventListener("click", () => {
+            if (depositInput) {
+              depositInput.placeholder = max >= MIN ? `1 ~ ${formatComma(max)}` : "추가 가능한 한도가 없습니다";
+
+              const rawDigits = onlyDigits(depositInput.value);
+              let val = toNumber(depositInput.value);
+
+              if (rawDigits !== "" && val < MIN) val = MIN;
+              if (val > max) val = max;
+
+              if (max < MIN) {
+                depositInput.value = "";
+              } else {
+                depositInput.value = (rawDigits === "" ? "" : formatComma(val));
+              }
+            }
+
+            if (limitHelp) {
+              limitHelp.textContent =
+                max >= MIN
+                  ? `최소 1원 ~ 최대 ${formatComma(max)}원까지 추가 가능`
+                  : `추가 가능한 한도가 없습니다`;
+            }
+
+            const disabled = (max < MIN);
+            if (plusBtn) plusBtn.disabled = disabled;
+            if (minusBtn) minusBtn.disabled = disabled;
+            if (depositBtn) depositBtn.disabled = disabled;
+          };
+
+          if (depositModalEl && depositInput && depositBtn) {
+
+            depositModalEl.addEventListener("shown.bs.modal", () => {
+              syncPlaceholderAndClamp();
+              depositInput.focus();
+            });
+
+            depositModalEl.addEventListener("hidden.bs.modal", () => {
+              depositInput.value = "";
+              if (depositMemo) depositMemo.value = "";
+            });
+
+            depositInput.addEventListener("input", () => {
               const max = getMaxAddAmount();
               let val = toNumber(depositInput.value);
-              val += STEP;
               if (val > max) val = max;
-              depositInput.value = formatComma(val);
+              depositInput.value = (val === 0 && onlyDigits(depositInput.value) === "") ? "" : formatComma(val);
             });
-          }
 
-          if (minusBtn) {
-            minusBtn.addEventListener("click", () => {
-              let val = toNumber(depositInput.value);
-              val -= STEP;
-              if (val < 0) val = 0;
-              depositInput.value = (val === 0 ? "" : formatComma(val));
-            });
-          }
-
-          depositBtn.addEventListener("click", async () => {
-            const max = getMaxAddAmount();
-            const amount = toNumber(depositInput.value);
-            const memoRaw = depositMemo ? depositMemo.value.trim() : "";
-            const memo = memoRaw.length > 0 ? memoRaw : "";
-
-            if (!Number.isFinite(amount) || amount <= 0) {
-              alert("금액을 입력하세요");
-              return;
-            }
-            if (amount > max) {
-              alert("추가 가능한 한도를 초과했습니다");
-              depositInput.value = formatComma(max);
-              return;
-            }
-
-            depositBtn.disabled = true;
-
-            try {
-              const body =
-                "amount=" + encodeURIComponent(amount) +
-                "&memo=" + encodeURIComponent(memo);
-
-              const res = await fetch("/isa/cash", {
-                method: "POST",
-                credentials: "same-origin",
-                headers: buildHeaders(),
-                body
+            if (plusBtn) {
+              plusBtn.addEventListener("click", () => {
+                const max = getMaxAddAmount();
+                let val = toNumber(depositInput.value);
+                val += STEP;
+                if (val > max) val = max;
+                depositInput.value = formatComma(val);
               });
+            }
 
-              const data = await safeJson(res);
+            if (minusBtn) {
+              minusBtn.addEventListener("click", () => {
+                let val = toNumber(depositInput.value);
+                val -= STEP;
+                if (val < 0) val = 0;
+                depositInput.value = (val === 0 ? "" : formatComma(val));
+              });
+            }
 
-              if (!res.ok) {
-                alert(data.message || ("예수금 추가 실패 (" + res.status + ")"));
+            depositBtn.addEventListener("click", async () => {
+              const max = getMaxAddAmount();
+              const amount = toNumber(depositInput.value);
+              const memoRaw = depositMemo ? depositMemo.value.trim() : "";
+              const memo = memoRaw.length > 0 ? memoRaw : "";
+
+              if (!Number.isFinite(amount) || amount <= 0) {
+                alert("금액을 입력하세요");
+                return;
+              }
+              if (amount > max) {
+                alert("추가 가능한 한도를 초과했습니다");
+                depositInput.value = formatComma(max);
                 return;
               }
 
-              // 화면 즉시 갱신
-              const currentEl = document.getElementById("currentRemainText");
-              const currentZeroEl = document.getElementById("currentRemainZeroText");
-              const lifetimeEl = document.getElementById("lifetimeRemainText");
+              depositBtn.disabled = true;
 
-              if (data.currentRemain != null) {
-                if (data.currentRemain > 0) {
-                  if (currentEl) {
-                    currentEl.textContent = fmtWon(data.currentRemain);
-                    currentEl.style.display = "";
-                  }
-                  if (currentZeroEl) currentZeroEl.style.display = "none";
-                } else {
-                  if (currentEl) currentEl.style.display = "none";
-                  if (currentZeroEl) currentZeroEl.style.display = "";
+              try {
+                const body =
+                  "amount=" + encodeURIComponent(amount) +
+                  "&memo=" + encodeURIComponent(memo);
+
+                const res = await fetch("/isa/cash", {
+                  method: "POST",
+                  credentials: "same-origin",
+                  headers: buildHeaders(),
+                  body
+                });
+
+                const data = await safeJson(res);
+
+                if (!res.ok) {
+                  alert(data.message || ("예수금 추가 실패 (" + res.status + ")"));
+                  return;
                 }
+
+                // 화면 즉시 갱신
+                const currentEl = document.getElementById("currentRemainText");
+                const currentZeroEl = document.getElementById("currentRemainZeroText");
+                const lifetimeEl = document.getElementById("lifetimeRemainText");
+
+                if (data.currentRemain != null) {
+                  if (data.currentRemain > 0) {
+                    if (currentEl) {
+                      currentEl.textContent = fmtWon(data.currentRemain);
+                      currentEl.style.display = "";
+                    }
+                    if (currentZeroEl) currentZeroEl.style.display = "none";
+                  } else {
+                    if (currentEl) currentEl.style.display = "none";
+                    if (currentZeroEl) currentZeroEl.style.display = "";
+                  }
+                }
+
+                if (lifetimeEl && data.lifetimeRemain != null) {
+                  lifetimeEl.textContent = fmtWon(data.lifetimeRemain);
+                }
+
+                // placeholder/max 갱신
+                syncPlaceholderAndClamp();
+
+                // ✅ 2단 프로그래스(회색 밴드 + 검정 누적) 갱신
+                updateTwoTierProgress();
+
+                bootstrap.Modal.getInstance(depositModalEl).hide();
+
+              } finally {
+                depositBtn.disabled = false;
               }
+            });
+          }
 
-              if (lifetimeEl && data.lifetimeRemain != null) {
-                lifetimeEl.textContent = fmtWon(data.lifetimeRemain);
+          // =========================
+          // 2) ISA 계좌 삭제 모달 (기존 그대로)
+          // =========================
+          const deleteModalEl = document.getElementById("deleteIsaModal");
+          const deleteBtn = document.getElementById("btnIsaDelete");
+
+          if (deleteModalEl && deleteBtn) {
+            deleteBtn.addEventListener("click", async () => {
+              deleteBtn.disabled = true;
+
+              try {
+                const res = await fetch("/isa/delete", {
+                  method: "POST",
+                  credentials: "same-origin",
+                  headers: buildHeaders()
+                });
+
+                const data = await safeJson(res);
+
+                if (!res.ok) {
+                  alert(data.message || ("계좌 삭제 실패 (" + res.status + ")"));
+                  return;
+                }
+
+                bootstrap.Modal.getInstance(deleteModalEl).hide();
+                window.location.href = "/isa";
+
+              } finally {
+                deleteBtn.disabled = false;
               }
+            });
+          }
 
-              // placeholder/max 갱신
-              syncPlaceholderAndClamp();
+          // =========================
+          // 페이지 최초 진입 시 2단 프로그래스 1회 세팅
+          // =========================
+          updateTwoTierProgress();
 
-              // ✅ 2단 프로그래스(회색 밴드 + 검정 누적) 갱신
-              updateTwoTierProgress();
-
-              bootstrap.Modal.getInstance(depositModalEl).hide();
-
-            } finally {
-              depositBtn.disabled = false;
-            }
-          });
-        }
-
-        // =========================
-        // 2) ISA 계좌 삭제 모달 (기존 그대로)
-        // =========================
-        const deleteModalEl = document.getElementById("deleteIsaModal");
-        const deleteBtn = document.getElementById("btnIsaDelete");
-
-        if (deleteModalEl && deleteBtn) {
-          deleteBtn.addEventListener("click", async () => {
-            deleteBtn.disabled = true;
-
-            try {
-              const res = await fetch("/isa/delete", {
-                method: "POST",
-                credentials: "same-origin",
-                headers: buildHeaders()
-              });
-
-              const data = await safeJson(res);
-
-              if (!res.ok) {
-                alert(data.message || ("계좌 삭제 실패 (" + res.status + ")"));
-                return;
-              }
-
-              bootstrap.Modal.getInstance(deleteModalEl).hide();
-              window.location.href = "/isa";
-
-            } finally {
-              deleteBtn.disabled = false;
-            }
-          });
-        }
-
-        // =========================
-        // 페이지 최초 진입 시 2단 프로그래스 1회 세팅
-        // =========================
-        updateTwoTierProgress();
-
-      });
-    </script>
+        });
+      </script>
 </main>
 
 </html>

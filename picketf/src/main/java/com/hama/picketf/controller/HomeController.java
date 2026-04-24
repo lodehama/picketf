@@ -28,9 +28,9 @@ public class HomeController {
     return "qqq";
   }
 
-  @GetMapping("/m7")
-  public String m7() {
-    return "m7";
+  @GetMapping("/m10")
+  public String m10() {
+    return "m10";
   }
 
   @GetMapping("/gld")

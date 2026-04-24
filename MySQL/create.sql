@@ -9,11 +9,7 @@ CREATE TABLE etf (
   etf_fx_hedged TINYINT NOT NULL DEFAULT 0          -- 0: 비헷지, 1: 환헷지
 );
 
-INSERT INTO etf (etf_category, etf_code, etf_name, etf_issuer, etf_leverage, etf_fx_hedged)
-VALUES
-('GLD', '0072R0', 'TIGER KRX금현물', '미래에셋자산운용', 1.0, 0),
-('GLD', '411060', 'ACE KRX금현물', '한국투자신탁운용', 1.0, 0);
-
+-- SNP
 INSERT INTO etf (etf_category, etf_code, etf_name, etf_issuer, etf_leverage, etf_fx_hedged)
 VALUES
 -- 일반 1배수 (비헷지)
@@ -39,6 +35,7 @@ VALUES
 -- 레버리지 2배 (환헷지)
 ('SNP', '225040', 'TIGER 미국S&P500레버리지(합성 H)', '미래에셋자산운용', 2.0, 1);
 
+-- QQQ
 INSERT INTO etf (etf_category, etf_code, etf_name, etf_issuer, etf_leverage, etf_fx_hedged)
 VALUES
 -- 일반 1배수 (비헷지)
@@ -60,3 +57,32 @@ VALUES
 
 -- 레버리지 2배 (환헷지)
 ('QQQ', '409820', 'KODEX 미국나스닥100레버리지(합성 H)', '삼성자산운용', 2.0, 1);
+
+-- M10
+INSERT INTO etf (etf_category, etf_code, etf_name, etf_issuer, etf_leverage, etf_fx_hedged)
+VALUES
+-- 일반 1배수 (비헷지)
+('QQQ', '133690', 'TIGER 미국나스닥100', '미래에셋자산운용', 1.0, 0),
+('QQQ', '379810', 'KODEX 미국나스닥100', '삼성자산운용', 1.0, 0),
+('QQQ', '367380', 'ACE 미국나스닥100', '한국투자신탁운용', 1.0, 0),
+('QQQ', '368590', 'RISE 미국나스닥100', '케이비자산운용', 1.0, 0),
+('QQQ', '476030', 'SOL 미국나스닥100', '신한자산운용', 1.0, 0),
+('QQQ', '0069M0', '1Q 미국나스닥100', '하나자산운용', 1.0, 0),
+('QQQ', '287180', 'PLUS 미국나스닥테크', '한화자산운용', 1.0, 0),
+
+-- 일반 1배수 (환헷지)
+('QQQ', '449190', 'KODEX 미국나스닥100(H)', '삼성자산운용', 1.0, 1),
+('QQQ', '448300', 'TIGER 미국나스닥100(H)', '미래에셋자산운용', 1.0, 1),
+('QQQ', '453080', 'KIWOOM 미국나스닥100(H)', '키움투자자산운용', 1.0, 1),
+
+-- 레버리지 2배 (비헷지)
+('QQQ', '418660', 'TIGER 미국나스닥100레버리지(합성)', '미래에셋자산운용', 2.0, 0),
+
+-- 레버리지 2배 (환헷지)
+('QQQ', '409820', 'KODEX 미국나스닥100레버리지(합성 H)', '삼성자산운용', 2.0, 1);
+
+-- GLD
+INSERT INTO etf (etf_category, etf_code, etf_name, etf_issuer, etf_leverage, etf_fx_hedged)
+VALUES
+('GLD', '0072R0', 'TIGER KRX금현물', '미래에셋자산운용', 1.0, 0),
+('GLD', '411060', 'ACE KRX금현물', '한국투자신탁운용', 1.0, 0);

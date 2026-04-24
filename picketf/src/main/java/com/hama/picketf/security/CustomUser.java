@@ -22,11 +22,10 @@ public class CustomUser extends User {
 		this.member = vo;
 	}
 
-	public UserVO getUser() {
+	public UserVO getMember() {
 		return member;
 	}
 
-	// 편의 메서드 (선택)
 	public Long getUsNum() {
 		return (long) member.getUs_num();
 	}

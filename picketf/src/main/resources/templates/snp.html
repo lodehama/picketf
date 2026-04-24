@@ -7,11 +7,16 @@
 </head>
 <main layout:fragment="content">
   <div class="container py-3">
-    <h5 class="mb-3">S&P ETF</h5>
     <div class="mb-2">
-      <p><strong>기본 정렬 기준은 시가총액 내림차순</strong></p>
-      <p><strong>항목별 데이터 출처 확인하기</strong></p>
-
+      <a href="https://www.google.com/finance/quote/.INX:INDEXSP" target="_blank" class="index-info">
+        기초지수정보 - S&P 500 Index
+      </a>
+      <p><strong>종목 데이터 => 전일 종가 (휴장일을 제외하고 매일 업데이트)</strong></p>
+      <p><strong>업데이트 기준 => 실부담비용 : 수동 업데이트 = TER (A+B) + 매매 · 중개 수수료율 (D)</strong></p>
+      <p class="mb-4">
+        <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          => 나머지 정보 : 자동 업데이트</strong>
+      </p>
 
       <div class="d-flex gap-2 mb-2" id="etf-filter-bar">
         <button class="btn btn-light border active" id="btn-basic" type="button">파생상품 제외</button>

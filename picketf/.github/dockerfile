@@ -1,10 +1,9 @@
 FROM gradle:7.6-jdk17 AS build
 WORKDIR /app
 COPY . .
-WORKDIR /app/picketf
 RUN gradle build -x test
 
-FROM openjdk:17-jdk-slim
+FROM openjdk:17-jdk
 WORKDIR /app
-COPY --from=build /app/picketf/build/libs/*.jar app.jar
+COPY --from=build /app/build/libs/*.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]

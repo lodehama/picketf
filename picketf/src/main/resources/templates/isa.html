@@ -31,13 +31,13 @@
         + 예수금 추가
       </button>
 
-      <div class="d-flex justify-content-center mt-4">
+      <div th:if="${isa == null}" class="d-flex justify-content-center mt-4">
         <div class="alert alert-secondary" style="max-width: 452px;">
           아직 ISA 계좌가 없습니다. “+ 계좌 만들기”로 생성하세요.
         </div>
       </div>
 
-      <div class="row justify-content-center">
+      <div class="row justify-content-center mt-4">
         <div class="col-md-10 col-lg-8 col-xl-6">
           <div th:if="${isa != null}" class="card shadow-sm">
             <div class="card-body">

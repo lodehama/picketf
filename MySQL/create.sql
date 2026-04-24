@@ -11,6 +11,11 @@ CREATE TABLE etf (
 
 INSERT INTO etf (etf_category, etf_code, etf_name, etf_issuer, etf_leverage, etf_fx_hedged)
 VALUES
+('GLD', '0072R0', 'TIGER KRX금현물', '미래에셋자산운용', 1.0, 0),
+('GLD', '411060', 'ACE KRX금현물', '한국투자신탁운용', 1.0, 0);
+
+INSERT INTO etf (etf_category, etf_code, etf_name, etf_issuer, etf_leverage, etf_fx_hedged)
+VALUES
 -- 일반 1배수 (비헷지)
 ('SNP', '360750', 'TIGER 미국S&P500', '미래에셋자산운용', 1.0, 0),
 ('SNP', '379800', 'KODEX 미국S&P500', '삼성자산운용', 1.0, 0),

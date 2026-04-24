@@ -33,6 +33,11 @@ public class HomeController {
     return "m7";
   }
 
+  @GetMapping("/gld")
+  public String gld() {
+    return "gld";
+  }
+
   @GetMapping("/devlog")
   public String devlog() {
     return "devlog";

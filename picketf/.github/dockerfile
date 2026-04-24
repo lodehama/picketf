@@ -3,7 +3,7 @@ WORKDIR /app
 COPY . .
 RUN gradle build -x test
 
-FROM openjdk:17-jdk
+FROM openjdk:17-jdk1
 WORKDIR /app
 COPY --from=build /app/build/libs/*.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]

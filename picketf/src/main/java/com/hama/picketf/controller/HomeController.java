@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import com.hama.picketf.service.UserService;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class HomeController {
@@ -48,6 +48,12 @@ public class HomeController {
     return "sources";
   }
 
+  // for server check
+  @GetMapping("/health")
+  @ResponseBody
+  public String health() {
+    return "ok";
+  }
 
   // @GetMapping("/fees")
   // public String fees() {

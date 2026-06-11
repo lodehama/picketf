@@ -13,7 +13,7 @@ import com.hama.picketf.model.vo.UserVO;
 @Service
 public class UserService {
 
-	private static final Pattern USER_ID_PATTERN = Pattern.compile("^[a-zA-Z][a-zA-Z0-9]{3,15}$");
+	private static final Pattern USER_ID_PATTERN = Pattern.compile("^[a-z][a-z0-9]{3,15}$");
 	private static final Pattern PASSWORD_PATTERN = Pattern.compile("^[A-Za-z0-9!@#$%^&*]{8,20}$");
 	private static final Pattern NICKNAME_PATTERN = Pattern.compile("^[가-힣A-Za-z0-9]{2,8}$");
 	private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
@@ -124,7 +124,7 @@ public class UserService {
 		}
 
 		if (!USER_ID_PATTERN.matcher(userId).matches()) {
-			throw new IllegalArgumentException("아이디는 4~16자, 영문으로 시작해야 합니다.");
+			throw new IllegalArgumentException("아이디는 4~16자, 영문으로 시작하고 영문/숫자만 사용할 수 있습니다.");
 		}
 	}
 

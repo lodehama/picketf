@@ -96,12 +96,12 @@
     }
 
     function validateUserIdFormat(value) {
-      const idRegex = /^[a-zA-Z][a-zA-Z0-9]{3,15}$/;
+      const idRegex = /^[a-z][a-z0-9]{3,15}$/;
 
       if (!idRegex.test(value)) {
         return {
           valid: false,
-          message: "아이디는 4~16자, 영문으로 시작해야 합니다."
+          message: "아이디는 4~16자, 영문으로 시작하고 영문/숫자만 사용할 수 있습니다."
         };
       }
 

@@ -21,7 +21,7 @@ public class KrxApiService {
   private final ObjectMapper om = new ObjectMapper();
   private final Map<String, CacheEntry> cache = new ConcurrentHashMap<>();
 
-  private static final long CACHE_TTL_MS = 10 * 60 * 1000;
+  private static final long CACHE_TTL_MS = 60 * 60 * 1000;
 
   private record CacheEntry(Map<String, KrxEtfDTO> data, long expiresAt, String resolvedBasDd) {
   }

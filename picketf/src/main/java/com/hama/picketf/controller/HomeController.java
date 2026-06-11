@@ -48,6 +48,11 @@ public class HomeController {
     return "sources";
   }
 
+  @GetMapping("/privacy-policy")
+  public String privacyPolicy() {
+    return "privacy-policy";
+  }
+
   // for server check
   @GetMapping("/health")
   @ResponseBody

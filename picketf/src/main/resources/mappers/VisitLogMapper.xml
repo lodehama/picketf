@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hama.picketf.dao.VisitLogDAO">
+
+  <insert id="upsertVisit">
+    INSERT INTO visit_log (
+      visitor_key,
+      us_num,
+      visit_date,
+      first_seen_at,
+      last_seen_at,
+      last_path
+    ) VALUES (
+      #{visitorKey},
+      #{usNum},
+      CURRENT_DATE(),
+      NOW(),
+      NOW(),
+      #{path}
+    )
+    ON DUPLICATE KEY UPDATE
+      us_num = VALUES(us_num),
+      last_seen_at = NOW(),
+      last_path = VALUES(last_path)
+  </insert>
+
+  <delete id="deleteAnonymousVisits">
+    DELETE FROM visit_log
+    WHERE visitor_key = #{anonymousVisitorKey}
+      AND visit_date >= DATE_FORMAT(CURRENT_DATE(), '%Y-%m-01')
+      AND visit_date &lt; DATE_ADD(DATE_FORMAT(CURRENT_DATE(), '%Y-%m-01'), INTERVAL 1 MONTH)
+  </delete>
+
+</mapper>

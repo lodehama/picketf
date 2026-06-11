@@ -3,6 +3,7 @@ package com.hama.picketf.service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -18,6 +19,12 @@ public class KrxApiService {
 
   private final RestTemplate rt = new RestTemplate();
   private final ObjectMapper om = new ObjectMapper();
+  private final Map<String, CacheEntry> cache = new ConcurrentHashMap<>();
+
+  private static final long CACHE_TTL_MS = 10 * 60 * 1000;
+
+  private record CacheEntry(Map<String, KrxEtfDTO> data, long expiresAt, String resolvedBasDd) {
+  }
 
   @Value("${krx.api.base-url}")
   private String baseUrl; // https://data-dbg.krx.co.kr
@@ -111,9 +118,37 @@ public class KrxApiService {
    * basDd 없으면: 오늘부터 fallbackDays 만큼 과거로 내려가며 첫 성공 날짜를 사용.
    */
   private Map<String, KrxEtfDTO> fetchAllEtfsByDate(String basDd) {
+    String start = resolveStartDate(basDd);
+    String cacheKey = "krx:etf:" + start;
+    long now = System.currentTimeMillis();
+
+    CacheEntry cached = cache.get(cacheKey);
+    if (cached != null && cached.expiresAt() > now) {
+      this.lastResolvedBasDd = cached.resolvedBasDd();
+      log("[KRX] cache HIT key=" + cacheKey);
+      return cached.data();
+    }
+
+    synchronized (this) {
+      cached = cache.get(cacheKey);
+      if (cached != null && cached.expiresAt() > now) {
+        this.lastResolvedBasDd = cached.resolvedBasDd();
+        log("[KRX] cache HIT key=" + cacheKey);
+        return cached.data();
+      }
+
+      Map<String, KrxEtfDTO> result = fetchAllEtfsByDateFromKrx(start);
+      if (!result.isEmpty()) {
+        cache.put(cacheKey, new CacheEntry(result, System.currentTimeMillis() + CACHE_TTL_MS, lastResolvedBasDd));
+        log("[KRX] cache PUT key=" + cacheKey + ", ttlMs=" + CACHE_TTL_MS);
+      }
+      return result;
+    }
+  }
+
+  private Map<String, KrxEtfDTO> fetchAllEtfsByDateFromKrx(String start) {
     long totalStart = System.currentTimeMillis();
 
-    String start = resolveStartDate(basDd);
     LocalDate cursor = LocalDate.parse(start, FMT);
 
     int maxTry = Math.max(1, fallbackDays);

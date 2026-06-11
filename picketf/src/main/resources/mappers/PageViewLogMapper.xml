@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hama.picketf.dao.PageViewLogDAO">
+
+  <insert id="insertPageView">
+    INSERT INTO page_view_log (
+      visitor_key,
+      us_num,
+      path,
+      viewed_at
+    ) VALUES (
+      #{visitorKey},
+      #{usNum},
+      #{path},
+      NOW()
+    )
+  </insert>
+
+</mapper>

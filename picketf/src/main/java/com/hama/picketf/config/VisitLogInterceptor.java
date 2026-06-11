@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.hama.picketf.security.CustomUser;
+import com.hama.picketf.service.PageViewLogService;
 import com.hama.picketf.service.VisitLogService;
 
 import jakarta.servlet.http.Cookie;
@@ -23,6 +24,7 @@ public class VisitLogInterceptor implements HandlerInterceptor {
   private static final int COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365;
 
   private final VisitLogService visitLogService;
+  private final PageViewLogService pageViewLogService;
 
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
@@ -37,14 +39,19 @@ public class VisitLogInterceptor implements HandlerInterceptor {
     Integer usNum = null;
     String visitorKey = "anon:" + anonymousId;
 
-    if (authentication != null && authentication.isAuthenticated()
-        && authentication.getPrincipal() instanceof CustomUser customUser) {
-      usNum = customUser.getMember().getUs_num();
-      visitorKey = "user:" + usNum;
-      visitLogService.deleteAnonymousVisits("anon:" + anonymousId, usNum);
-    }
+    try {
+      if (authentication != null && authentication.isAuthenticated()
+          && authentication.getPrincipal() instanceof CustomUser customUser) {
+        usNum = customUser.getMember().getUs_num();
+        visitorKey = "user:" + usNum;
+        visitLogService.deleteAnonymousVisits("anon:" + anonymousId, usNum);
+      }
 
-    visitLogService.recordVisit(visitorKey, usNum, path);
+      visitLogService.recordVisit(visitorKey, usNum, path);
+      pageViewLogService.recordPageView(visitorKey, usNum, path);
+    } catch (Exception e) {
+      System.out.println("[VISIT_LOG] failed path=" + path + ", message=" + e.getMessage());
+    }
     return true;
   }
 

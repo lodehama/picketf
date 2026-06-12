@@ -33,6 +33,11 @@ public class HomeController {
     return "m10";
   }
 
+  @GetMapping("/sox")
+  public String sox() {
+    return "sox";
+  }
+
   @GetMapping("/gld")
   public String gld() {
     return "gld";

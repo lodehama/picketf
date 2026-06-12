@@ -85,3 +85,22 @@ INSERT INTO etf (etf_category, etf_code, etf_name, etf_issuer, etf_leverage, etf
 VALUES
 ('GLD', '0072R0', 'TIGER KRX금현물', '미래에셋자산운용', 1.0, 0),
 ('GLD', '411060', 'ACE KRX금현물', '한국투자신탁운용', 1.0, 0);
+
+-- SOX
+-- 일반 1배수 (비헷지)
+INSERT INTO etf (etf_category, etf_code, etf_name, etf_issuer, etf_leverage, etf_fx_hedged)
+VALUES
+('SOX', '390390', 'KODEX 미국반도체', '삼성자산운용', 1.0, 0),
+('SOX', '381180', 'TIGER 미국필라델피아반도체나스닥', '미래에셋자산운용', 1.0, 0),
+('SOX', '497570', 'TIGER 미국필라델피아AI반도체나스닥', '미래에셋자산운용', 1.0, 0),
+('SOX', '469060', 'RISE 미국반도체NYSE', '케이비자산운용', 1.0, 0),
+('SOX', '479620', 'SOL 미국AI반도체칩메이커', '신한자산운용', 1.0, 0),
+('SOX', '473490', 'KIWOOM 글로벌AI반도체', '키움투자자산운용', 1.0, 0),
+
+-- 레버리지 2배 (비헷지)
+('SOX', '423920', 'TIGER 미국필라델피아반도체레버리지(합성)', '미래에셋자산운용', 2.0, 0);
+
+-- 일반 1배수 (환헷지)
+INSERT INTO etf (etf_category, etf_code, etf_name, etf_issuer, etf_leverage, etf_fx_hedged)
+VALUES
+('SOX', '469050', 'RISE 미국반도체NYSE(H) ', '케이비자산운용', 1.0, 1);

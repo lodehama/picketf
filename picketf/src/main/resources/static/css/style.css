@@ -586,6 +586,20 @@ main {
   text-decoration: none;
 }
 
+/* ETF 종목 구성 경고 (M10, SOX) */
+.composition-warning {
+  max-width: 900px;
+  margin: 14px auto 18px;
+  padding: 10px 14px;
+  border-left: 4px solid #dc3545;
+  border-radius: 6px;
+  background: #fff1f2;
+  color: #b4232f;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.55;
+}
+
 .container {
   max-width: 1100px;
 }

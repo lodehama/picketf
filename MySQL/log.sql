@@ -7,6 +7,8 @@ WHERE visit_date >= '2026-06-01'
 # 접속 기기 유형  
 SELECT device_type, COUNT(DISTINCT visitor_key) AS unique_visitors
 FROM page_view_log
+WHERE viewed_at >= '2026-06-01'
+  AND viewed_at < '2026-07-01'
 GROUP BY device_type
 ORDER BY unique_visitors DESC;
 

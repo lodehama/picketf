@@ -97,10 +97,9 @@ VALUES
 ('SOX', '479620', 'SOL 미국AI반도체칩메이커', '신한자산운용', 1.0, 0),
 ('SOX', '473490', 'KIWOOM 글로벌AI반도체', '키움투자자산운용', 1.0, 0),
 
+-- 일반 1배수 (환헷지)
+('SOX', '469050', 'RISE 미국반도체NYSE(H) ', '케이비자산운용', 1.0, 1),
+
 -- 레버리지 2배 (비헷지)
 ('SOX', '423920', 'TIGER 미국필라델피아반도체레버리지(합성)', '미래에셋자산운용', 2.0, 0);
 
--- 일반 1배수 (환헷지)
-INSERT INTO etf (etf_category, etf_code, etf_name, etf_issuer, etf_leverage, etf_fx_hedged)
-VALUES
-('SOX', '469050', 'RISE 미국반도체NYSE(H) ', '케이비자산운용', 1.0, 1);

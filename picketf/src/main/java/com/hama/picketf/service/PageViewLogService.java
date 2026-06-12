@@ -12,7 +12,7 @@ public class PageViewLogService {
 
   private final PageViewLogDAO pageViewLogDAO;
 
-  public void recordPageView(String visitorKey, Integer usNum, String path) {
-    pageViewLogDAO.insertPageView(visitorKey, usNum, path);
+  public void recordPageView(String visitorKey, Integer usNum, String path, String deviceType) {
+    pageViewLogDAO.insertPageView(visitorKey, usNum, path, deviceType);
   }
 }

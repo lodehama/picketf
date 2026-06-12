@@ -4,6 +4,12 @@ FROM visit_log
 WHERE visit_date >= '2026-06-01'
   AND visit_date < '2026-07-01';
 
+# 접속 기기 유형  
+SELECT device_type, COUNT(DISTINCT visitor_key) AS unique_visitors
+FROM page_view_log
+GROUP BY device_type
+ORDER BY unique_visitors DESC;
+
 # 페이지 뷰 조회 (같은 사람이 여러 번 보면 전부 카운트)
 SELECT path, COUNT(*) AS view_count
 FROM page_view_log

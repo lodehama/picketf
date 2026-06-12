@@ -7,5 +7,6 @@ public interface PageViewLogDAO {
   void insertPageView(
       @Param("visitorKey") String visitorKey,
       @Param("usNum") Integer usNum,
-      @Param("path") String path);
+      @Param("path") String path,
+      @Param("deviceType") String deviceType);
 }

@@ -33,6 +33,7 @@ public class VisitLogInterceptor implements HandlerInterceptor {
     }
 
     String path = request.getRequestURI();
+    String deviceType = detectDeviceType(request.getHeader("User-Agent"));
     String anonymousId = getOrCreateAnonymousId(request, response);
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -48,7 +49,7 @@ public class VisitLogInterceptor implements HandlerInterceptor {
       }
 
       visitLogService.recordVisit(visitorKey, usNum, path);
-      pageViewLogService.recordPageView(visitorKey, usNum, path);
+      pageViewLogService.recordPageView(visitorKey, usNum, path, deviceType);
     } catch (Exception e) {
       System.out.println("[VISIT_LOG] failed path=" + path + ", message=" + e.getMessage());
     }
@@ -72,5 +73,24 @@ public class VisitLogInterceptor implements HandlerInterceptor {
     cookie.setMaxAge(COOKIE_MAX_AGE_SECONDS);
     response.addCookie(cookie);
     return anonymousId;
+  }
+
+  private String detectDeviceType(String userAgent) {
+    if (userAgent == null || userAgent.isBlank()) {
+      return "unknown";
+    }
+
+    String ua = userAgent.toLowerCase();
+
+    if (ua.contains("bot") || ua.contains("crawler") || ua.contains("spider")) {
+      return "bot";
+    }
+    if (ua.contains("ipad") || ua.contains("tablet")) {
+      return "tablet";
+    }
+    if (ua.contains("mobi") || ua.contains("iphone") || ua.contains("android")) {
+      return "mobile";
+    }
+    return "desktop";
   }
 }

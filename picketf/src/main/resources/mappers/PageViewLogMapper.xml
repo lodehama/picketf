@@ -8,11 +8,13 @@
       visitor_key,
       us_num,
       path,
+      device_type,
       viewed_at
     ) VALUES (
       #{visitorKey},
       #{usNum},
       #{path},
+      #{deviceType},
       NOW()
     )
   </insert>

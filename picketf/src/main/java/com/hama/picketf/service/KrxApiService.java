@@ -76,6 +76,29 @@ public class KrxApiService {
       System.out.println(msg);
   }
 
+  private boolean hasUsableValue(JsonNode node, String fieldName) {
+    String value = node.path(fieldName).asText("");
+    if (value.isBlank() || "-".equals(value))
+      return false;
+
+    String normalized = value.replace(",", "").trim();
+    try {
+      return Double.parseDouble(normalized) != 0;
+    } catch (NumberFormatException e) {
+      return false;
+    }
+  }
+
+  private boolean hasCompleteEtfSnapshot(JsonNode arr) {
+    for (JsonNode node : arr) {
+      if (hasUsableValue(node, "TDD_CLSPRC")
+          && hasUsableValue(node, "INVSTASST_NETASST_TOTAMT")) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   /** 실제 호출 + 파싱 (주어진 날짜 1회 시도) */
   private Map<String, KrxEtfDTO> fetchOnce(String date) {
     String url = String.format("%s%s?basDd=%s", baseUrl, apiPath, date);
@@ -94,9 +117,8 @@ public class KrxApiService {
       if (!arr.isArray() || arr.isEmpty())
         return Map.of();
 
-      // 오류 원인: 비영업일/미확정 데이터("-")면 실패로 간주 → 상위에서 fallback 타게 함
-      String close = arr.get(0).path("TDD_CLSPRC").asText("");
-      if (close.isBlank() || "-".equals(close))
+      // Treat partial snapshots as unavailable so fallback can find the latest complete date.
+      if (!hasCompleteEtfSnapshot(arr))
         return Map.of();
 
       Map<String, KrxEtfDTO> map = new LinkedHashMap<>();

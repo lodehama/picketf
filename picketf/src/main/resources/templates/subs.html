@@ -15,16 +15,16 @@
     <div class="container py-3">
 
       <!-- 왼쪽(리스트) + 오른쪽(차트) 레이아웃 래퍼 -->
-      <div class="d-flex align-items-start gap-4">
+      <div class="d-flex align-items-start gap-4 subs-layout">
 
         <!-- 왼쪽: 기존 리스트 영역 -->
-        <div class="container-fluid py-3" style="max-width:760px; margin-left:0; flex: 0 0 660px;">
+        <div class="container-fluid py-3 subs-panel" style="max-width:760px; margin-left:0; flex: 0 0 660px;">
 
           <!-- 여백용 -->
           <h5 class="mb-3">&nbsp;</h5>
 
           <!-- 상단 요약 -->
-          <div class="d-flex justify-content-between align-items-center mb-2 small text-muted">
+          <div class="d-flex justify-content-between align-items-center mb-2 small text-muted subs-summary-bar">
             <div>
               <h5 class="mb-3">
                 내 구독 관리 (<span th:text="${subsCount}">0</span>개)
@@ -143,7 +143,7 @@
         </div>
 
         <!-- 오른쪽: 차트 영역 -->
-        <div style="width: 600px; position: sticky; top: 90px;">
+        <div class="subs-chart-panel" style="width: 600px; position: sticky; top: 90px;">
           <div class="card-body" style="padding-top: 20px;">
             <div style="height: 580px;">
               <canvas id="subsTypeDonut"></canvas>
@@ -540,6 +540,7 @@
 
                 const monthlyTotal = safeTotal;
                 const yearlyTotal = monthlyTotal * 12;
+                const isMobileChart = window.matchMedia("(max-width: 768px)").matches;
 
                 const data = {
                   labels: labelsForChart,
@@ -573,6 +574,7 @@
                         color: "#2b2b2b",
                         font: { size: 16, weight: 600 },
                         display: (ctx) => {
+                          if (isMobileChart) return false;
                           const value = Number(ctx.dataset.data[ctx.dataIndex] || 0);
                           const arr = ctx.dataset.data.map(Number);
                           const total = arr.reduce((a, b) => a + b, 0);

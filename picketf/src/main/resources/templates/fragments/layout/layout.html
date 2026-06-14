@@ -78,25 +78,21 @@
     </aside>
 
     <nav class="mobile-bottom-nav" aria-label="모바일 주요 메뉴">
+      <a th:href="@{/isa/tax}" class="mobile-bottom-nav__item">
+        <i class="bi bi-calculator"></i>
+        <span>절세 계산</span>
+      </a>
+      <a th:href="@{/cpi}" class="mobile-bottom-nav__item">
+        <i class="bi bi-cash-coin"></i>
+        <span>화폐가치</span>
+      </a>
       <a th:href="@{/isa}" class="mobile-bottom-nav__item">
         <i class="bi bi-house-door"></i>
-        <span>ISA</span>
+        <span>ISA 계좌</span>
       </a>
       <a th:href="@{/subs}" class="mobile-bottom-nav__item">
         <i class="bi bi-bar-chart-line"></i>
-        <span>구독</span>
-      </a>
-      <a th:href="@{/isa/tax}" class="mobile-bottom-nav__item">
-        <i class="bi bi-calculator"></i>
-        <span>계산기</span>
-      </a>
-      <a th:href="@{/mypage}" class="mobile-bottom-nav__item" sec:authorize="isAuthenticated()">
-        <img src="/img/person-square.svg" alt="마이 페이지" class="mobile-bottom-nav__avatar">
-        <span>마이 페이지</span>
-      </a>
-      <a th:href="@{/login}" class="mobile-bottom-nav__item" sec:authorize="isAnonymous()">
-        <img src="/img/person-square.svg" alt="로그인" class="mobile-bottom-nav__avatar">
-        <span>로그인</span>
+        <span>구독 관리</span>
       </a>
       <button class="mobile-bottom-nav__item" type="button" data-bs-toggle="offcanvas"
         data-bs-target="#mobileMoreSheet" aria-controls="mobileMoreSheet">
@@ -112,6 +108,22 @@
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="닫기"></button>
       </div>
       <div class="offcanvas-body">
+        <div class="mobile-more-sheet__account" sec:authorize="isAuthenticated()">
+          <a th:href="@{/mypage}" class="mobile-more-sheet__link mobile-more-sheet__link--account">
+            <img src="/img/person-square.svg" alt="사용자 메뉴" class="mobile-more-sheet__avatar">
+            <span>마이 페이지</span>
+          </a>
+        </div>
+        <div class="mobile-more-sheet__account" sec:authorize="isAnonymous()">
+          <a th:href="@{/login}" class="mobile-more-sheet__link">
+            <i class="bi bi-person"></i>
+            <span>로그인</span>
+          </a>
+          <a th:href="@{/signup}" class="mobile-more-sheet__link">
+            <i class="bi bi-person-plus"></i>
+            <span>계정 만들기</span>
+          </a>
+        </div>
         <a th:href="@{/isa}" class="mobile-more-sheet__link">
           <i class="bi bi-house-door"></i>
           <span>ISA 계좌 관리</span>

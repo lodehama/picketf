@@ -1455,9 +1455,9 @@ input[type="number"].money {
     color: #111827;
   }
 
-  .mobile-more-sheet {
+  .offcanvas-bottom.mobile-more-sheet {
     display: block;
-    height: auto;
+    height: min(78vh, 560px);
     max-height: min(78vh, 560px);
     border-radius: 18px 18px 0 0;
   }
@@ -1473,12 +1473,19 @@ input[type="number"].money {
 
   .mobile-more-sheet .offcanvas-body {
     padding: 4px 12px calc(18px + env(safe-area-inset-bottom));
+    overflow-y: auto;
   }
 
   .mobile-more-sheet__account {
     padding-bottom: 8px;
     margin-bottom: 8px;
     border-bottom: 1px solid #e5e7eb;
+  }
+
+  .mobile-more-sheet__section {
+    padding-top: 8px;
+    margin-top: 8px;
+    border-top: 1px solid #e5e7eb;
   }
 
   .mobile-more-sheet__form {

@@ -94,8 +94,8 @@
         <i class="bi bi-bar-chart-line"></i>
         <span>구독 관리</span>
       </a>
-      <button class="mobile-bottom-nav__item" type="button" data-bs-toggle="offcanvas"
-        data-bs-target="#mobileMoreSheet" aria-controls="mobileMoreSheet">
+      <button class="mobile-bottom-nav__item" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMoreSheet"
+        aria-controls="mobileMoreSheet">
         <i class="bi bi-three-dots"></i>
         <span>더보기</span>
       </button>
@@ -131,23 +131,24 @@
             <span>계정 만들기</span>
           </a>
         </div>
-        <a th:href="@{/sources}" class="mobile-more-sheet__link">
-          <i class="bi bi-folder2-open"></i>
-          <span>자료 출처</span>
+        
+        <a th:href="@{/devlog}" class="mobile-more-sheet__link">
+          <i class="bi bi-pencil-fill"></i>
+          <span>개발로그</span>
+        </a>
+        <a th:href="@{/privacy-policy}" class="mobile-more-sheet__link">
+          <i class="bi bi-file-earmark-lock"></i>
+          <span>개인정보처리방침</span>
         </a>
 
         <div class="mobile-more-sheet__section">
-          <a th:href="@{/devlog}" class="mobile-more-sheet__link">
-            <i class="bi bi-pencil-fill"></i>
-            <span>개발로그</span>
-          </a>
           <a href="https://naver.me/GLhvF3qz" class="mobile-more-sheet__link" target="_blank">
             <i class="bi bi-question-circle"></i>
             <span>문의하기</span>
           </a>
-          <a th:href="@{/privacy-policy}" class="mobile-more-sheet__link">
-            <i class="bi bi-file-earmark-lock"></i>
-            <span>개인정보처리방침</span>
+          <a th:href="@{/sources}" class="mobile-more-sheet__link">
+            <i class="bi bi-folder2-open"></i>
+            <span>자료 출처</span>
           </a>
         </div>
       </div>

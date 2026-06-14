@@ -1457,8 +1457,8 @@ input[type="number"].money {
 
   .offcanvas-bottom.mobile-more-sheet {
     display: block;
-    height: min(78vh, 560px);
-    max-height: min(78vh, 560px);
+    height: min(88vh, 720px);
+    max-height: min(88vh, 720px);
     border-radius: 18px 18px 0 0;
   }
 

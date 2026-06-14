@@ -1520,10 +1520,12 @@ input[type="number"].money {
     width: 28px;
     height: 28px;
     display: block;
+    flex: 0 0 28px;
   }
 
   .mobile-more-sheet__link i {
-    width: 22px;
+    width: 28px;
+    flex: 0 0 28px;
     color: #4b5563;
     font-size: 19px;
     text-align: center;

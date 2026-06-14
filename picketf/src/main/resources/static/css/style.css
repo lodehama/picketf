@@ -1913,6 +1913,16 @@ input[type="number"].money {
     border-radius: 10px;
   }
 
+  .cpi-page {
+    padding-top: 24px !important;
+  }
+
+  .cpi-page h2 {
+    margin-bottom: 20px !important;
+    font-size: 25px;
+    font-weight: 700;
+  }
+
   .cpi-wrap .cpi-row {
     grid-template-columns: minmax(106px, 1fr) minmax(138px, auto);
     column-gap: 12px;

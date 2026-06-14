@@ -1971,9 +1971,9 @@ input[type="number"].money {
 
   .cpi-row--run .cpi-controls {
     display: grid;
-    grid-template-columns: 138px;
+    grid-template-columns: repeat(2, 138px);
     justify-content: end;
-    gap: 8px;
+    gap: 10px;
   }
 
   .cpi-run {

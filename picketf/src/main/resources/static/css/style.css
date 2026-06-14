@@ -1739,6 +1739,76 @@ input[type="number"].money {
   .cpi-divider {
     margin: 20px 0;
   }
+
+  .login-layout-main {
+    min-height: 100svh;
+    align-items: flex-start;
+  }
+
+  .login-main {
+    padding: 96px 24px 32px;
+  }
+
+  .signup-main {
+    padding: 72px 24px 32px;
+  }
+
+  .auth-page .auth-card {
+    max-width: 100%;
+  }
+
+  .auth-page .auth-title {
+    margin-bottom: 28px;
+    font-size: 24px;
+    line-height: 1.35;
+    word-break: keep-all;
+  }
+
+  .auth-page .auth-logo {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 32px;
+  }
+
+  .auth-page .form-group {
+    margin-bottom: 16px;
+  }
+
+  .auth-page .form-label {
+    font-size: 15px;
+  }
+
+  .auth-page .form-control {
+    height: 46px;
+    border-radius: 10px;
+    font-size: 16px;
+  }
+
+  .keep-login-wrap {
+    margin-top: 18px;
+    gap: 8px;
+  }
+
+  .keep-login-wrap input[type="checkbox"] {
+    width: 22px;
+    height: 22px;
+  }
+
+  .keep-login-wrap label {
+    font-size: 15px;
+    color: #4b5563;
+  }
+
+  .auth-page .btn-auth {
+    height: 48px;
+    border-radius: 10px;
+    font-size: 17px;
+  }
+
+  .auth-page .bottom-link {
+    margin-top: 18px;
+    font-size: 14px;
+  }
 }
 /* #endregion signup */
 

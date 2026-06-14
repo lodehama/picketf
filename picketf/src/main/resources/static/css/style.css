@@ -1802,6 +1802,134 @@ input[type="number"].money {
     font-size: 11px;
   }
 
+  .isa-tax-title {
+    padding-top: 26px !important;
+  }
+
+  .isa-tax-title h2 {
+    margin-bottom: 0;
+    font-size: 25px;
+    font-weight: 700;
+  }
+
+  .isa-tax-page {
+    padding-top: 18px !important;
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .isa-tax-summary {
+    margin-bottom: 12px !important;
+    align-items: flex-start !important;
+  }
+
+  .isa-tax-summary .text-muted {
+    font-size: 14px;
+    line-height: 1.5;
+    word-break: keep-all;
+  }
+
+  .isa-tax-card {
+    border-radius: 10px;
+    box-shadow: none !important;
+  }
+
+  .isa-tax-card .card-body {
+    padding: 18px !important;
+  }
+
+  .isa-type-group {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .isa-type-group .btn {
+    width: 100%;
+    margin-right: 0 !important;
+    padding: 10px 12px;
+    text-align: left;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+
+  #isaTaxForm .form-label {
+    margin-bottom: 6px;
+    font-size: 14px;
+  }
+
+  #isaTaxForm .row.g-2 {
+    row-gap: 14px;
+  }
+
+  #isaTaxForm .row.g-2 > .col-12.col-md-1 {
+    display: none;
+  }
+
+  #isaTaxForm .input-group .form-control,
+  #isaTaxForm .input-group-text {
+    height: 40px;
+    font-size: 15px;
+  }
+
+  #isaTaxForm .form-text {
+    margin-top: 5px;
+    font-size: 12px;
+    text-align: left !important;
+  }
+
+  #isaTaxForm .form-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding-left: 0;
+  }
+
+  #isaTaxForm .form-check-input {
+    flex: 0 0 auto;
+    margin-left: 0;
+    margin-top: 3px;
+  }
+
+  #isaTaxForm .form-check-label {
+    font-size: 14px;
+    line-height: 1.45;
+    word-break: keep-all;
+  }
+
+  .isa-tax-direct-options {
+    margin-left: 0 !important;
+    padding-left: 24px;
+  }
+
+  .isa-tax-actions {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px !important;
+  }
+
+  .isa-tax-actions .btn {
+    min-width: 0;
+    padding: 9px 6px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .result-card {
+    margin-top: 12px;
+  }
+
+  .result-card .card-body > .border {
+    padding: 12px !important;
+    border-radius: 9px !important;
+  }
+
+  .result-card .value {
+    white-space: nowrap;
+  }
+
   .subs-layout {
     display: block !important;
   }

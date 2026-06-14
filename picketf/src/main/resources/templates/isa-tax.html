@@ -7,13 +7,13 @@
 </head>
 
 <main layout:fragment="content">
-  <div class="container pt-5 text-center">
+  <div class="container pt-5 text-center isa-tax-title">
     <h2>ISA 절세 계산기</h2>
   </div>
 
   <body class="bg-white">
-    <main class="container pt-5" style="max-width: 920px;">
-      <div class="d-flex align-items-end justify-content-between mb-3">
+    <main class="container pt-5 isa-tax-page" style="max-width: 920px;">
+      <div class="d-flex align-items-end justify-content-between mb-3 isa-tax-summary">
         <div>
           <div class="text-muted">ISA 계좌 투자와 직접 투자 시 세금을 비교합니다.</div>
         </div>
@@ -22,7 +22,7 @@
       <div class="row g-3">
         <!-- FORM -->
         <div class="col-lg-7">
-          <div class="card shadow-sm">
+          <div class="card shadow-sm isa-tax-card">
             <div class="card-body p-4">
               <form id="isaTaxForm" novalidate>
                 <!-- ISA 유형 -->
@@ -81,7 +81,7 @@
                 </div>
 
                 <!-- 직투 비과세 매년 수익실현 -->
-                <div class="mt-2 ms-4">
+                <div class="mt-2 ms-4 isa-tax-direct-options">
                   <div class="form-check">
                     <input class="form-check-input" type="checkbox" id="directExempt3y" />
                     <label class="form-check-label" for="directExempt3y">
@@ -99,7 +99,7 @@
 
                 <hr class="my-4" />
 
-                <div class="d-flex gap-2">
+                <div class="d-flex gap-2 isa-tax-actions">
                   <button class="btn btn-dark" type="button" id="calcBtn">계산</button>
                   <button class="btn btn-outline-dark" type="button" id="exampleBtn">예시값</button>
                   <button class="btn btn-light border" type="button" id="resetBtn">초기화</button>
@@ -111,7 +111,7 @@
 
         <!-- OUTPUT -->
         <div class="col-lg-5">
-          <div class="card shadow-sm result-card">
+          <div class="card shadow-sm result-card isa-tax-card">
             <div class="card-body p-4">
               <div class="d-flex justify-content-between align-items-end mb-3">
                 <div class="fw-semibold">결과</div>

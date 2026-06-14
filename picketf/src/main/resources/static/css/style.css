@@ -762,6 +762,155 @@ main {
   text-align: center !important;
 }
 
+/* #region devlog.html */
+.devlog-page {
+  width: min(920px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 54px 0 80px;
+}
+
+.devlog-hero {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.devlog-hero h1 {
+  margin: 0;
+  color: #111827;
+  font-size: 36px;
+  font-weight: 850;
+  line-height: 1.2;
+}
+
+.devlog-hero p {
+  margin: 12px 0 0;
+  color: #6b7280;
+  font-size: 15px;
+  font-weight: 500;
+  word-break: keep-all;
+}
+
+.devlog-list {
+  position: relative;
+  display: grid;
+  gap: 14px;
+}
+
+.devlog-list::before {
+  content: "";
+  position: absolute;
+  top: 16px;
+  bottom: 16px;
+  left: 74px;
+  width: 2px;
+  background: #e5e7eb;
+}
+
+.devlog-entry {
+  position: relative;
+  display: grid;
+  grid-template-columns: 116px minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.devlog-date {
+  position: sticky;
+  top: 78px;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 86px;
+  margin-top: 12px;
+  padding: 10px 8px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+  color: #111827;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06);
+}
+
+.devlog-date span {
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.devlog-date strong {
+  font-size: 20px;
+  font-weight: 850;
+  line-height: 1.1;
+}
+
+.devlog-card {
+  position: relative;
+  padding: 22px 24px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+}
+
+.devlog-card::before {
+  content: "";
+  position: absolute;
+  top: 30px;
+  left: -25px;
+  width: 12px;
+  height: 12px;
+  border: 3px solid #2f8df3;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.devlog-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.devlog-card h2 {
+  margin: 0;
+  color: #111827;
+  font-size: 20px;
+  font-weight: 850;
+  line-height: 1.35;
+  word-break: keep-all;
+}
+
+.devlog-card p {
+  margin: 9px 0 0;
+  color: #4b5563;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.7;
+  word-break: keep-all;
+}
+
+.devlog-badge {
+  flex: 0 0 auto;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: #111827;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.devlog-entry--latest .devlog-date {
+  border-color: #b7d6ff;
+  background: #f7fbff;
+}
+
+.devlog-entry--latest .devlog-card {
+  border-color: #b7d6ff;
+  background: linear-gradient(180deg, #f7fbff 0%, #fff 82%);
+}
+/* #endregion devlog.html */
+
 /* #endregion qqq.html ETF table */
 
 /* #region qqq.html ETF 항목 설명 모달 */
@@ -1565,6 +1714,92 @@ input[type="number"].money {
   .index-info {
     font-size: 21px;
     margin-bottom: 22px;
+  }
+
+  .devlog-page {
+    width: 100%;
+    padding: 30px 16px 28px;
+  }
+
+  .devlog-hero {
+    margin-bottom: 20px;
+    text-align: left;
+  }
+
+  .devlog-hero h1 {
+    font-size: 28px;
+  }
+
+  .devlog-hero p {
+    max-width: 300px;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .devlog-list {
+    gap: 12px;
+  }
+
+  .devlog-list::before {
+    display: none;
+  }
+
+  .devlog-entry {
+    display: block;
+  }
+
+  .devlog-date {
+    position: static;
+    width: fit-content;
+    margin: 0 0 8px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    flex-direction: row;
+    gap: 5px;
+  }
+
+  .devlog-date span,
+  .devlog-date strong {
+    color: #6b7280;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.2;
+  }
+
+  .devlog-date strong::before {
+    content: ".";
+  }
+
+  .devlog-card {
+    padding: 17px 18px;
+    border-radius: 10px;
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.05);
+  }
+
+  .devlog-card::before {
+    display: none;
+  }
+
+  .devlog-card__top {
+    align-items: flex-start;
+  }
+
+  .devlog-card h2 {
+    font-size: 17px;
+  }
+
+  .devlog-card p {
+    margin-top: 7px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .devlog-badge {
+    padding: 4px 8px;
+    font-size: 11px;
   }
 
   .subs-layout {

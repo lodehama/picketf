@@ -3,157 +3,251 @@
   layout:decorate="~{fragments/layout/layout.html}">
 
 <head>
-  <title>메인 페이지</title>
+  <title>개발로그</title>
 </head>
 <main layout:fragment="content">
-  <div class="container py-3">
-    <h5 class="mb-3 text-center fw-bold">Dev Log</h5>
-    <div class="mb-2">
-      <table class="table updates">
-        <thead>
-          <tr>
-            <th>날짜</th>
-            <th>업데이트 내역</th>
-            <th>변경사항 및 고민</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>2026-06-15</td>
-            <td>모바일 기준 레이아웃 수정</td>
-            <td>접속 유저 비율을 고려해 모바일 기준으로 레이아웃 수정
-            </td>
-          </tr>
-          <tr>
-            <td>2026-06-11</td>
-            <td>MAU, 페이지 별 조회 측정</td>
-            <td>페이지별 사용자 행동 분석
-            </td>
-          </tr>
-          <tr>
-            <td>2026-04-25</td>
-            <td>배포</td>
-            <td>배포하여 실제 서비스 운영 시작
-            </td>
-          </tr>
-          <tr>
-            <td>2026-04-24</td>
-            <td>ETF 테이블 수정</td>
-            <td>상세 페이지 정보, 기초지수정보, 신규 지수 +
-            </td>
-          </tr>
-          <tr>
-            <td>2026-03-31</td>
-            <td>자료출처 +</td>
-            <td>각 페이지에서 사용된 데이터 출처를 명시
-            </td>
-          </tr>
-          <tr>
-            <td>2026-03-27</td>
-            <td>마이 페이지 - 닉네임 / 비밀번호 변경 / 회원탈퇴 +</td>
-            <td>유효성 검사와 중복 체크, 금지어 체크
-            </td>
-          </tr>
-          <tr>
-            <td>2026-03-17</td>
-            <td>헤더에 마이 페이지 +</td>
-            <td>드랍다운 형식으로 표시
-            </td>
-          </tr>
-          <tr>
-            <td>2026-03-10</td>
-            <td>로그인, 회원가입 페이지 +</td>
-            <td>레이아웃 구현, 유효성 검사와 중복 체크, 금지어 체크
-            </td>
-          </tr>
-          <tr>
-            <td>2026-03-04</td>
-            <td>ISA 절세 계산기 +
-            </td>
-            <td>ISA와 직투시 절세액 차이를 계산
-            </td>
-          </tr>
-          <tr>
-            <td>2026-02-16</td>
-            <td>ISA 계좌 - 예수금 납입 내역 +
-              <br>2단 프로그래스 바 +
-            </td>
-            <td>최근 납입 내역과 메모를 확인 가능
-              <br>사용자가 한 눈에 알 수 있게 시각화
-            </td>
-          </tr>
-          <tr>
-            <td>2026-02-10</td>
-            <td>ISA 계좌 상태 +</td>
-            <td>계좌 개설연도를 확인하고 해당하는 납입 금액을 표기
-            </td>
-          </tr>
-          <tr>
-            <td>2026-01-30</td>
-            <td>화폐가치 계산기 +</td>
-            <td>물가 상승률과 최저시급 변화를 조회 가능
-            </td>
-          </tr>
-          <tr>
-            <td>2026-01-16</td>
-            <td>메뉴 호버시 시각적 효과 +</td>
-            <td>가시성 향상을 위해 사이드바 & 헤더에 적용
-            </td>
-          </tr>
-          <tr>
-            <td>2026-01-15</td>
-            <td>사이트 레이아웃 변경</td>
-            <td>헤더는 로고 / 주메뉴 / 회원정보로 3등분
-              <br>사이드바는 카테고리별로 메뉴 구분 & 하단 영역 분리
-            </td>
-          </tr>
-          <tr>
-            <td>2026-01-07</td>
-            <td>구독 서비스 (차트 +)</td>
-            <td>월간 고정 소비를 차트로 시각화
-            </td>
-          </tr>
-          <tr>
-            <td>2025-12-04</td>
-            <td>구독 서비스 +</td>
-            <td>구독중인 서비스를 확인하고 해지 기능
-            </td>
-          </tr>
-          <tr>
-            <td>2025-11-26</td>
-            <td>ETF - <i class="bi bi-exclamation-circle text-secondary"></i> 종목 상세보기 +</td>
-            <td>종목 전체 이름, 운용사, 종목코드, 상장일, 바로가기를 확인 가능
-            </td>
-          </tr>
-          <tr>
-            <td>2025-11-05</td>
-            <td>ETF - 상단 탭 필터 기능 +
-              <br>(환헷지/레버리지 분류)
-            </td>
-            <td>분류하기 위해 기본적으로 API로 호출하되 일부는 DB로 관리
-              <br>실부담비용은 낮은 순으로, 시가총액은 높은 순으로 3개
-            </td>
-          </tr>
-          <tr>
-            <td>2025-10-30</td>
-            <td><i class="bi bi-bookmark"></i> ETF - 북마크 +</td>
-            <td>
-              비회원 접근성을 위해 쿠키로 저장
-            </td>
-          </tr>
-          <tr>
-            <td>2025-10-29</td>
-            <td>ETF - 테이블 추가 (헤더 메뉴)</td>
-            <td>종목 정보들을 표기할 테이블 구성</td>
-          </tr>
-          <tr>
-            <td>~ 2025-10-28</td>
-            <td>프로젝트 세팅, 회원가입 +</td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
+  <section class="devlog-page">
+    <header class="devlog-hero">
+      <h1>개발로그</h1>
+      <p>사용하면서 불편했던 부분과 새로 더한 기능을 시간순으로 정리</p>
+    </header>
+
+    <div class="devlog-list" aria-label="개발 업데이트 내역">
+      <article class="devlog-entry devlog-entry--latest">
+        <div class="devlog-date">
+          <span>2026</span>
+          <strong>06.15</strong>
+        </div>
+        <div class="devlog-card">
+          <div class="devlog-card__top">
+            <h2>모바일 기준 레이아웃 수정</h2>
+            <span class="devlog-badge">Latest</span>
+          </div>
+          <p>접속 유저 비율을 고려한 모바일 기준 레이아웃 개선</p>
+        </div>
+      </article>
+
+      <article class="devlog-entry">
+        <div class="devlog-date">
+          <span>2026</span>
+          <strong>06.11</strong>
+        </div>
+        <div class="devlog-card">
+          <h2>MAU, 페이지 별 조회 측정</h2>
+          <p>페이지별 사용자 행동 분석을 위한 조회 측정 추가</p>
+        </div>
+      </article>
+
+      <article class="devlog-entry">
+        <div class="devlog-date">
+          <span>2026</span>
+          <strong>04.25</strong>
+        </div>
+        <div class="devlog-card">
+          <h2>배포</h2>
+          <p>실제 서비스 운영 시작</p>
+        </div>
+      </article>
+
+      <article class="devlog-entry">
+        <div class="devlog-date">
+          <span>2026</span>
+          <strong>04.24</strong>
+        </div>
+        <div class="devlog-card">
+          <h2>ETF 테이블 수정</h2>
+          <p>상세 페이지 정보, 기초지수 정보, 신규 지수 항목 보강</p>
+        </div>
+      </article>
+
+      <article class="devlog-entry">
+        <div class="devlog-date">
+          <span>2026</span>
+          <strong>03.31</strong>
+        </div>
+        <div class="devlog-card">
+          <h2>자료출처 추가</h2>
+          <p>각 페이지에서 사용된 데이터 출처 명시</p>
+        </div>
+      </article>
+
+      <article class="devlog-entry">
+        <div class="devlog-date">
+          <span>2026</span>
+          <strong>03.27</strong>
+        </div>
+        <div class="devlog-card">
+          <h2>마이 페이지 기능 추가</h2>
+          <p>닉네임 변경, 비밀번호 변경, 회원탈퇴, 유효성 검사, 중복 체크, 금지어 체크 추가</p>
+        </div>
+      </article>
+
+      <article class="devlog-entry">
+        <div class="devlog-date">
+          <span>2026</span>
+          <strong>03.17</strong>
+        </div>
+        <div class="devlog-card">
+          <h2>헤더 마이 페이지 메뉴 추가</h2>
+          <p>마이 페이지 진입 메뉴를 드롭다운 형식으로 표시</p>
+        </div>
+      </article>
+
+      <article class="devlog-entry">
+        <div class="devlog-date">
+          <span>2026</span>
+          <strong>03.10</strong>
+        </div>
+        <div class="devlog-card">
+          <h2>로그인, 회원가입 페이지 추가</h2>
+          <p>기본 레이아웃, 유효성 검사, 중복 체크, 금지어 체크 구현</p>
+        </div>
+      </article>
+
+      <article class="devlog-entry">
+        <div class="devlog-date">
+          <span>2026</span>
+          <strong>03.04</strong>
+        </div>
+        <div class="devlog-card">
+          <h2>ISA 절세 계산기 추가</h2>
+          <p>ISA 투자와 직접 투자 시 절세액 차이 계산</p>
+        </div>
+      </article>
+
+      <article class="devlog-entry">
+        <div class="devlog-date">
+          <span>2026</span>
+          <strong>02.16</strong>
+        </div>
+        <div class="devlog-card">
+          <h2>ISA 납입 내역과 프로그래스 바 추가</h2>
+          <p>최근 납입 내역, 메모 확인과 납입 진행률 시각화</p>
+        </div>
+      </article>
+
+      <article class="devlog-entry">
+        <div class="devlog-date">
+          <span>2026</span>
+          <strong>02.10</strong>
+        </div>
+        <div class="devlog-card">
+          <h2>ISA 계좌 상태 추가</h2>
+          <p>계좌 개설연도 기준 납입 금액 표기</p>
+        </div>
+      </article>
+
+      <article class="devlog-entry">
+        <div class="devlog-date">
+          <span>2026</span>
+          <strong>01.30</strong>
+        </div>
+        <div class="devlog-card">
+          <h2>화폐가치 계산기 추가</h2>
+          <p>물가 상승률과 최저시급 변화 조회</p>
+        </div>
+      </article>
+
+      <article class="devlog-entry">
+        <div class="devlog-date">
+          <span>2026</span>
+          <strong>01.16</strong>
+        </div>
+        <div class="devlog-card">
+          <h2>메뉴 호버 효과 추가</h2>
+          <p>가시성 향상을 위한 사이드바와 헤더 효과 적용</p>
+        </div>
+      </article>
+
+      <article class="devlog-entry">
+        <div class="devlog-date">
+          <span>2026</span>
+          <strong>01.15</strong>
+        </div>
+        <div class="devlog-card">
+          <h2>사이트 레이아웃 변경</h2>
+          <p>헤더 3분할, 사이드바 카테고리 메뉴와 하단 영역 정리</p>
+        </div>
+      </article>
+
+      <article class="devlog-entry">
+        <div class="devlog-date">
+          <span>2026</span>
+          <strong>01.07</strong>
+        </div>
+        <div class="devlog-card">
+          <h2>구독 서비스 차트 추가</h2>
+          <p>월간 고정 소비 차트 시각화</p>
+        </div>
+      </article>
+
+      <article class="devlog-entry">
+        <div class="devlog-date">
+          <span>2025</span>
+          <strong>12.04</strong>
+        </div>
+        <div class="devlog-card">
+          <h2>구독 서비스 추가</h2>
+          <p>구독 중인 서비스 확인과 해지 기능</p>
+        </div>
+      </article>
+
+      <article class="devlog-entry">
+        <div class="devlog-date">
+          <span>2025</span>
+          <strong>11.26</strong>
+        </div>
+        <div class="devlog-card">
+          <h2>ETF 종목 상세보기 추가</h2>
+          <p>종목 전체 이름, 운용사, 종목코드, 상장일, 바로가기 제공</p>
+        </div>
+      </article>
+
+      <article class="devlog-entry">
+        <div class="devlog-date">
+          <span>2025</span>
+          <strong>11.05</strong>
+        </div>
+        <div class="devlog-card">
+          <h2>ETF 상단 탭 필터 추가</h2>
+          <p>환헷지와 레버리지 분류 추가, 실부담비용과 시가총액 기준 정렬</p>
+        </div>
+      </article>
+
+      <article class="devlog-entry">
+        <div class="devlog-date">
+          <span>2025</span>
+          <strong>10.30</strong>
+        </div>
+        <div class="devlog-card">
+          <h2>ETF 북마크 추가</h2>
+          <p>비회원 접근성을 위한 쿠키 기반 북마크 저장</p>
+        </div>
+      </article>
+
+      <article class="devlog-entry">
+        <div class="devlog-date">
+          <span>2025</span>
+          <strong>10.29</strong>
+        </div>
+        <div class="devlog-card">
+          <h2>ETF 테이블 추가</h2>
+          <p>헤더 메뉴별 종목 정보 테이블 구성</p>
+        </div>
+      </article>
+
+      <article class="devlog-entry">
+        <div class="devlog-date">
+          <span>2025</span>
+          <strong>10.28</strong>
+        </div>
+        <div class="devlog-card">
+          <h2>프로젝트 세팅, 회원가입 추가</h2>
+          <p>서비스 기본 구조와 회원가입 흐름 준비</p>
+        </div>
+      </article>
     </div>
+  </section>
 </main>
 
 </html>

@@ -1341,7 +1341,7 @@ input[type="number"].money {
 
 @media (max-width: 768px) {
   body {
-    padding-bottom: calc(76px + env(safe-area-inset-bottom));
+    padding-bottom: 0;
   }
 
   main {
@@ -1536,7 +1536,15 @@ input[type="number"].money {
   }
 
   .footer {
-    padding-bottom: calc(84px + env(safe-area-inset-bottom));
+    margin-top: 28px;
+    padding: 14px 18px calc(92px + env(safe-area-inset-bottom)) !important;
+    background: #f8fafc;
+    border-top: 1px solid #edf0f3;
+    color: #8a93a3;
+    font-size: 11px;
+    line-height: 1.55;
+    text-align: left !important;
+    word-break: keep-all;
   }
 
   .container {

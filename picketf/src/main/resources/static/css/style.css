@@ -1443,6 +1443,12 @@ input[type="number"].money {
     line-height: 1;
   }
 
+  .mobile-bottom-nav__avatar {
+    width: 22px;
+    height: 22px;
+    display: block;
+  }
+
   .mobile-bottom-nav__item:hover,
   .mobile-bottom-nav__item:focus-visible {
     background: #f2f4f6;

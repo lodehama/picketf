@@ -90,15 +90,19 @@
         <i class="bi bi-calculator"></i>
         <span>계산기</span>
       </a>
+      <a th:href="@{/mypage}" class="mobile-bottom-nav__item" sec:authorize="isAuthenticated()">
+        <img src="/img/person-square.svg" alt="마이 페이지" class="mobile-bottom-nav__avatar">
+        <span>마이 페이지</span>
+      </a>
+      <a th:href="@{/login}" class="mobile-bottom-nav__item" sec:authorize="isAnonymous()">
+        <img src="/img/person-square.svg" alt="로그인" class="mobile-bottom-nav__avatar">
+        <span>로그인</span>
+      </a>
       <button class="mobile-bottom-nav__item" type="button" data-bs-toggle="offcanvas"
         data-bs-target="#mobileMoreSheet" aria-controls="mobileMoreSheet">
         <i class="bi bi-three-dots"></i>
         <span>더보기</span>
       </button>
-      <a th:href="@{/sources}" class="mobile-bottom-nav__item">
-        <i class="bi bi-folder2-open"></i>
-        <span>자료</span>
-      </a>
     </nav>
 
     <div class="offcanvas offcanvas-bottom mobile-more-sheet" tabindex="-1" id="mobileMoreSheet"
@@ -108,29 +112,6 @@
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="닫기"></button>
       </div>
       <div class="offcanvas-body">
-        <div class="mobile-more-sheet__account" sec:authorize="isAuthenticated()">
-          <a th:href="@{/mypage}" class="mobile-more-sheet__link mobile-more-sheet__link--account">
-            <img src="/img/person-square.svg" alt="사용자 메뉴" class="mobile-more-sheet__avatar">
-            <span>마이 페이지</span>
-          </a>
-          <form action="/logout" method="post" class="mobile-more-sheet__form">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-            <button type="submit" class="mobile-more-sheet__link mobile-more-sheet__button">
-              <i class="bi bi-box-arrow-right"></i>
-              <span>로그아웃</span>
-            </button>
-          </form>
-        </div>
-        <div class="mobile-more-sheet__account" sec:authorize="isAnonymous()">
-          <a th:href="@{/login}" class="mobile-more-sheet__link">
-            <i class="bi bi-person"></i>
-            <span>로그인</span>
-          </a>
-          <a th:href="@{/signup}" class="mobile-more-sheet__link">
-            <i class="bi bi-person-plus"></i>
-            <span>계정 만들기</span>
-          </a>
-        </div>
         <a th:href="@{/isa}" class="mobile-more-sheet__link">
           <i class="bi bi-house-door"></i>
           <span>ISA 계좌 관리</span>

@@ -1367,7 +1367,7 @@ input[type="number"].money {
   }
 
   .app-logo__text {
-    font-size: 15px;
+    display: none;
   }
 
   .app-nav {

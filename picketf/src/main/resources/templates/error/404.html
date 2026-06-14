@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{fragments/layout/layout.html}">
+
+<head>
+  <title>페이지를 찾을 수 없음</title>
+</head>
+
+<main layout:fragment="content">
+  <section class="not-found-page">
+    <div class="not-found-card">
+      <div class="not-found-code">404</div>
+      <h1>페이지를 찾을 수 없습니다</h1>
+      <p>
+        주소가 잘못 입력되었거나, 이동 또는 삭제된 페이지일 수 있습니다.
+        필요한 메뉴는 아래 버튼이나 상단 메뉴에서 다시 선택해 주세요.
+      </p>
+      <div class="not-found-actions">
+        <a th:href="@{/}" class="btn btn-dark">홈으로</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+</html>

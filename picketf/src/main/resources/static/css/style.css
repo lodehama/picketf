@@ -244,6 +244,64 @@ main {
 
 /* #endregion index */
 
+/* #region error pages */
+.not-found-page {
+  min-height: calc(100vh - 64px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 72px 24px;
+}
+
+.not-found-card {
+  width: min(520px, 100%);
+  padding: 42px 36px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+  text-align: center;
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.06);
+}
+
+.not-found-code {
+  margin-bottom: 12px;
+  color: #2f8df3;
+  font-size: 54px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.not-found-card h1 {
+  margin: 0;
+  color: #111827;
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.not-found-card p {
+  margin: 14px 0 0;
+  color: #6b7280;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.7;
+  word-break: keep-all;
+}
+
+.not-found-actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 26px;
+}
+
+.not-found-actions .btn {
+  min-width: 112px;
+  border-radius: 8px;
+  font-weight: 700;
+}
+/* #endregion error pages */
+
 /* #region mypage */
 
 :root {
@@ -1714,6 +1772,41 @@ input[type="number"].money {
   .index-info {
     font-size: 21px;
     margin-bottom: 22px;
+  }
+
+  .not-found-page {
+    min-height: auto;
+    padding: 36px 16px 28px;
+    align-items: flex-start;
+  }
+
+  .not-found-card {
+    padding: 32px 22px;
+    border-radius: 10px;
+    box-shadow: none;
+  }
+
+  .not-found-code {
+    font-size: 46px;
+  }
+
+  .not-found-card h1 {
+    font-size: 22px;
+  }
+
+  .not-found-card p {
+    font-size: 14px;
+  }
+
+  .not-found-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-top: 22px;
+  }
+
+  .not-found-actions .btn {
+    width: 100%;
+    min-height: 42px;
   }
 
   .devlog-page {

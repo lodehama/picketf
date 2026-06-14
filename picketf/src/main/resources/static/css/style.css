@@ -1669,6 +1669,76 @@ input[type="number"].money {
   .subs-item small {
     font-size: 12px;
   }
+
+  .cpi-wrap {
+    max-width: 100%;
+    margin: 0;
+    padding: 18px 14px;
+    border-radius: 10px;
+  }
+
+  .cpi-wrap .cpi-row {
+    grid-template-columns: minmax(106px, 1fr) minmax(138px, auto);
+    column-gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .cpi-label {
+    min-width: 0;
+    font-size: 15px;
+    line-height: 1.35;
+    word-break: keep-all;
+  }
+
+  .cpi-controls,
+  .cpi-value {
+    justify-content: flex-end;
+    min-width: 0;
+  }
+
+  .cpi-select,
+  .cpi-value-box,
+  .cpi-input-wrap,
+  .cpi-input {
+    width: 138px;
+  }
+
+  .cpi-value-box {
+    height: 38px;
+    font-size: 15px;
+  }
+
+  .cpi-input {
+    height: 38px;
+    font-size: 15px;
+  }
+
+  .cpi-select {
+    height: 38px;
+    margin-right: 0;
+    font-size: 15px;
+  }
+
+  .cpi-row--run {
+    grid-template-columns: minmax(106px, 1fr) minmax(138px, auto);
+  }
+
+  .cpi-row--run .cpi-controls {
+    display: grid;
+    grid-template-columns: 138px;
+    justify-content: end;
+    gap: 8px;
+  }
+
+  .cpi-run {
+    width: 138px;
+    height: 40px;
+    border-radius: 8px;
+  }
+
+  .cpi-divider {
+    margin: 20px 0;
+  }
 }
 /* #endregion signup */
 

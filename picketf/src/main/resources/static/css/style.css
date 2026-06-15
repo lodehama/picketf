@@ -2640,7 +2640,7 @@ input[type="number"].money {
     background: transparent;
     box-shadow: none;
     flex-direction: row;
-    gap: 5px;
+    gap: 0;
   }
 
   .devlog-date span,

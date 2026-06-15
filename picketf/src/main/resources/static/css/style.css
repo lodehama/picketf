@@ -2124,6 +2124,28 @@ input[type="number"].money {
     word-break: keep-all;
   }
 
+  body:has(.home-page) .home-page .container {
+    padding-top: 52px !important;
+    padding-bottom: 26px !important;
+  }
+
+  body:has(.home-page) .home-page .text-center {
+    margin-bottom: 0 !important;
+  }
+
+  body:has(.home-page) .title-blue {
+    margin-bottom: 16px;
+  }
+
+  body:has(.home-page) .lead {
+    margin-bottom: 22px;
+  }
+
+  body:has(.home-page) .footer {
+    margin-top: 0;
+    padding: 18px 18px calc(78px + env(safe-area-inset-bottom)) !important;
+  }
+
   .container {
     max-width: 100%;
   }

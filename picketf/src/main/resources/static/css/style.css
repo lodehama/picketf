@@ -746,7 +746,7 @@ main {
 /* 순자산총액 */
 .table.etf td:nth-child(6),
 .table.etf th:nth-child(6) {
-  width: 128px;
+  width: 130px;
 }
 
 /* 거래대금 */

@@ -33,6 +33,61 @@
       </button>
     </div>
   </div>
+  <script>
+    (function () {
+      function syncEtfToolbarWidth() {
+        const filterBar = document.getElementById("etf-filter-bar");
+        const table = document.querySelector(".table.etf");
+
+        if (!filterBar || !table) {
+          return;
+        }
+
+        if (window.matchMedia("(max-width: 768px)").matches) {
+          filterBar.style.width = "";
+          filterBar.style.maxWidth = "";
+          return;
+        }
+
+        const tableWidth = Math.ceil(Math.max(table.scrollWidth, table.getBoundingClientRect().width));
+        filterBar.style.width = tableWidth + "px";
+        filterBar.style.maxWidth = "none";
+      }
+
+      function observeEtfTableWidth() {
+        const table = document.querySelector(".table.etf");
+
+        if (!table || typeof ResizeObserver === "undefined") {
+          return;
+        }
+
+        new ResizeObserver(syncEtfToolbarWidth).observe(table);
+      }
+
+      function observeEtfTableChanges() {
+        const tableBody = document.querySelector(".table.etf tbody");
+
+        if (!tableBody || typeof MutationObserver === "undefined") {
+          return;
+        }
+
+        new MutationObserver(function () {
+          requestAnimationFrame(syncEtfToolbarWidth);
+        }).observe(tableBody, { childList: true, subtree: true, characterData: true });
+      }
+
+      window.addEventListener("load", function () {
+        syncEtfToolbarWidth();
+        observeEtfTableWidth();
+        observeEtfTableChanges();
+      });
+      window.addEventListener("resize", syncEtfToolbarWidth);
+      requestAnimationFrame(syncEtfToolbarWidth);
+      setTimeout(syncEtfToolbarWidth, 300);
+      setTimeout(syncEtfToolbarWidth, 1000);
+      setTimeout(syncEtfToolbarWidth, 2000);
+    })();
+  </script>
 </th:block>
 
 <table th:fragment="table(rowsFragment)" class="table etf">

@@ -2194,7 +2194,9 @@ input[type="number"].money {
   }
 
   .table.etf {
-    min-width: 920px;
+    width: max-content;
+    min-width: max-content;
+    max-width: none;
     font-size: 14px;
   }
 

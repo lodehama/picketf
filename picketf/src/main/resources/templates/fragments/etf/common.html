@@ -96,13 +96,18 @@
   <script>
     document.addEventListener("click", function (event) {
       const modalEl = document.getElementById("glossaryModal");
+      const modalContent = modalEl ? modalEl.querySelector(".modal-content") : null;
 
-      if (!modalEl || event.target !== modalEl) {
+      if (!modalEl || !modalEl.classList.contains("show") || !modalContent) {
+        return;
+      }
+
+      if (modalContent.contains(event.target)) {
         return;
       }
 
       bootstrap.Modal.getOrCreateInstance(modalEl).hide();
-    });
+    }, true);
   </script>
 </div>
 

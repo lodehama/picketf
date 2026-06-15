@@ -495,19 +495,12 @@
           const safeTotal = Number(donutTotal || 0);
           const canvas = document.getElementById("subsTypeDonut");
 
-          console.log("labels", donutLabels);
-          console.log("values", donutValues);
-          console.log("total", safeTotal);
-          console.log("Canvas?", canvas);
-
           /* =========================================================
            * 0-1) 차트 렌더(절대 return으로 아래 기능 죽이지 않기)
            * ========================================================= */
           try {
             if (typeof Chart === "undefined") {
-              console.warn("Chart.js가 로드되지 않았습니다. 차트를 스킵합니다.");
             } else if (!canvas) {
-              console.warn("canvas #subsTypeDonut 요소가 없습니다. 차트를 스킵합니다.");
             } else {
               const labelsForChart = Array.isArray(donutLabels) ? donutLabels : [];
               const valuesForChart = Array.isArray(donutValues) ? donutValues : [];
@@ -518,7 +511,6 @@
                 valuesForChart.some(v => Number(v) > 0);
 
               if (!hasData) {
-                console.warn("구독 차트 데이터가 없습니다. 차트를 숨깁니다.");
                 canvas.style.display = "none";
 
                 const msg = document.createElement("div");
@@ -610,16 +602,12 @@
 
                 if (typeof ChartDataLabels !== "undefined") {
                   Chart.register(ChartDataLabels);
-                } else {
-                  console.warn("ChartDataLabels 플러그인이 로드되지 않았습니다. datalabels는 비활성화됩니다.");
                 }
 
                 new Chart(canvas, config);
               }
             }
-          } catch (err) {
-            console.error("차트 렌더 중 오류 (아래 기능은 계속 진행):", err);
-          }
+          } catch (err) {}
 
           /* =========================================================
            * 1) 정렬/쿠키
@@ -782,7 +770,6 @@
                 }
               } catch (e) {
                 alert("저장 요청 중 네트워크 오류가 발생했습니다.");
-                console.error(e);
               }
             });
           }
@@ -793,8 +780,6 @@
           const recommendModalEl = document.getElementById("subsRecommendModal");
           const recSelectAll = document.getElementById("recSelectAll");
           const recSaveBtn = recommendModalEl ? recommendModalEl.querySelector("#btn-rec-save") : null;
-
-          console.log("recSaveBtn?", recSaveBtn, "recommendModalEl?", recommendModalEl, "recSelectAll?", recSelectAll);
 
           if (recSaveBtn && recommendModalEl) {
 
@@ -898,7 +883,6 @@
                 }
               } catch (e) {
                 alert("저장 요청 중 네트워크 오류가 발생했습니다.");
-                console.error(e);
               }
             });
           }

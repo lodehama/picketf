@@ -109,10 +109,6 @@ public class IsaController {
       @RequestParam("amount") long amount,
       @RequestParam(value = "memo", required = false) String memo) {
 
-    System.out.println("amount = [" + amount + "]");
-
-    System.out.println("memo=[" + memo + "]");
-
     Integer usNum = getLoginUsNumOrNull();
     if (usNum == null) {
       return ResponseEntity.status(401).body(Map.of("message", "로그인이 필요합니다"));

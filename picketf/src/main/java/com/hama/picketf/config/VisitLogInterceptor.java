@@ -15,9 +15,11 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class VisitLogInterceptor implements HandlerInterceptor {
 
   private static final String ANONYMOUS_COOKIE_NAME = "picketf_vid";
@@ -51,7 +53,7 @@ public class VisitLogInterceptor implements HandlerInterceptor {
       visitLogService.recordVisit(visitorKey, usNum, path);
       pageViewLogService.recordPageView(visitorKey, usNum, path, deviceType);
     } catch (Exception e) {
-      System.out.println("[VISIT_LOG] failed path=" + path + ", message=" + e.getMessage());
+      log.warn("[VISIT_LOG] failed path={}, message={}", path, e.getMessage());
     }
     return true;
   }

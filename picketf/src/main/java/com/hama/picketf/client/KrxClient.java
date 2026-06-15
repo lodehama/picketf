@@ -7,9 +7,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 @Component
+@Slf4j
 public class KrxClient {
 
   private final WebClient webClient;
@@ -71,7 +73,7 @@ public class KrxClient {
           .block();
     } catch (Exception e) {
       // 필요 시 로그로 교체 가능
-      e.printStackTrace();
+      log.warn("KRX API request failed: {}", e.getMessage());
       throw e;
     }
   }

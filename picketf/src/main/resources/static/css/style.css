@@ -943,8 +943,8 @@ main {
 }
 
 .table.etf > tbody > tr:hover > td:not(.hl-green):not(.hl-red) {
-  background-color: #f2f5f9 !important;
-  --bs-table-accent-bg: #f2f5f9 !important;
+  background-color: #f4f8ff !important;
+  --bs-table-accent-bg: #f4f8ff !important;
 }
 
 .table.etf > tbody > tr.row-selected > td:not(.hl-green):not(.hl-red) {

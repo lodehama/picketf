@@ -762,7 +762,7 @@ main {
 /* NAV */
 .table.etf td:nth-child(9),
 .table.etf th:nth-child(9) {
-  width: 120px;
+  width: 104px;
 }
 
 /* 괴리율 */
@@ -847,6 +847,14 @@ main {
 
 .table.etf td:nth-child(8),
 .table.etf th:nth-child(8) {
+  padding-left: 8px;
+  padding-right: 8px;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+.table.etf td:nth-child(9),
+.table.etf th:nth-child(9) {
   padding-left: 8px;
   padding-right: 8px;
   font-variant-numeric: tabular-nums;

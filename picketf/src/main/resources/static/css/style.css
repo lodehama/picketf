@@ -887,8 +887,11 @@ main {
 
 /* 업데이트 항목 */
 .table.etf tbody td.hl-green {
-  background-color: #e8f7ec !important;
-  color: #0f5132;
+  --bs-table-bg: #dff5e1 !important;
+  --bs-table-accent-bg: #dff5e1 !important;
+  background: #dff5e1 !important;
+  background-color: #dff5e1 !important;
+  color: #000000;
 }
 
 .table.etf tbody td.hl-red {

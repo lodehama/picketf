@@ -155,6 +155,26 @@
     </div>
 
     <!-- 우측 메인영역 -->
+    <script>
+      (function () {
+        function closeMobileMoreSheetFromBackdrop(event) {
+          if (!event.target.classList || !event.target.classList.contains("offcanvas-backdrop")) {
+            return;
+          }
+
+          const sheet = document.getElementById("mobileMoreSheet");
+          if (!sheet || !sheet.classList.contains("show")) {
+            return;
+          }
+
+          bootstrap.Offcanvas.getOrCreateInstance(sheet).hide();
+        }
+
+        document.addEventListener("click", closeMobileMoreSheetFromBackdrop, true);
+        document.addEventListener("touchstart", closeMobileMoreSheetFromBackdrop, true);
+      })();
+    </script>
+
     <div class="app-main flex-grow-1 d-flex flex-column">
 
       <!-- 헤더 -->

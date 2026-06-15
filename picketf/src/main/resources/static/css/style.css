@@ -1124,6 +1124,14 @@ main {
   display: none !important;
 }
 
+#glossaryModal {
+  z-index: 2060;
+}
+
+.modal-backdrop {
+  z-index: 2050;
+}
+
 #glossaryModal .modal-dialog {
   max-width: 640px;
 }
@@ -2028,6 +2036,31 @@ input[type="number"].money {
 
   #btn-leverage {
     order: 4;
+  }
+
+  #glossaryModal .modal-dialog {
+    max-width: none;
+    width: calc(100% - 24px);
+    margin: 12px auto calc(76px + env(safe-area-inset-bottom));
+  }
+
+  #glossaryModal .modal-content {
+    max-height: calc(100dvh - 96px - env(safe-area-inset-bottom));
+    display: flex;
+  }
+
+  #glossaryModal .modal-body {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #glossaryModal .modal-footer {
+    flex-shrink: 0;
+  }
+
+  #glossaryModal .modal-footer .btn {
+    min-width: 96px;
+    min-height: 44px;
   }
 
   .table.etf {

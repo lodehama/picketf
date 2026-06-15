@@ -37,6 +37,7 @@
     (function () {
       function syncEtfToolbarWidth() {
         const filterBar = document.getElementById("etf-filter-bar");
+        const indexInfo = document.querySelector(".index-info");
         const table = document.querySelector(".table.etf");
 
         if (!filterBar || !table) {
@@ -46,12 +47,20 @@
         if (window.matchMedia("(max-width: 768px)").matches) {
           filterBar.style.width = "";
           filterBar.style.maxWidth = "";
+          if (indexInfo) {
+            indexInfo.style.width = "";
+            indexInfo.style.maxWidth = "";
+          }
           return;
         }
 
         const tableWidth = Math.ceil(Math.max(table.scrollWidth, table.getBoundingClientRect().width));
         filterBar.style.width = tableWidth + "px";
         filterBar.style.maxWidth = "none";
+        if (indexInfo) {
+          indexInfo.style.width = tableWidth + "px";
+          indexInfo.style.maxWidth = "none";
+        }
       }
 
       function observeEtfTableWidth() {

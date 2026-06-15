@@ -2356,7 +2356,30 @@ input[type="number"].money {
 
   body:has(.home-page) .footer {
     margin-top: 0;
-    padding: 18px 18px calc(78px + env(safe-area-inset-bottom)) !important;
+    padding: 16px 18px calc(64px + env(safe-area-inset-bottom)) !important;
+  }
+
+  body:has(.home-page) {
+    overflow: hidden;
+    overscroll-behavior-y: none;
+  }
+
+  body:has(.home-page) .app-wrapper,
+  body:has(.home-page) .app-main {
+    min-height: 100svh;
+    height: 100svh;
+    overflow: hidden;
+  }
+
+  body:has(.home-page) .app-header {
+    flex: 0 0 auto;
+  }
+
+  body:has(.home-page) .home-page {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    align-items: center;
   }
 
   .container {

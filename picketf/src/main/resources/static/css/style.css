@@ -897,6 +897,7 @@ main {
 .table.etf tbody td.hl-red {
   background-color: #fff0f0 !important;
   color: #9f1239;
+  font-weight: 700;
 }
 
 .table.etf > tbody > tr:hover > td:not(.hl-green):not(.hl-red) {

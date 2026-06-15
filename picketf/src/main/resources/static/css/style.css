@@ -964,6 +964,10 @@ main {
   display: none;
 }
 
+.table.etf + table.align-middle {
+  display: none !important;
+}
+
 /* #region devlog.html */
 .devlog-page {
   width: min(920px, calc(100% - 48px));
@@ -1116,6 +1120,10 @@ main {
 /* #endregion qqq.html ETF table */
 
 /* #region ETF 항목 설명 모달 */
+#glossaryModal:not(.show) {
+  display: none !important;
+}
+
 #glossaryModal .modal-dialog {
   max-width: 640px;
 }

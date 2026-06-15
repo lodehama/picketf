@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
   layout:decorate="~{fragments/layout/layout.html}">
 
@@ -8,45 +8,11 @@
 <main layout:fragment="content">
   <div class="container py-3">
     <div class="mb-2">
-      <a href="https://www.google.com/finance/quote/.INX:INDEXSP" target="_blank" class="index-info">
-        기초지수정보 - S&P 500 Index
-      </a>
-      <div class="etf-page-note">
-        <div><strong>종목 데이터</strong><span>전일 종가 기준으로 표시됩니다.</span></div>
-        <div><strong>업데이트</strong><span>실부담비용은 수동 업데이트, 나머지 항목은 자동 업데이트됩니다.</span></div>
-        <div><strong>계산 기준</strong><span>실부담비용 = TER(A+B) + 매매/중개 수수료율(D)</span></div>
-      </div>
+      <th:block th:replace="~{fragments/etf/common :: summary('https://www.google.com/finance/quote/.INX:INDEXSP', '기초지수정보 - S&P 500 Index', false)}"></th:block>
 
-      <div class="etf-toolbar">
-        <div class="etf-base-date-bar">
-          <span>기준일</span>
-          <strong id="etf-base-date">-</strong>
-        </div>
-
-        <div class="d-flex gap-2 mb-2" id="etf-filter-bar">
-          <button class="btn etf-filter-btn active" id="btn-basic" type="button">파생상품 제외</button>
-          <button class="btn etf-filter-btn" id="btn-hedged" type="button">환헷지</button>
-          <button class="btn etf-filter-btn" id="btn-leverage" type="button">레버리지</button>
-          <button type="button" class="btn etf-info-btn ms-auto" data-bs-toggle="modal"
-            data-bs-target="#glossaryModal"><i class="bi bi-info-circle"></i><span>항목 설명</span></button>
-        </div>
-      </div>
-      <table class="table etf">
-        <thead>
-          <tr>
-            <th></th>
-            <th></th>
-            <th id="bas-date-header">기준일</th>
-            <th>종목명 <i class="bi bi-caret-down-fill"></i></th>
-            <th>실부담비용 <i class="bi bi-caret-down-fill"></i></th>
-            <th>순자산총액 <i class="bi bi-caret-down-fill"></i></th>
-            <th>거래대금 <i class="bi bi-caret-down-fill"></i></th>
-            <th>종가 <i class="bi bi-caret-down-fill"></i></th>
-            <th>NAV</th>
-            <th>괴리율</th>
-          </tr>
-        </thead>
-        <tbody>
+      
+      <th:block th:replace="~{fragments/etf/common :: table(~{::etfRows})}">
+        <th:block th:fragment="etfRows">
           <!-- 1 -->
           <tr data-code="379800">
             <td><i class="bi bi-bookmark"></i></td>
@@ -255,48 +221,10 @@
             <td class="NAV">-</td>
             <td class="premium">-</td>
           </tr>
-        </tbody>
-      </table>
+        </th:block>
+      </th:block>
     </div>
-    <!-- 모달1 -->
-    <div class="modal fade" id="glossaryModal" tabindex="-1" aria-labelledby="glossaryTitle" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-md">
-        <div class="modal-content">
-          <div class="modal-header border-0 pt-3 pb-1">
-            <h5 class="modal-title fw-bold w-100 text-center" id="glossaryTitle">항목 설명</h5>
-          </div>
-          <div class="modal-body p-2 pt-0">
-            <table class="table align-middle mb-0">
-              <tbody>
-                <tr>
-                  <th class="text-center">실부담비용</th>
-                  <td>TER(보수율 + 기타 비용)
-                    <br>+ 매매 · 중개 수수료율
-                    <br>실제로 지불하는 수수료
-                  </td>
-                </tr>
-                <tr>
-                  <th class="text-center">거래대금</th>
-                  <td>해당 종목의 일일 거래대금</td>
-                </tr>
-                <tr>
-                  <th class="text-center">NAV</th>
-                  <td>해당 종목의 종가 기준 순자산가치</td>
-                </tr>
-                <tr>
-                  <th class="text-center">괴리율</th>
-                  <td>종가와 NAV의 차이를 %로 나타낸 값</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="modal-footer d-flex flex-column align-items-end border-0 p-2 pt-0">
-            <p class="text-secondary small mb-1">※ 데이터 출처 : 한국거래소 / 금융투자협회</p>
-            <button class="btn btn-outline-secondary" data-bs-dismiss="modal">닫기</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <th:block th:replace="~{fragments/etf/common :: glossaryModal}"></th:block>
 
     <!-- 모달2 -->
     <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailTitle" aria-hidden="true">
@@ -870,3 +798,6 @@
 </main>
 
 </html>
+
+
+

@@ -1020,6 +1020,7 @@ main {
 #etf-filter-bar {
   align-items: center;
   flex-wrap: wrap;
+  width: min(920px, 100%);
   margin-bottom: 10px !important;
 }
 
@@ -2135,6 +2136,7 @@ input[type="number"].money {
   #etf-filter-bar {
     display: grid !important;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    width: 100%;
     gap: 10px !important;
     align-items: stretch;
   }

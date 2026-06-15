@@ -77,27 +77,6 @@ main {
   background-color: #f2f4f6;
 }
 
-/* 로그아웃 버튼으로 안 보이게 */
-/* form 자체가 줄바꿈/여백 만들지 않게 */
-.app-nav__logout {
-  margin: 0;
-  display: inline-flex;
-  font-weight: 500; /* nav 링크들과 동일하게 맞추기 */
-}
-
-/* button 기본 스타일 제거 + a처럼 보이게 */
-.app-nav__btn {
-  appearance: none;
-  -webkit-appearance: none;
-
-  background: none;
-  border: none;
-
-  font: inherit;
-  color: inherit;
-  cursor: pointer;
-}
-
 /* 로그인, 계정 만들기 */
 .app-nav__signup {
   padding: 8px 14px;
@@ -666,17 +645,6 @@ main {
   text-decoration: underline;
 }
 
-.m10-info {
-  display: block;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 700;
-  color: #2f8df3;
-  margin-top: 18px;
-  margin-bottom: 24px;
-  text-decoration: none;
-}
-
 /* ETF 종목 구성 경고 (M10, SOX) */
 .composition-warning {
   max-width: 900px;
@@ -975,11 +943,6 @@ main {
 .table .bi-bookmark-fill:hover {
   color: #111827;
   transform: translateY(-1px);
-}
-
-.table.updates th,
-.table.updates td {
-  text-align: center !important;
 }
 
 .etf-page-note {
@@ -1803,13 +1766,6 @@ label[for="recSelectAll"] {
   font-weight: 500;
 }
 
-/* 원 텍스트 */
-.cpi-unit {
-  font-size: 16px;
-  color: #111827;
-  font-weight: 700;
-}
-
 /* 실행 버튼 */
 .cpi-run {
   font-size: 16px;
@@ -2230,12 +2186,6 @@ input[type="number"].money {
   .mobile-bottom-nav__item i {
     font-size: 20px;
     line-height: 1;
-  }
-
-  .mobile-bottom-nav__avatar {
-    width: 22px;
-    height: 22px;
-    display: block;
   }
 
   .mobile-bottom-nav__item:hover,
@@ -2998,17 +2948,6 @@ input[type="number"].money {
     font-size: 15px;
   }
 
-  .cpi-row--run {
-    grid-template-columns: minmax(106px, 1fr) minmax(138px, auto);
-  }
-
-  .cpi-row--run .cpi-controls {
-    display: grid;
-    grid-template-columns: repeat(2, 138px);
-    justify-content: end;
-    gap: 10px;
-  }
-
   .cpi-year-row {
     grid-template-columns: minmax(96px, 0.85fr) minmax(0, 1fr) minmax(0, 1fr) !important;
   }
@@ -3165,16 +3104,3 @@ input[type="number"].money {
 }
 /* #endregion signup */
 
-table.updates th {
-  background-color: #f8f9fa;
-  font-weight: 700;
-  text-align: center;
-  padding: 12px;
-  border-bottom: 2px solid #dee2e6;
-}
-
-table.updates td {
-  padding: 6px 6px;
-  vertical-align: middle; /* 셀 내용 수직 중앙 정렬 */
-  border-bottom: 1px solid #eee;
-}

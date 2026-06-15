@@ -16,7 +16,6 @@ public class UserService {
 	private static final Pattern USER_ID_PATTERN = Pattern.compile("^[a-z][a-z0-9]{3,15}$");
 	private static final Pattern PASSWORD_PATTERN = Pattern.compile("^[A-Za-z0-9!@#$%^&*]{8,20}$");
 	private static final Pattern NICKNAME_PATTERN = Pattern.compile("^[가-힣A-Za-z0-9]{2,8}$");
-	private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
 
 	@Autowired
 	UserDAO userDAO;
@@ -32,7 +31,7 @@ public class UserService {
 
 		userVO.setUs_id(userId);
 		userVO.setUs_nickname(nickname);
-		userVO.setUs_email(email);
+		userVO.setUs_email(email == null ? "" : email);
 
 		// 아이디 검증
 		validateUserId(userId);
@@ -54,9 +53,6 @@ public class UserService {
 		if (existsByNickname(nickname)) {
 			throw new IllegalArgumentException("이미 사용중인 닉네임입니다.");
 		}
-
-		// 이메일 검증
-		validateEmail(email);
 
 		userVO.setUs_pw(passwordEncoder.encode(password));
 		userVO.setUs_authority("USER");
@@ -145,16 +141,6 @@ public class UserService {
 
 		if (!NICKNAME_PATTERN.matcher(nickname).matches()) {
 			throw new IllegalArgumentException("닉네임은 2~8자이며, 한글/영문/숫자만 가능합니다.");
-		}
-	}
-
-	public void validateEmail(String email) {
-		if (email == null || email.isEmpty()) {
-			throw new IllegalArgumentException("이메일을 입력해주세요.");
-		}
-
-		if (!EMAIL_PATTERN.matcher(email).matches()) {
-			throw new IllegalArgumentException("올바른 이메일 형식이 아닙니다.");
 		}
 	}
 

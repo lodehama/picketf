@@ -1812,7 +1812,7 @@ input[type="number"].money {
   .mypage-main {
     min-height: auto;
     display: block;
-    padding: 32px 14px 28px !important;
+    padding: 44px 14px 28px !important;
   }
 
   .mypage-wrap {
@@ -1822,9 +1822,10 @@ input[type="number"].money {
   }
 
   .mypage-title {
-    margin-bottom: 24px;
-    font-size: 27px;
+    margin-bottom: 22px;
+    font-size: 26px;
     font-weight: 700;
+    line-height: 1.25;
   }
 
   .mypage-profile-card,
@@ -1837,7 +1838,7 @@ input[type="number"].money {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
   }
 
   .mypage-tab-btn {
@@ -1849,13 +1850,17 @@ input[type="number"].money {
   }
 
   .mypage-wrap .my-4 {
-    margin-bottom: 14px !important;
+    margin: 0 0 14px !important;
   }
 
   .mypage-info-section {
-    padding: 18px;
+    padding: 16px 18px;
     border-radius: 10px;
     margin-bottom: 12px;
+  }
+
+  .mypage-info-section:first-child {
+    background: #f8fafc;
   }
 
   .mypage-info-row {
@@ -1872,11 +1877,12 @@ input[type="number"].money {
     height: auto;
     font-size: 13px;
     color: #6b7280;
+    margin-bottom: 0;
   }
 
   .mypage-info-row span {
     min-width: 0;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 600;
     word-break: break-all;
   }
@@ -1901,6 +1907,13 @@ input[type="number"].money {
   .mypage-nickname-current,
   .mypage-password-current {
     padding: 0 12px;
+  }
+
+  .mypage-save-btn:disabled {
+    border-color: #e5e7eb;
+    background: #f3f4f6;
+    color: #9ca3af;
+    cursor: not-allowed;
   }
 
   .mypage-save-btn,

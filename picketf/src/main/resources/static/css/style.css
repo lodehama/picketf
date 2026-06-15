@@ -756,7 +756,7 @@ main {
 /* 종가 */
 .table.etf td:nth-child(8),
 .table.etf th:nth-child(8) {
-  width: 120px;
+  width: 94px;
 }
 
 /* NAV */
@@ -839,6 +839,14 @@ main {
 
 .table.etf td:nth-child(7),
 .table.etf th:nth-child(7) {
+  padding-left: 8px;
+  padding-right: 8px;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+.table.etf td:nth-child(8),
+.table.etf th:nth-child(8) {
   padding-left: 8px;
   padding-right: 8px;
   font-variant-numeric: tabular-nums;

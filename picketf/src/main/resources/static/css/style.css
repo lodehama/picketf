@@ -947,6 +947,24 @@ main {
   --bs-table-accent-bg: #f2f5f9 !important;
 }
 
+.table.etf > tbody > tr.row-selected > td:not(.hl-green):not(.hl-red) {
+  background-color: #eef6ff !important;
+  --bs-table-accent-bg: #eef6ff !important;
+}
+
+.table.etf > tbody > tr.row-selected > td:first-child {
+  border-left-color: #93c5fd !important;
+}
+
+.table.etf > tbody > tr.row-selected > td {
+  border-top-color: #bfdbfe !important;
+  border-bottom-color: #bfdbfe !important;
+}
+
+.table.etf > tbody > tr.row-selected > td:last-child {
+  border-right-color: #bfdbfe !important;
+}
+
 .table .bi-bookmark,
 .table .bi-bookmark-fill {
   transition: color 0.18s ease, transform 0.18s ease;

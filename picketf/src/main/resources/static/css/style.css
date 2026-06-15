@@ -1809,6 +1809,111 @@ input[type="number"].money {
     min-height: 42px;
   }
 
+  .mypage-main {
+    min-height: auto;
+    display: block;
+    padding: 32px 14px 28px !important;
+  }
+
+  .mypage-wrap {
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  .mypage-title {
+    margin-bottom: 24px;
+    font-size: 27px;
+    font-weight: 700;
+  }
+
+  .mypage-profile-card,
+  .mypage-wrap .my-4,
+  .mypage-tab-content {
+    width: 100%;
+  }
+
+  .mypage-profile-header {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .mypage-tab-btn {
+    width: 100%;
+    height: 42px;
+    border-radius: 9px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .mypage-wrap .my-4 {
+    margin-bottom: 14px !important;
+  }
+
+  .mypage-info-section {
+    padding: 18px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+  }
+
+  .mypage-info-row {
+    display: grid;
+    gap: 5px;
+  }
+
+  .mypage-info-row + .mypage-info-row {
+    margin-top: 16px;
+  }
+
+  .mypage-label {
+    width: auto;
+    height: auto;
+    font-size: 13px;
+    color: #6b7280;
+  }
+
+  .mypage-info-row span {
+    min-width: 0;
+    font-size: 16px;
+    font-weight: 600;
+    word-break: break-all;
+  }
+
+  .mypage-nickname-row,
+  .mypage-password-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .mypage-nickname-current,
+  .mypage-password-current,
+  .mypage-nickname-input,
+  .mypage-password-input {
+    width: 100%;
+    height: 42px;
+    justify-content: flex-start;
+    font-size: 15px;
+  }
+
+  .mypage-nickname-current,
+  .mypage-password-current {
+    padding: 0 12px;
+  }
+
+  .mypage-save-btn,
+  .mypage-delete-btn {
+    width: 100%;
+    height: 42px;
+    font-weight: 700;
+  }
+
+  .mypage-delete-btn {
+    margin-top: 12px;
+  }
+
   .devlog-page {
     width: 100%;
     padding: 30px 16px 28px;
@@ -2197,10 +2302,32 @@ input[type="number"].money {
     gap: 10px;
   }
 
+  .cpi-year-row {
+    grid-template-columns: minmax(96px, 0.85fr) minmax(0, 1fr) minmax(0, 1fr) !important;
+  }
+
+  .cpi-year-row .cpi-controls {
+    display: contents;
+  }
+
+  .cpi-year-row .cpi-select {
+    grid-column: 2;
+    width: 100%;
+  }
+
+  .cpi-year-row .cpi-run {
+    grid-column: 3;
+    width: 100%;
+  }
+
   .cpi-run {
     width: 138px;
     height: 40px;
     border-radius: 8px;
+  }
+
+  .cpi-year-row .cpi-run {
+    width: 100%;
   }
 
   .cpi-divider {

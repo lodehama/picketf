@@ -696,7 +696,7 @@ main {
 }
 
 .table.etf {
-  width: 100%;
+  width: max-content;
   max-width: 1100px;
   margin: 4px auto 0;
   border-collapse: separate;
@@ -732,7 +732,9 @@ main {
 /* 종목명 */
 .table.etf td:nth-child(4),
 .table.etf th:nth-child(4) {
-  width: 256px;
+  width: auto;
+  min-width: 0;
+  white-space: nowrap;
 }
 
 /* 실부담비용 */

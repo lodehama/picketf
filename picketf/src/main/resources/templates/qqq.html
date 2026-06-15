@@ -336,7 +336,8 @@
           if (n >= trillion) {
             const 조 = Math.floor(n / trillion);
             const 억 = Math.floor((n % trillion) / billion);
-            return `${조}조${억 > 0 ? " " + 억.toLocaleString() + "억원" : ""}`;
+            const paddedEok = String(억).padStart(4, "0").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            return `${조}조 ${paddedEok}억원`;
           } else if (n >= 10 * billion) {
             return `${Math.floor(n / billion).toLocaleString()}억원`;
           } else if (n >= billion) {

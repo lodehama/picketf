@@ -158,8 +158,10 @@
     </div>
   </div>
   <script>
-    document.addEventListener("click", function (event) {
-      const modalEl = document.getElementById("glossaryModal");
+    function closeEtfModalFromOutside(event) {
+      const modalEl = ["glossaryModal", "detailModal"]
+        .map((id) => document.getElementById(id))
+        .find((el) => el && el.classList.contains("show"));
       const modalContent = modalEl ? modalEl.querySelector(".modal-content") : null;
 
       if (!modalEl || !modalEl.classList.contains("show") || !modalContent) {
@@ -171,7 +173,10 @@
       }
 
       bootstrap.Modal.getOrCreateInstance(modalEl).hide();
-    }, true);
+    }
+
+    document.addEventListener("click", closeEtfModalFromOutside, true);
+    document.addEventListener("touchstart", closeEtfModalFromOutside, true);
   </script>
 </div>
 

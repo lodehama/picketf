@@ -1246,7 +1246,12 @@ main {
   display: none !important;
 }
 
-#glossaryModal {
+#detailModal:not(.show) {
+  display: none !important;
+}
+
+#glossaryModal,
+#detailModal {
   --bs-modal-zindex: 3000;
   z-index: 3000 !important;
   background: transparent;
@@ -1261,11 +1266,20 @@ main {
   background: rgba(17, 24, 39, 0.48);
 }
 
+#detailModal.show {
+  background: rgba(17, 24, 39, 0.48);
+}
+
 #glossaryModal .modal-dialog {
   max-width: 640px;
 }
 
-#glossaryModal .modal-content {
+#detailModal .modal-dialog {
+  max-width: 700px;
+}
+
+#glossaryModal .modal-content,
+#detailModal .modal-content {
   overflow: hidden;
   border: 1px solid #e5e7eb;
   border-radius: 14px;
@@ -1273,67 +1287,79 @@ main {
   box-shadow: 0 18px 48px rgba(15, 23, 42, 0.18);
 }
 
-#glossaryModal .modal-header {
+#glossaryModal .modal-header,
+#detailModal .modal-header {
   justify-content: center;
   padding: 22px 24px 12px !important;
   border-bottom: none !important;
 }
 
-#glossaryModal .modal-title {
+#glossaryModal .modal-title,
+#detailModal .modal-title {
   color: #111827;
   font-size: 20px;
   font-weight: 800 !important;
   letter-spacing: 0;
 }
 
-#glossaryModal .modal-body {
+#glossaryModal .modal-body,
+#detailModal .modal-body {
   padding: 6px 24px 10px !important;
 }
 
-#glossaryModal table {
+#glossaryModal table,
+#detailModal table {
   overflow: hidden;
   border: 1px solid #eef2f7;
   border-radius: 10px;
   font-size: 15px;
 }
 
-#glossaryModal table tr {
+#glossaryModal table tr,
+#detailModal table tr {
   border-color: #eef2f7;
 }
 
 #glossaryModal table th,
-#glossaryModal table td {
+#glossaryModal table td,
+#detailModal table th,
+#detailModal table td {
   padding: 13px 16px;
   border-color: #eef2f7;
   vertical-align: middle;
 }
 
-#glossaryModal table th {
+#glossaryModal table th,
+#detailModal table th {
   width: 150px;
   background: #f8fafc;
   color: #111827;
   font-weight: 750;
 }
 
-#glossaryModal table td {
+#glossaryModal table td,
+#detailModal table td {
   color: #374151;
   line-height: 1.55;
 }
 
-#glossaryModal .modal-footer {
+#glossaryModal .modal-footer,
+#detailModal .modal-footer {
   align-items: stretch !important;
   padding: 8px 24px 22px !important;
   border-top: none !important;
 }
 
-#glossaryModal .modal-footer p {
+#glossaryModal .modal-footer p,
+#detailModal .modal-footer p {
   align-self: flex-end;
   margin-bottom: 10px !important;
   color: #6b7280 !important;
   font-size: 13px;
 }
 
-#glossaryModal .modal-footer .btn {
+#glossaryModal .modal-footer .btn,
+#detailModal .modal-footer .btn {
   align-self: flex-end;
   min-width: 78px;
   min-height: 38px;
@@ -1344,7 +1370,8 @@ main {
   font-weight: 700;
 }
 
-#glossaryModal .modal-footer .btn:hover {
+#glossaryModal .modal-footer .btn:hover,
+#detailModal .modal-footer .btn:hover {
   border-color: #111827;
   background: #111827;
   color: #ffffff;
@@ -2358,27 +2385,32 @@ input[type="number"].money {
     order: 4;
   }
 
-  #glossaryModal .modal-dialog {
+  #glossaryModal .modal-dialog,
+  #detailModal .modal-dialog {
     max-width: none;
     width: calc(100% - 24px);
     margin: 12px auto calc(76px + env(safe-area-inset-bottom));
   }
 
-  #glossaryModal .modal-content {
+  #glossaryModal .modal-content,
+  #detailModal .modal-content {
     max-height: calc(100dvh - 96px - env(safe-area-inset-bottom));
     display: flex;
   }
 
-  #glossaryModal .modal-body {
+  #glossaryModal .modal-body,
+  #detailModal .modal-body {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
 
-  #glossaryModal .modal-footer {
+  #glossaryModal .modal-footer,
+  #detailModal .modal-footer {
     flex-shrink: 0;
   }
 
-  #glossaryModal .modal-footer .btn {
+  #glossaryModal .modal-footer .btn,
+  #detailModal .modal-footer .btn {
     min-width: 96px;
     min-height: 44px;
   }

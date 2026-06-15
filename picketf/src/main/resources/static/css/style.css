@@ -1996,6 +1996,40 @@ input[type="number"].money {
     -webkit-overflow-scrolling: touch;
   }
 
+  #etf-filter-bar {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 10px !important;
+    align-items: stretch;
+  }
+
+  #etf-filter-bar .etf-filter-btn,
+  #etf-filter-bar .etf-info-btn {
+    width: 100%;
+    min-height: 46px;
+    justify-content: center;
+    margin-left: 0 !important;
+    padding: 9px 10px;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  #btn-basic {
+    order: 1;
+  }
+
+  #etf-filter-bar .etf-info-btn {
+    order: 2;
+  }
+
+  #btn-hedged {
+    order: 3;
+  }
+
+  #btn-leverage {
+    order: 4;
+  }
+
   .table.etf {
     min-width: 920px;
     font-size: 14px;

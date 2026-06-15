@@ -2681,6 +2681,25 @@ input[type="number"].money {
   .signup-main .signup-btn {
     margin-top: 8px;
   }
+
+  .mypage-main.signup-main {
+    padding: 86px 14px 120px !important;
+  }
+
+  .mypage-main .mypage-title {
+    margin-bottom: 18px;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  .mypage-main .mypage-profile-header {
+    margin-bottom: 12px;
+  }
+
+  .mypage-main .mypage-wrap .my-4 {
+    margin-bottom: 14px !important;
+  }
 }
 /* #endregion signup */
 

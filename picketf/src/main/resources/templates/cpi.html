@@ -207,7 +207,30 @@
 
                 try {
                   /* ===============================
-                     A) 최저시급 계산
+                     A) CPI 계산
+                     =============================== */
+                  const cpiRes = await fetch(
+                    `/cpi/value?baseYear=${baseYear}&compareYear=${compareYear}&baseAmount=${baseAmount}`
+                  );
+
+                  if (!cpiRes.ok) {
+                    alert("CPI 계산 실패");
+                    return;
+                  }
+
+                  const cpi = await cpiRes.json();
+
+                  // compareAmountBox, inflationRateBox, inflationCagrBox
+                  const compareAmountBox = document.getElementById("compareAmountBox");
+                  const inflationRateBox = document.getElementById("inflationRateBox");
+                  const inflationCagrBox = document.getElementById("inflationCagrBox");
+
+                  fillBox(compareAmountBox, fmtMoney(cpi.compareAmount));
+                  fillBox(inflationRateBox, fmtPct(cpi.inflationRate));
+                  fillBox(inflationCagrBox, fmtPct(cpi.cagrRate));
+
+                  /* ===============================
+                     B) 최저시급 계산
                      =============================== */
                   const res = await fetch(
                     `/cpi/minwage?baseYear=${baseYear}&compareYear=${compareYear}`
@@ -224,30 +247,6 @@
                   document.getElementById("compareMinWage").textContent = fmtMoneyPlain(data.compareMinWage);
                   document.getElementById("minWageGrowth").textContent = fmtPct(data.growthRate);
                   document.getElementById("minWageCagr").textContent = fmtPct(data.cagrRate);
-
-                  /* ===============================
-                     B) CPI 계산
-                     =============================== */
-                  const cpiRes = await fetch(
-                    `/cpi/value?baseYear=${baseYear}&compareYear=${compareYear}&baseAmount=${baseAmount}`
-                  );
-
-                  if (!cpiRes.ok) {
-                    alert("CPI 계산 실패");
-                    return;
-                  }
-
-                  const cpi = await cpiRes.json();
-
-                  // ✅ HTML에 아래 id 3개가 있어야 함
-                  // compareAmountBox, inflationRateBox, inflationCagrBox
-                  const compareAmountBox = document.getElementById("compareAmountBox");
-                  const inflationRateBox = document.getElementById("inflationRateBox");
-                  const inflationCagrBox = document.getElementById("inflationCagrBox");
-
-                  fillBox(compareAmountBox, fmtMoney(cpi.compareAmount));
-                  fillBox(inflationRateBox, fmtPct(cpi.inflationRate));
-                  fillBox(inflationCagrBox, fmtPct(cpi.cagrRate));
 
                 } catch (e) {
                   alert("요청 처리 중 오류가 발생했습니다.");

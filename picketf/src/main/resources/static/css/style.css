@@ -768,7 +768,7 @@ main {
 /* 괴리율 */
 .table.etf td:nth-child(10),
 .table.etf th:nth-child(10) {
-  width: 80px;
+  width: 72px;
 }
 
 /* 셀 사이 경계선 제거 */
@@ -855,6 +855,14 @@ main {
 
 .table.etf td:nth-child(9),
 .table.etf th:nth-child(9) {
+  padding-left: 8px;
+  padding-right: 8px;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+.table.etf td:nth-child(10),
+.table.etf th:nth-child(10) {
   padding-left: 8px;
   padding-right: 8px;
   font-variant-numeric: tabular-nums;

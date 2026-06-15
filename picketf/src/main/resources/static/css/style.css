@@ -2344,7 +2344,7 @@ input[type="number"].money {
   }
 
   .signup-main {
-    padding: 72px 24px 32px;
+    padding: 40px 24px 28px;
   }
 
   .auth-page .auth-card {
@@ -2402,6 +2402,39 @@ input[type="number"].money {
   .auth-page .bottom-link {
     margin-top: 18px;
     font-size: 14px;
+  }
+
+  .signup-main .auth-title {
+    margin-bottom: 8px;
+    font-size: 24px;
+  }
+
+  .signup-main .auth-desc {
+    margin-bottom: 22px;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .signup-main .form-group {
+    margin-bottom: 12px;
+  }
+
+  .signup-main .form-label {
+    margin-bottom: 6px;
+  }
+
+  .signup-main .form-control {
+    height: 42px;
+  }
+
+  .signup-main .input-message {
+    min-height: 16px;
+    margin-top: 5px;
+    font-size: 12px;
+  }
+
+  .signup-main .signup-btn {
+    margin-top: 8px;
   }
 }
 /* #endregion signup */

@@ -1125,11 +1125,17 @@ main {
 }
 
 #glossaryModal {
-  z-index: 2060;
+  --bs-modal-zindex: 3000;
+  z-index: 3000 !important;
+  background: transparent;
 }
 
 .modal-backdrop {
-  z-index: 2050;
+  z-index: 1050 !important;
+}
+
+#glossaryModal.show {
+  background: rgba(17, 24, 39, 0.48);
 }
 
 #glossaryModal .modal-dialog {

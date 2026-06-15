@@ -12,27 +12,27 @@
 
 <body>
   <main layout:fragment="content">
-    <div class="container py-3">
+    <div class="container py-3 subs-page">
 
       <!-- 왼쪽(리스트) + 오른쪽(차트) 레이아웃 래퍼 -->
-      <div class="d-flex align-items-start gap-4 subs-layout">
+      <div class="subs-layout">
 
         <!-- 왼쪽: 기존 리스트 영역 -->
-        <div class="container-fluid py-3 subs-panel" style="max-width:760px; margin-left:0; flex: 0 0 660px;">
+        <div class="subs-panel">
 
           <!-- 여백용 -->
-          <h5 class="mb-3">&nbsp;</h5>
+          <div class="subs-page-spacer" aria-hidden="true"></div>
 
           <!-- 상단 요약 -->
-          <div class="d-flex justify-content-between align-items-center mb-2 small text-muted subs-summary-bar">
+          <div class="subs-summary-bar">
             <div>
-              <h5 class="mb-3">
+              <h5>
                 내 구독 관리 (<span th:text="${subsCount}">0</span>개)
               </h5>
             </div>
 
             <!-- 정렬 버튼 -->
-            <div class="btn-group mb-2" role="group">
+            <div class="btn-group subs-sort-group" role="group">
               <button type="button" class="btn btn-outline-secondary subs-sort-btn" data-sort="price" data-dir="asc">
                 가격 낮은순
               </button>
@@ -49,7 +49,7 @@
           </div>
 
           <!-- 메인 카드 -->
-          <div class="card">
+          <div class="card subs-list-card">
             <div class="card-body p-0">
 
               <!-- 비어 있을 때 -->
@@ -78,7 +78,7 @@
                       <img th:if="${s.subsIcon == null or s.subsIcon == ''}" th:src="@{/img/subs/default.svg}"
                         style="width:32px;height:32px;object-fit:contain;">
 
-                      <div>
+                      <div class="subs-item-main">
                         <div class="subs-name-row">
                           <span class="fw-semibold me-1" th:text="${s.subsName}">서비스 이름</span>
 
@@ -107,7 +107,7 @@
                     </div>
 
                     <!-- 오른쪽 -->
-                    <div class="text-end">
+                    <div class="text-end subs-item-price">
                       <div class="fw-semibold" th:text="${#numbers.formatInteger(s.subsPrice, 0, 'COMMA')} + ' 원'">
                         15,900 원
                       </div>
@@ -128,8 +128,7 @@
           </div>
 
           <!-- 구독 추가 버튼 -->
-          <br>
-          <div class="d-flex gap-2">
+          <div class="subs-add-actions">
             <button class="btn btn-outline-dark btn-sm flex-fill" type="button" data-bs-toggle="modal"
               data-bs-target="#subsManualModal">
               직접 추가
@@ -143,9 +142,9 @@
         </div>
 
         <!-- 오른쪽: 차트 영역 -->
-        <div class="subs-chart-panel" style="width: 600px; position: sticky; top: 90px;">
-          <div class="card-body" style="padding-top: 20px;">
-            <div style="height: 580px;">
+        <div class="subs-chart-panel">
+          <div class="card-body">
+            <div class="subs-chart-canvas-wrap">
               <canvas id="subsTypeDonut"></canvas>
             </div>
           </div>

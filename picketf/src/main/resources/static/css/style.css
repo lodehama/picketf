@@ -1351,20 +1351,188 @@ main {
 }
 /* #endregion ETF 항목 설명 모달 */
 
-/* #region subs.html 모달 */
-/* subs 구독 이미지 중앙 정렬*/
+/* #region subs.html */
+.subs-page {
+  max-width: 1120px;
+}
+
+.subs-layout {
+  display: grid;
+  grid-template-columns: minmax(520px, 660px) minmax(340px, 440px);
+  gap: 32px;
+  align-items: start;
+  justify-content: center;
+}
+
+.subs-panel {
+  min-width: 0;
+}
+
+.subs-page-spacer {
+  height: 32px;
+}
+
+.subs-summary-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.subs-summary-bar h5 {
+  margin: 0;
+  color: #111827;
+  font-size: 20px;
+  font-weight: 650;
+  letter-spacing: 0;
+}
+
+.subs-sort-group {
+  gap: 6px;
+  margin: 0;
+}
+
+.subs-sort-group .subs-sort-btn {
+  border-radius: 9px !important;
+  border-color: #d7dce3;
+  color: #475569;
+  background: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 12px;
+}
+
+.subs-sort-group .subs-sort-btn:hover,
+.subs-sort-group .subs-sort-btn.active {
+  border-color: #111827;
+  background: #111827;
+  color: #ffffff;
+}
+
+.subs-list-card {
+  overflow: hidden;
+  border: 1px solid #e3e7ee;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.06);
+}
+
+.subs-item {
+  min-height: 72px;
+  border-color: #edf0f4 !important;
+  background: #ffffff;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.subs-item:last-child {
+  border-bottom: 0 !important;
+}
+
+.subs-item:hover {
+  background: #f8fafc;
+}
+
+.subs-item img {
+  width: 36px !important;
+  height: 36px !important;
+  object-fit: contain;
+  flex: 0 0 36px;
+}
+
+.subs-item-main {
+  min-width: 0;
+}
+
 .subs-name-row {
   display: flex;
-  align-items: center; /* 완벽하게 세로 중앙 정렬 */
-  gap: 4px;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.subs-name-row .fw-semibold {
+  color: #111827;
+  font-weight: 700 !important;
+  white-space: nowrap;
+}
+
+.subs-name-row .form-switch {
+  min-height: 0;
+  padding-left: 2.15em;
+  margin: 0 2px;
+}
+
+.subs-name-row .form-check-input {
+  cursor: pointer;
 }
 
 .subs-action-btn {
-  padding: 2px 4px;
-  border: none;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 8px;
   background: transparent;
+  color: #334155;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
+.subs-action-btn:hover {
+  border-color: #d7dce3;
+  background: #ffffff;
+  color: #111827;
+}
+
+.subs-item-price .fw-semibold {
+  color: #111827;
+  font-size: 16px;
+  font-weight: 750 !important;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+.subs-status {
+  font-weight: 700;
+}
+
+.subs-add-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.subs-add-actions .btn {
+  min-height: 38px;
+  border-radius: 9px;
+  font-weight: 650;
+}
+
+.subs-chart-panel {
+  position: sticky;
+  top: 90px;
+  overflow: hidden;
+  border: 1px solid #e3e7ee;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.06);
+}
+
+.subs-chart-panel .card-body {
+  padding: 22px 20px 18px;
+}
+
+.subs-chart-canvas-wrap {
+  height: 500px;
+}
+
+/* #endregion subs.html */
+
+/* #region subs.html 모달 */
+/* subs 구독 이미지 중앙 정렬*/
 /* subs 구독 수정 모달 제목 가운데 정렬 */
 #subsEditModal .modal-header {
   display: flex;

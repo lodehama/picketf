@@ -738,7 +738,7 @@ main {
 /* 실부담비용 */
 .table.etf td:nth-child(5),
 .table.etf th:nth-child(5) {
-  width: 120px;
+  width: 96px;
 }
 
 /* 순자산총액 */
@@ -818,7 +818,15 @@ main {
 
 .table.etf td:nth-child(4),
 .table.etf th:nth-child(4) {
-  text-align: left !important;
+  text-align: right !important;
+}
+
+.table.etf td:nth-child(5),
+.table.etf th:nth-child(5) {
+  padding-left: 8px;
+  padding-right: 8px;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
 }
 
 /* 먼저 전부 초기화 */

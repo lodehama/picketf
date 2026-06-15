@@ -33,7 +33,7 @@
         <!-- 비밀번호 -->
         <div class="form-group">
           <label for="password" class="form-label">비밀번호</label>
-          <input type="password" class="form-control" id="password" name="us_pw" minlength="8" maxlength="20" required>
+          <input type="password" class="form-control" id="password" name="us_pw" minlength="6" maxlength="20" required>
           <div id="passwordMessage" class="input-message"></div>
         </div>
 
@@ -97,12 +97,12 @@
     }
 
     function validatePasswordFormat(value) {
-      const passwordRegex = /^[A-Za-z0-9!@#$%^&*]{8,20}$/;
+      const passwordRegex = /^[A-Za-z0-9!@#$%^&*]{6,20}$/;
 
       if (!passwordRegex.test(value)) {
         return {
           valid: false,
-          message: "비밀번호는 8~20자, 영문과 숫자, 특수문자만 가능합니다."
+          message: "비밀번호는 6~20자, 영문과 숫자, 특수문자만 가능합니다."
         };
       }
 

@@ -209,12 +209,12 @@
       let isPasswordValid = false;
 
       function validatePasswordFormat(value) {
-        const regex = /^[A-Za-z0-9!@#$%^&*]{8,20}$/;
+        const regex = /^[A-Za-z0-9!@#$%^&*]{6,20}$/;
 
         if (!regex.test(value)) {
           return {
             valid: false,
-            message: "8~20자, 영문/숫자/특수문자만 가능합니다."
+            message: "6~20자, 영문/숫자/특수문자만 가능합니다."
           };
         }
 

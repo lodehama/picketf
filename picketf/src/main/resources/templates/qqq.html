@@ -17,6 +17,11 @@
         <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           => 나머지 정보 : 자동 업데이트</strong></p>
 
+      <div class="etf-base-date-bar">
+        <span>기준일</span>
+        <strong id="etf-base-date">-</strong>
+      </div>
+
       <div class="d-flex gap-2 mb-2" id="etf-filter-bar">
         <button class="btn btn-light border active" id="btn-basic" type="button">파생상품 제외</button>
         <button class="btn btn-light border" id="btn-hedged" type="button">환헷지</button>
@@ -221,10 +226,6 @@
             <table class="table align-middle mb-0">
               <tbody>
                 <tr>
-                  <th class="text-center text-nowrap" style="width: 120px;">기준일</th>
-                  <td>해당 종목의 정보를 가져온 기준일</td>
-                </tr>
-                <tr>
                   <th class="text-center">실부담비용</th>
                   <td>TER(보수율 + 기타 비용)
                     <br>+ 매매 · 중개 수수료율
@@ -352,6 +353,10 @@
           if (m) return `${m[1]}-${m[2].padStart(2, "0")}-${m[3].padStart(2, "0")}`;
           return s;
         }
+
+        const baseDateEl = document.getElementById("etf-base-date");
+        const commonBaseDate = Object.values(allData).map((item) => normalizeBasDd(item?.BAS_DD)).find(Boolean);
+        if (baseDateEl) baseDateEl.textContent = commonBaseDate ?? "-";
 
         const dtoKeys = [
           "BAS_DD", "ISU_CD", "ISU_NM", "TDD_CLSPRC", "CMPPREVDD_PRC", "FLUC_RT", "NAV",

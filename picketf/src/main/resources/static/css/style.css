@@ -2288,8 +2288,8 @@ input[type="number"].money {
   }
 
   body:has(.home-page) .home-page .container {
-    padding-top: 42px !important;
-    padding-bottom: 18px !important;
+    padding-top: 64px !important;
+    padding-bottom: 132px !important;
   }
 
   body:has(.home-page) .home-page .text-center {
@@ -2309,16 +2309,9 @@ input[type="number"].money {
     padding: 14px 18px calc(96px + env(safe-area-inset-bottom)) !important;
   }
 
-  body:has(.home-page) {
-    overflow: hidden;
-    overscroll-behavior-y: none;
-  }
-
   body:has(.home-page) .app-wrapper,
   body:has(.home-page) .app-main {
     min-height: 100svh;
-    height: 100svh;
-    overflow: hidden;
   }
 
   body:has(.home-page) .app-header {
@@ -2326,10 +2319,8 @@ input[type="number"].money {
   }
 
   body:has(.home-page) .home-page {
-    flex: 0 0 auto;
-    min-height: 0;
-    display: flex;
-    align-items: flex-start;
+    flex: 1 0 auto;
+    min-height: auto;
   }
 
   .container {

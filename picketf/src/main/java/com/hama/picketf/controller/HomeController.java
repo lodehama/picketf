@@ -38,6 +38,11 @@ public class HomeController {
     return "sox";
   }
 
+  @GetMapping("/space")
+  public String space() {
+    return "space";
+  }
+
   @GetMapping("/gld")
   public String gld() {
     return "gld";

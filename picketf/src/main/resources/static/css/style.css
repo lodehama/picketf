@@ -2289,7 +2289,7 @@ input[type="number"].money {
 
   body:has(.home-page) .home-page .container {
     padding-top: 64px !important;
-    padding-bottom: 132px !important;
+    padding-bottom: clamp(220px, 28svh, 320px) !important;
   }
 
   body:has(.home-page) .home-page .text-center {

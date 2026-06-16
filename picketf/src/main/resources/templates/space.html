@@ -8,7 +8,7 @@
 <main layout:fragment="content">
   <div class="container py-3">
     <div class="mb-2">
-      <th:block th:replace="~{fragments/etf/common :: summary('https://www.google.com/finance/quote/UFO:BATS', '기초지수정보 - 우주 항공/테크', true)}"></th:block>
+      <th:block th:replace="~{fragments/etf/common :: summary(null, '', true)}"></th:block>
 
       <th:block th:replace="~{fragments/etf/common :: table(~{::etfRows})}">
         <th:block th:fragment="etfRows">

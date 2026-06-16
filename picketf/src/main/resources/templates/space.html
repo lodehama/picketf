@@ -8,9 +8,6 @@
 <main layout:fragment="content">
   <div class="container py-3">
     <div class="mb-2">
-      <th:block th:replace="~{fragments/etf/common :: summary('https://www.google.com/finance/quote/SOX:INDEXNASDAQ', '기초지수정보 - 필라델피아 반도체 지수', true)}"></th:block>
-
-      
       <th:block th:replace="~{fragments/etf/common :: table(~{::etfRows})}">
         <th:block th:fragment="etfRows">
           <!-- 1 -->

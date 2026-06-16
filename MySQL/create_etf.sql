@@ -103,3 +103,13 @@ VALUES
 -- 레버리지 2배 (비헷지)
 ('SOX', '423920', 'TIGER 미국필라델피아반도체레버리지(합성)', '미래에셋자산운용', 2.0, 0);
 
+-- SPACE
+-- 일반 1배수 (비헷지)
+INSERT INTO etf (etf_category, etf_code, etf_name, etf_issuer, etf_leverage, etf_fx_hedged)
+VALUES
+('SPACE', '0183J0', 'TIGER 미국우주테크', '미래에셋자산운용', 1.0, 0),
+('SPACE', '0167Z0', 'KODEX 미국우주항공', '삼성자산운용', 1.0, 0),
+('SPACE', '0207Z0', 'KIWOOM 미국우주데이터센터인프라', '키움투자자산운용', 1.0, 0),
+('SPACE', '0181L0', 'SOL 미국우주항공TOP10', '신한자산운용', 1.0, 0),
+('SPACE', '0131V0', '1Q 미국우주항공테크', '하나자산운용', 1.0, 0);
+

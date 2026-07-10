@@ -1,8 +1,8 @@
 # MAU 측정
 SELECT COUNT(DISTINCT visitor_key) AS mau
 FROM visit_log
-WHERE visit_date >= '2026-06-01'
-  AND visit_date < '2026-07-01';
+WHERE visit_date >= '2026-07-01'
+  AND visit_date < '2026-07-31';
 
 # 접속 기기 유형  
 SELECT device_type, COUNT(DISTINCT visitor_key) AS unique_visitors

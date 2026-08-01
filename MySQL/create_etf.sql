@@ -103,7 +103,7 @@ VALUES
 -- 레버리지 2배 (비헷지)
 ('SOX', '423920', 'TIGER 미국필라델피아반도체레버리지(합성)', '미래에셋자산운용', 2.0, 0);
 
--- SPACE
+-- SPACE (앞으로 추가 X)
 -- 일반 1배수 (비헷지)
 INSERT INTO etf (etf_category, etf_code, etf_name, etf_issuer, etf_leverage, etf_fx_hedged)
 VALUES

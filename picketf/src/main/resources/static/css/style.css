@@ -1209,15 +1209,6 @@ main {
   font-weight: 800;
 }
 
-.devlog-entry--latest .devlog-date {
-  border-color: #b7d6ff;
-  background: #f7fbff;
-}
-
-.devlog-entry--latest .devlog-card {
-  border-color: #b7d6ff;
-  background: linear-gradient(180deg, #f7fbff 0%, #fff 82%);
-}
 /* #endregion devlog.html */
 
 /* #endregion qqq.html ETF table */

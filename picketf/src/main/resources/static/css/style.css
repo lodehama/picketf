@@ -2634,11 +2634,6 @@ input[type="number"].money {
     line-height: 1.6;
   }
 
-  .devlog-badge {
-    padding: 4px 8px;
-    font-size: 11px;
-  }
-
   .isa-tax-title {
     padding-top: 26px !important;
   }
